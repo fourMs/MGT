@@ -1,2 +1,2 @@
 # MGT 
-# This is for Musical Gestures Toolbox
+# to use MGT, MIRtoolbox and mocaptoolbox required to be installed
