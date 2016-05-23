@@ -1,5 +1,5 @@
 function mgmotionhistory(nframe,varargin)
-% function mg = mgmotionhistory(nframe,varargin)
+% function  mgmotionhistory(nframe,varargin)
 % mgmotionhistory computes the motion history image given the number of
 % frames and specified temporal segment of a video, showing the motion
 % history image over time;
