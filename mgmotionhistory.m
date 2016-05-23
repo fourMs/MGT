@@ -1,6 +1,23 @@
 function mgmotionhistory(nframe,varargin)
 % function mg = mgmotionhistory(nframe,varargin)
-% mgmotionhistory computes the motion history image
+% mgmotionhistory computes the motion history image given the number of
+% frames and specified temporal segment of a video, showing the motion
+% history image over time;
+
+% syntax: mgmotionhistory(nframe,varargin);
+% mgmotionhistory(nframe,videofile,starttime,endtime);
+% mgmotionhistory(nframe,videofile,starttime);
+% mgmotionhistory(nframe,videofile);
+
+% input:
+% nframe: the number of frames used to compute motion history image;
+% starttime: specify the start time in a video;
+% endtime: specify the end time in a video;
+% videofile: input video file
+
+% example:
+% mgmotionhistory(5,'dancer.mov',5,10); computing the motion history image
+% from 5sec to 10sec, using 5 frames to calculate it.
 if isempty(varargin)
     mg = {{}};
 end
