@@ -94,7 +94,6 @@ elseif isstruct(varargin{1}) && isfield(varargin{1},'video')
     close(v);
     tmp = mgvideoreader(filename);
     mg.video.obj = tmp.video.obj;
-    mg.video.obj = tmp.video.obj;
     mg.video.starttime = 0;
     mg.video.endtime = tmp.video.obj.Duration;
 end
