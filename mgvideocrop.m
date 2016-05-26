@@ -59,6 +59,7 @@ if ischar(varargin{1})
     writeVideo(v,tmp);
     i = 1;
     numf = mg.video.obj.FrameRate*mg.video.obj.Duration-1;
+    disp('****cropping video****');
     while mg.video.obj.CurrentTime < mg.video.obj.Duration
         progmeter(i,numf);
         tmp = readFrame(mg.video.obj);
@@ -99,6 +100,7 @@ elseif isstruct(varargin{1}) && isfield(varargin{1},'video')
     writeVideo(v,tmp);
     i = 1;
     numf = mg.video.obj.FrameRate*mg.video.obj.Duration-1;
+    disp('****cropping video****');
     while mg.video.obj.CurrentTime < mg.video.obj.Duration
         progmeter(i,numf);
         tm = readFrame(mg.video.obj);
