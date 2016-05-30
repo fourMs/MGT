@@ -6,7 +6,7 @@ This  repository includes data-set, example, source-code, MGT.zip, mirtoolbox.zi
 2. In the source-code, the functionalities of the MGT are listed, which are the same as the MGT.zip.
 #
 3. Mirtoolbox, Mocaptoolbox, matlabPyrtools are the helpful toolboxes. In order to use MGT, they need to be installed as well.
-% To install the MGT:
-%1. at first, download the MGT.zip and helpful toolboxes, put them in a directory and unzip them.
-%2. Launch your Matlab, enter the directory which contains the previous unzipped files. Run run.m in matlab command console. Note that if the helpful toolboxes have been installed in the matlab, you can simply install MGT like this: addpath('./MGT'), or you can by set path in the matlab "Home" section, find "set path" and click it. Then it opens a file selection dialog. Next, click the "Add Folder" and choose the unzipped folder and finally click "save". 
+To install the MGT:
+1. at first, download the MGT.zip and helpful toolboxes, put them in a directory and unzip them.
+2. Launch your Matlab, enter the directory which contains the previous unzipped files. Run run.m in matlab command console. Note that if the helpful toolboxes have been installed in the matlab, you can simply install MGT like this: addpath('./MGT'), or you can by set path in the matlab "Home" section, find "set path" and click it. Then it opens a file selection dialog. Next, click the "Add Folder" and choose the unzipped folder and finally click "save". 
 
