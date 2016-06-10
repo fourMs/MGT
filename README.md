@@ -1,3 +1,4 @@
+
 MGT is a music gestures toolbox which is useful to analyze video based music-related body motion. It has been developed in Matlab. Current vision requires Matlab 2015, and helpful toolboxes like matlabPyrtools, mocaptoolbox, mirtoolbox. 
 This  repository includes data-set, example, source-code, MGT.zip, mirtoolbox.zip, mocaptoolbox.zip. User can choose to download .zip. 
 
@@ -11,5 +12,5 @@ To install the MGT:
 
 1. at first, download the MGT.zip and helpful toolboxes, put them in a directory and unzip them.
 
-2. Launch your Matlab, enter the directory which contains the previous unzipped files. Run run.m in matlab command console. Note that if the helpful toolboxes have been installed in the matlab, you can simply install MGT like this: addpath('./MGT'), or you can by set path in the matlab "Home" section, find "set path" and click it. Then it opens a file selection dialog. Next, click the "Add Folder" and choose the unzipped folder and finally click "save". 
+2. Launch your Matlab, enter the directory which contains the previous unzipped files. Run install.m in matlab command console. Note that if the helpful toolboxes have been installed in the matlab, you can simply install MGT like this: addpath('./MGT'), or you can by set path in the matlab "Home" section, find "set path" and click it. Then it opens a file selection dialog. Next, click the "Add Folder" and choose the unzipped folder and finally click "save". 
 
