@@ -8,7 +8,6 @@ function mg = mgvideorotate(varargin)
 % mg = mgvideorotate(file,angle,method)
 % mg = mgvideorotate(mg,angle)
 % mg = mgvideorotate(mg,angle,method,bbox,filename)
-
 % input:
 % mg: musical gestures structure
 % angle:positive value means rotation in a counterclockwise direction,
@@ -16,7 +15,6 @@ function mg = mgvideorotate(varargin)
 % method:specify the interpolation method, options:'nearest','bilinear','bicubic'
 % bbox:bounding box, options:'loose','crop';
 % filename: the name of rotated video, required format .avi;
-
 % output:
 % mg: a musical gestures data structure contains rotated video
 
