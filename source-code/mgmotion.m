@@ -10,8 +10,6 @@ function mg = mgmotion(f,varargin)
 % mg = mgmotion(filename,'Diff',starttime,endtime,'Regular',0.3);
 % mg = mgmotion(filename,'OpticalFlow',starttime,'Binary',0.2);
 % mg = mgmotion(mg,'OpticalFlow');
-
-
 % input:
 % filename: the name of the video file
 % 'Diff','OpticalFlow': indicate the methods used to compute the
@@ -21,10 +19,8 @@ function mg = mgmotion(f,varargin)
 % filtertype: Binary, Regular, Blob, when choose the Blob, the element
 % structure need be constructed using function strel
 % thres: threshold [0,1]
-
 % output: mg,a musical gestures data structure containing the computed motion
 % image, motiongram, qom, com
-
 % mg = mginitstruct;
 l = length(varargin);
 if ischar(f)
@@ -285,12 +281,12 @@ if strcmp(method,'Diff')
     mg.video.obj = s.video.obj;
 elseif strcmp(method,'OpticalFlow')
     mg.video.obj.CurrentTime = starttime;
-%     v = VideoWriter('optical.avi');
+    v = VideoWriter('optical.avi');
     v.FrameRate = mg.video.obj.FrameRate;
     ind = 1;
     numf = mg.video.obj.FrameRate*(endtime-starttime)-1;
-%     open(v);
-%     fh = figure('visible','off');
+    open(v);
+    fh = figure('visible','off');
     fr1 = rgb2gray(readFrame(mg.video.obj));
     while mg.video.obj.CurrentTime < endtime
         progmeter(ind,numf);
@@ -315,14 +311,14 @@ elseif strcmp(method,'OpticalFlow')
         mg.video.gram.gramx = [mg.video.gram.gramx,gramy];
         mg.video.qom = [mg.video.qom;qom];
         mg.video.com = [mg.video.com;com];
-%         imshow(fr1),hold on;
-%         plot(flow,'DecimationFactor',[20 20],'ScaleFactor',10);
-%         hold off;
-%         writeVideo(v,getframe(fh));
+        imshow(fr1),hold on;
+        plot(flow,'DecimationFactor',[20 20],'ScaleFactor',10);
+        hold off;
+        writeVideo(v,getframe(fh));
         fr1 = fr2;
         ind = ind + 1;
     end
-%     close(v)
+    close(v)
     figure,subplot(211),plot(mg.video.qom)
     title('Quantity of motion by opticalflow');
     set(gca,'XTick',[0:2*mg.video.obj.FrameRate:ind])
