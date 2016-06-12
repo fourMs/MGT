@@ -2,10 +2,8 @@ function mgwaveplot(varargin)
 % function mgwaveplot(varargin)
 % mgwaveplot plots the waveform of the audio,and spectrum, rms,envelop of the audio
 % syntax: mgwaveplot(mg)
-
 % input: 
 % mg: musical gestures data structure containing the audio information
-
 % output:
 % a figure showing the waveform,spectrum,rms,envelop of the audio
 close all
