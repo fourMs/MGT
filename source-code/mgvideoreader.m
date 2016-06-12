@@ -4,14 +4,12 @@ function mg = mgvideoreader(varargin)
 % and returns a data structure containing the video parameters and data. It
 % could extract segment from existing musical gestures data structure.
 % syntax: mg = mgvideoreader(filename)
-
 % input: 
 % filename: the name of video file
 % Extract: indicates  that mgvideoreader reads a segment from the video
 % starttime: start of extracted segment 
 % endtime: end of extracted segment
 % mg: a musical gestures data structure
-
 % output:
 % mg,a musical gestures data structure containing the extracted segment of
 % the video
