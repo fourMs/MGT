@@ -19,7 +19,7 @@ for i = 1:l
          mg.mocap = mcread(varargin{i});
     elseif ismember(ex,{'.mp3';'.wav'})
          mg.audio.mir = miraudio(varargin{i});
-    elseif ismember(ex,{'.mp4';'.avi';'mov';'m4v';'mpg'})
+    elseif ismember(ex,{'.mp4';'.avi';'.mov';'.m4v';'.mpg'})
          tmp = mgvideoreader(varargin{i});
          mg.video = tmp.video;
     else
