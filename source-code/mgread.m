@@ -15,16 +15,16 @@ if isempty(fn)
     mg = {{}};
     disp('please input a file type,eg,Mocap,Audio,Video');
 end
-if strcmp(fn,'Mocap')
+if strcmpi(fn,'Mocap')
     disp('Please select a motion capture data file .c3d,.tsv');
     mg = mginitstruct('Mocap');
     mg.mocap = mcread;
-elseif strcmp(fn,'Audio')
+elseif strcmpi(fn,'Audio')
     mg = mginitstruct('Audio');
     disp('please select a audio file .wav,.mp3');
     [file,path] = uigetfile({'*.mp3;*.wav'},'select a audio file');
     mg.audio.mir = miraudio([path,file]);
-elseif strcmp(fn,'Video')
+elseif strcmpi(fn,'Video')
     mg = mginitstruct('Video');
     disp('please select a video file .mp4,.m4v,.mpg,.mov,.avi');
     [file,path] = uigetfile({'*.mp4;*.avi';'m4v';'mpg';'mov'},'select a video file');
@@ -33,7 +33,7 @@ elseif strcmp(fn,'Video')
     else 
         return;
     end
-elseif strcmp(fn,'Folder')
+elseif strcmpi(fn,'Folder')
 %     mg = mginitstruct;
     [filename, pathname, filterindex] = uigetfile( ...
     {'*.*',  'All Files (*.*)'; '*.mat','MAT-files (*.mat)';   ...
