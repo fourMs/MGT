@@ -2,28 +2,22 @@ function mg = mgreadsegment(varargin)
 % function out = mgreadsegment(varargin)
 % mgreadsegment extracts a temporal segment from the media file,or musical gestures data structure. 
 % It extracts a segment of different file.
-
 % syntax:out = mgreadsegment(filename of video);
 % out = mgreadsegment(filename of mocap);
 % out = mgreadsegment(filename of audio);
 % out = mgreadsegment(filename of video,timestart,timeend);
 % out = mgreadsegment(mg,timestart,timeend);
-
 % input:
 % filename: specified filename,audio,video,or mocap file
 % timestart: start of the segment
 % timeend: end of the segment
 % mg: a musical gestures data structure
-
 % output:
 % mg: a muscial gestures data structure containing the specified segment
-
 % eg. out = mgreadsegment(filename of audio,2,4)
 % out = mgreadsegment(filename of video,2,4)
 % out = mgreadsegment(mg,2,4)
-
 % also see: mgvideoread
-
 if isempty(varargin)
     mg = {{}};
     return
@@ -32,8 +26,8 @@ l = length(varargin);
 if ischar(varargin{1})
 if l == 1
     filename = varargin{1};
-    [~,~,ex] = fileparts(filename);
-    if ismember(ex,{'.mp4';'.avi';'mov';'mpg';'m4v'})
+    [~,pr,ex] = fileparts(filename);
+    if ismember(ex,{'.mp4';'.avi';'.mov';'.mpg';'.m4v'})
         tmp = mgvideoreader(filename);
         mg.video = tmp.video;
     elseif ismember(ex,{'.mp3';'wav'})
@@ -54,11 +48,12 @@ elseif l == 3
         endtime = starttime;
         starttime = tmp;
     end
-    [~,~,ex] = fileparts(filename);
+    [~,pr,ex] = fileparts(filename);
     if ismember(ex,{'.mp4';'.avi';'.mpg';'.mov';'.m4v'})
         s = mgvideoreader(filename,'Extract',starttime,endtime);
         s.video.obj.CurrentTime = s.video.starttime;
-        v = VideoWriter('segment.avi');
+        newname = strcat(pr,'segement.avi');
+        v = VideoWriter(newname);
         v.FrameRate = s.video.obj.FrameRate;
         open(v);
         indf = 1;
@@ -75,8 +70,12 @@ elseif l == 3
             indf = indf + 1;
         end
         close(v); 
-        s = mgvideoreader('segment.avi');
+        fprintf('\n');
+        disp(['the cropped video is created with name ',newname]);
+        s = mgvideoreader(newname);
         mg.video = s.video;
+        mg.video.orig_starttime = starttime;
+        mg.video.orig_endtime = endtime;
         
     elseif ismember(ex,{'.mp3';'.wav'})
         mg.audio.mir =  miraudio(filename,'Extract',starttime,endtime);
@@ -103,7 +102,9 @@ elseif isstruct(varargin{1})
         end
         if isfield(mg,'video')
             mg.video.obj.CurrentTime = starttime;
-            v = VideoWriter('segment.avi');
+            [~,pr,~] = fileparts(mg.video.obj.Name);
+            newname = strcat(pr,'segment.avi');
+            v = VideoWriter(newname);
             v.FrameRate = mg.video.obj.FrameRate;
             open(v);
             indf = 1;
@@ -120,7 +121,9 @@ elseif isstruct(varargin{1})
                 indf = indf + 1;
             end
             close(v); 
-            tmp = mgvideoreader('segment.avi');
+            fprintf('\n');
+            disp(['the cropped video is created with name ',newname]);
+            tmp = mgvideoreader(newname);
             mg.video.obj = tmp.video.obj;
             mg.video.starttime = 0;
             mg.video.endtime = tmp.video.obj.Duration;
