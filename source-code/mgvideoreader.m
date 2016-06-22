@@ -29,11 +29,11 @@ if ischar(varargin{1})
         s.video.starttime = 0;
         s.video.endtime = obj.Duration;
         s.video.obj = obj;
-    elseif l == 3 && strcmp(varargin{2},'Extract')
+    elseif l == 3 && strcmpi(varargin{2},'Extract')
         s.video.starttime = varargin{3};
         s.video.endtime = obj.Duration;
         s.video.obj = obj;
-    elseif l == 4 && strcmp(varargin{2},'Extract')
+    elseif l == 4 && strcmpi(varargin{2},'Extract')
         s.video.starttime = varargin{3};
         s.video.endtime = varargin{4};
         s.video.obj = obj;
@@ -41,10 +41,10 @@ if ischar(varargin{1})
 elseif isstruct(varargin{1})
     if l == 1
         return;
-    elseif l == 3 && strcmp(varargin{2},'Extract')
+    elseif l == 3 && strcmpi(varargin{2},'Extract')
         s = varargin{1};
         s.video.starttime = varargin{3};
-    elseif l == 4 && strcmp(varargin{2},'Extract')
+    elseif l == 4 && strcmpi(varargin{2},'Extract')
         s = varargin{1};
         s.video.starttime = varargin{3};
         s.video.endtime = varargin{4};
