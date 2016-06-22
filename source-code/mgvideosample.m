@@ -1,78 +1,124 @@
-function mg = mgvideosample(varargin)
-% function mg = mgvideosample(varargin)
-% mgvideosample the video in the spatial view for the sake of memory.
-% syntax: mg = mgvideosample(mg,factor,newfilename)
-% mg = mgvideosample(file)
-% mg = mgvideosample(file,factor)
-% mg = mgvideosample(file,factor,newfilename)
-% mg = mgvideosample(mg,factor,newfilename)
-% mg = mgvideosample(mg,factor)
+function mg = mgvideoadjust(varargin)
+% function mg = mgvideoadjust(varargin)
+% adjust the contrast of the video, for RGB image,three channels must be
+% given
+% finally,wirtes adjusted video in the disk and returns a musical gestures
+% data structure
+% syntax: mg = mgvideoadjust(file);
+% mg = mgvideoadjust(mg);
+% mg = mgvideoadjust(file,[low_in1 low_in2 low_in3;high_in1 high_in2 high_in3],
+% [low_out1 low_out2 low_out3;high_out1 high_out2 high_out3])
+% mg = mgvideoadjust(mg,[low_in;high_in],[low_out;high_out])
 % input:
-% mg: musical gestures structure or an image
-% factor: sampling factor,default value,[2,2],the first value is row sampling
-% factor, the second value is column sampling factor
-% filename: the file name of sampled video, required format .avi
+% mg:musical gestures data structure
+% file:the file name of video
+% [low_in;high_in],[low_out;high_out]:mapping value in video frame to new
+% values such that the values between [low_in;high_in] map to values
+% between [low_out;high_out]
 % output:
-% mg:sampled mg 
-
+% mg:a musical gestures data structure contains the adjusted video
 
 if isempty(varargin)
     return;
 end
-if length(varargin) == 3
-   factor = varargin{2};
-   filename = varargin{3};
-elseif length(varargin) == 2
-   filename = 'samplevideo.avi';
-   factor = varargin{2};
-elseif length(varargin) == 1;
-    filename = 'samplevideo.avi';
-    factor = [2,2];
+l = length(varargin);
+if l == 3
+    mapin = varargin{2};
+    mapout = varargin{3};
+elseif l == 4
+    mapin = varargin{2};
+    mapout = varargin{3};
+    gamma = varargin{4};
 end
-if isstruct(varargin{1}) && isfield(varargin{1},'video') 
-    mg = varargin{1};
-    mg.video.obj.CurrentTime = mg.video.starttime;
-    v = VideoWriter(filename);
+if ischar(varargin{1})
+    fn = varargin{1};
+    [~,pr,ex] = fileparts(fn);
+    if ismember(ex,{'.mp4';'.avi';'.mpg';'.mov';'.m4v'})
+        mg = mgvideoreader(fn);
+    else
+        error('unknown video format,please check the video format');
+    end
+    newname = strcat(pr,'adjustvideo.avi');
+    v = VideoWriter(newname);
     v.FrameRate = mg.video.obj.FrameRate;
     open(v);
     i = 1;
-    numf = floor((mg.video.endtime-mg.video.starttime)*mg.video.obj.FrameRate);
-    disp('****sampling video****')
+    numf = mg.video.obj.FrameRate*mg.video.obj.Duration;
+    disp('****adjusting video contrast****');
     while mg.video.obj.CurrentTime < mg.video.endtime
         progmeter(i,numf);
         tmp = readFrame(mg.video.obj);
-        tmp = rgb2gray(tmp);
-        tmp = tmp(1:factor(1):end,1:factor(2):end);
+        if l == 1
+            tmp = rgb2gray(tmp);
+            tmp = imadjust(tmp);
+        elseif l == 3
+            if size(mapin,2) == 1 || size(mapin,1) ==1
+                tmp = rgb2gray(tmp);
+                tmp = imadjust(tmp,mapin,mapout);
+            elseif size(mapin,2) == 3
+                tmp = imadjust(tmp,mapin,mapout);
+            end
+        elseif l == 4
+            if size(mapin,2) == 1 || size(mapin,1) == 1
+                tmp = rgb2gray(tmp);
+                tmp = imadjust(tmp,mapin,mapout,gamma);
+            elseif size(mapin,2) == 3
+                tmp = imadjust(tmp,mapin,mapout,gamma);
+            end
+        end
         writeVideo(v,tmp);
         i = i + 1;
     end
-    close(v)
-    s = mgvideoreader(filename);
-    mg.video.obj = s.video.obj;
-    mg.video.starttime = 0;
-    mg.video.endtime = s.video.obj.Duration;
-elseif ischar(varargin{1})
-    file =varargin{1};
-    [~,~,ex] = fileparts(file);
-    if ismember(ex,{'.mp4';'.mov';'.avi';'.mpg';'.m4v'})
-        mg = mgvideoreader(file);
-        v = VideoWriter(filename);
-        v.FrameRate = mg.video.obj.FrameRate;
-        open(v);
-        i = 1;
-        numf = floor(mg.video.obj.FrameRate*mg.video.obj.Duration);
-        disp('****sampling video****');
-        while mg.video.obj.CurrentTime < mg.video.endtime
-            progmeter(i,numf);
-            tmp = rgb2gray(readFrame(mg.video.obj));
-            tmp = tmp(1:factor(1):end,1:factor(2):end);
-            writeVideo(v,tmp);
-            i = 1 + i;
+    fprintf('\n');
+    disp(['the cropped video is created with name ',newname]);
+    close(v);
+    mg = mgvideoreader(newname);
+elseif isstruct(varargin{1}) && isfield(varargin{1},'video')
+    mg = varargin{1};
+    mg.video.obj.CurrentTime = 0;
+    [~,pr,~] = fileparts(mg.video.obj.Name);
+    newname = strcat(pr,'adjustvideo.avi');
+    v = VideoWriter(newname);    
+    v.FrameRate = mg.video.obj.FrameRate;
+    open(v);
+    i = 1;
+    numf = mg.video.obj.FrameRate*mg.video.obj.Duration;
+    disp('****adjusting video contrast****');
+    while mg.video.obj.CurrentTime < mg.video.endtime
+        progmeter(i,numf);
+        tmp = readFrame(mg.video.obj);
+        if l == 1
+            tmp = rgb2gray(tmp);
+            tmp = imadjust(tmp);
+        elseif l == 3
+            if size(mapin,2) == 1 || size(mapin,1) == 1
+                tmp = rgb2gray(tmp);
+                tmp = imadjust(tmp,mapin,mapout);
+            elseif size(mapin,2) == 3
+                tmp = imadjust(tmp,mapin,mapout);
+            end
+        elseif l == 4
+            if size(mapin,2) == 1 || size(mapin,1) == 1
+                tmp = rgb2gray(tmp);
+                tmp = imadjust(tmp,mapin,mapout,gamma);
+            elseif size(mapin,2) == 3
+                tmp = imadjust(tmp,mapin,mapout,gamma); 
+            end
         end
-        close(v);
-        mg = mgvideoreader(filename);
-    end  
+        writeVideo(v,tmp);
+        i = i + 1;
+    end
+    close(v);
+    fprintf('\n');
+    disp(['the cropped video is created with name ',newname]);
+    tmp = mgvideoreader(newname);
+    mg.video.obj = tmp.video.obj;
+    mg.video.starttime = 0;
+    mg.video.endtime = tmp.video.obj.Duration;
 end
+        
+        
+    
 
     
     
