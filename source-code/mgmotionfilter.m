@@ -23,6 +23,13 @@ elseif l >=3
     f = varargin{1};
     med = varargin{2};
     thres = varargin{3};
+    if strcmpi(med,'regular')
+        med = 'Regular';
+    elseif strcmpi(med,'binary')
+        med = 'Binary';
+    elseif strcmpi(med,'blob')
+        med = 'Blob';
+    end
 end
 switch med
     case 'Regular'
