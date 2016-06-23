@@ -4,7 +4,6 @@ function f = mgmotionfilter(varargin)
 % It provides three options, 'Regular','Binary','Blob' options.
 % syntax: f = mgmotionfilter(f,method,thres)
 % f = mgmotionfilter(f), default method 'Regular', thres =  0.1;
-
 % input:
 % f :input motion image or optical flow field.
 % method :'Regular', turn all values below thres to 0;
@@ -29,12 +28,16 @@ switch med
     case 'Regular'
         thres = min(f(:))+(max(f(:))-min(f(:)))*thres;
         f(find(f<thres)) = 0;
+        f = medfilt2(f,[5,5]);
     case 'Binary'
-        thres = min(f(:))+(max(f(:))-min(f(:)))*thres;
+%         thres = min(f(:))+(max(f(:))-min(f(:)))*thres;
+        thres = max(f(:))*thres;
         f(find(f<thres)) = 0;
         f(find(f>=thres)) = 1;
+        f = 255*medfilt2(f,[5,5]);
     case 'Blob'
         f = imerode(f,thres);
 end
+
 
 
