@@ -1,4 +1,4 @@
-Important:Since many problems in Matlab2016,I suggest if anybody is still using Matlab2015b, please test it in Matlab2015b. Then I will make a new version for Matlab2016.
+Important:Since many problems in Matlab2016,I suggest if anybody is still using Matlab2015a, please test it in Matlab2015a. Then I will make a new version for Matlab2016a.
 
 MGT is a music gestures toolbox which is useful to analyze video based music-related body motion. It has been developed in Matlab. Current vision requires Matlab 2015, and helpful toolboxes like matlabPyrtools, mocaptoolbox, mirtoolbox. 
 This  repository includes data-set, example, source-code, MGT.zip, mirtoolbox.zip, mocaptoolbox.zip. User can choose to download .zip. 
