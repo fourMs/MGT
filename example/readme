@@ -1,2 +1,4 @@
-Example folder includes two demos, demo one for pianist data set, demo two for dancing data
-The data set used in demo 1 can be found in the data set folder under MGT 
+Example folder includes two demos, demo1 for pianist data set, demo2 for dancing data set.
+In the data set folder, the data set (pianist.mp4,pianist.wav,pianist.tsv) for demo1 can be found. But, the data set (dance.c3d,dance.wav) for demo2 does not include the video recording.
+
+
