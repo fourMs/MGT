@@ -7,7 +7,7 @@ for i = 1:d.nMarkers
         r(i,j) = d.data(j,i*3-2);
         g(i,j) = d.data(j,i*3-1);
         b(i,j) = d.data(j,i*3);
-    end
+    end   
 end
 for i = 1:d.nMarkers
     r(i,:) = r(i,:)-min(r(i,:));r(i,:) = r(i,:)./max(r(i,:));
