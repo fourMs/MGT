@@ -1,4 +1,13 @@
 function s = mgmocapqom(varargin)
+% mgmocapqom computes the quantity of motion of mocap data. 
+% syntax:
+% s = mgmocapqom(mg);
+%
+% input:
+% mg: data structure contains mocap data set
+% s: the quantity of motion of mocap data set is stored in the field of
+% s.mocap.data
+
 s = varargin{1};
 if isstruct(varargin{1})
     if isfield(varargin{1},'mocap')
