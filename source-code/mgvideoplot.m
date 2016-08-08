@@ -3,14 +3,11 @@ function mgvideoplot(varargin)
 % mgvideoplot plots the motion image,motion grams mocap grams over time
 % syntax: mgvideoplot(mg,'Converted','On')
 % mgvideoplot(mg,'Converted','Off')
-
 % input:
 % mg: musical gestures data structure containing video and mocap data at
 % least
-
 % output:
 % a figure showing the motion image ,motion grams,mocap gram
-
 % comments:the motion should computed by 'Diff' method.
 
 l = length(varargin);
@@ -32,7 +29,7 @@ if ischar(varargin{1})
     end
     if l == 1;
         type = 'Off';
-    elseif l == 3 && strcmp(varargin{2},'Converted')
+    elseif l == 3 && strcmpi(varargin{2},'Converted')
         type =  varargin{3};
     end
 elseif isstruct(varargin{1})
