@@ -1,9 +1,12 @@
 function mg = mgvideocrop(varargin)
 % function mg = mgvideocrop(varargin)
 % mgvideocrop crops the region of video frame given by user
-% it provides user to draw a region area which the user wants to crop
+% If the position of region is not given, it provides user to draw a region area which the user wants to crop
 % then crops the same region in the every video frame
 % finally write the croped region into a video file
+% To crop the region, user has to draw a box in the first frame, then
+% right-click mouse and choose the crop image to create a mask of the
+% desired region.
 %
 % syntax: mg = mgvideocrop(mg,pos,newfilename);
 % mg = mgvideocrop(file,pos,newfilename)
@@ -14,7 +17,7 @@ function mg = mgvideocrop(varargin)
 % pos:position matrix, first row vector indicates the index of columns,second row
 % indicates the index of rows
 % file: the video file name needs to be croped
-% filename: the name of croped video, required foramt .avi
+% newfilename: the name of croped video, required foramt .avi
 %
 % example:
 % mg = mgvideocrop(videofile,[20 50;20 50],'newvideo.avi');
