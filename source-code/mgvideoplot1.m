@@ -1,6 +1,6 @@
 function mgvideoplot1(varargin)
 % function mgvideoplot(varargin)
-% mgvideoplot plots the motion image,motion grams mocap grams over time
+% mgvideoplot plots the motion image,motion grams,boundingbox over time
 % when choosing the "Motiongram" option, the input mg must contain the 
 % motion information, meaning computed by mgmotion; 
 % When choose the "Boundingbox" or "Opticalflow" option, the input mg must
@@ -48,7 +48,7 @@ switch med
             end
             if l == 2;
                 type = 'Off';
-            elseif l == 4 && strcmp(varargin{3},'Converted')
+            elseif l == 4 && strcmpi(varargin{3},'Converted')
                 type =  varargin{4};
             end
         elseif isstruct(varargin{1})
@@ -59,7 +59,7 @@ switch med
             end
             if l == 2
                 type = 'Off';
-            elseif l == 4 && strcmp(varargin{3},'Converted')
+            elseif l == 4 && strcmpi(varargin{3},'Converted')
                 type = varargin{4};
             end
             mgmotion.video.obj.CurrentTime = 0;
@@ -77,7 +77,7 @@ switch med
         title('motion image')
         pause(1/mgmotion.video.obj.FrameRate);
         subplot('Position',positionVector2)
-        if strcmp(type,'Off')
+        if strcmpi(type,'Off')
             if isfield(mgmotion.video,'gram') && i > n
                 tmp1 = mgmotion.video.gram.gramx(:,i-n+1:i);
                 imshow(tmp1,[])
@@ -222,3 +222,4 @@ switch med
         end
         hold off
 end
+
