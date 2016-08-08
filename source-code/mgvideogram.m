@@ -2,6 +2,17 @@ function mg = mgvideogram(varargin)
 % function mg = mgvideogram(varargin)
 % mgvideogram computes the videogram of a specified temporal segment of a
 % video;
+% 
+% syntax:
+% mg = mgvideogram(mg,starttime,endtime);
+% 
+% input:
+% mg: mg structure contains video information
+% starttime,endtime: compute the videogram from starttime to endtime of the
+% video
+%
+% output:
+% mg: contains the computed videograms
 l = length(varargin);
 if ischar(varargin{1})
     if l == 1
