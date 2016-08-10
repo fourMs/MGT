@@ -78,10 +78,16 @@ if ischar(varargin{1})
 elseif isstruct(varargin{1}) && isfield(varargin{1},'video')
     mg = varargin{1};
     mg.video.obj.CurrentTime = 0;
+    [~,pr,~] = fileparts(mg.video.obj.Name);
+    if length(varargin) <5
+        filename = strcat(pr,'rotate.avi');
+    else
+        filename = varargin{5};
+    end
     v = VideoWriter(filename);
     open(v);
     i = 1;
-    numf = mg.video.obj.FrameRate*mg.video.obj.Duration;
+    numf = mg.video.obj.FrameRate*(mg.video.endtime-mg.video.starttime);
     disp('****rotating video****');
     while mg.video.obj.CurrentTime < mg.video.endtime
         progmeter(i,numf);
