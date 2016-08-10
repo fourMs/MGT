@@ -47,7 +47,7 @@ end
     
 if ischar(varargin{1})
     file = varargin{1};
-    [~,~,ex] = fileparts(file);
+    [~,pr,ex] = fileparts(file);
     if ismember(ex,{'.mp4';'.avi';'mpg';'mov';'m4v'})
         mg = mgvideoreader(file);
     else 
@@ -55,10 +55,12 @@ if ischar(varargin{1})
     end
 elseif isstruct(varargin{1}) && isfield(varargin{1},'video')
     mg = varargin{1};
+    [~,pr,~] = fileparts(mg.video.obj.Name);
 end
+newfile = strcat(pr,'magnify.avi');
 switch med
     case 'IIR'
-    v = VideoWriter('videomagnify.avi');
+    v = VideoWriter(newfile);
     v.FrameRate = mg.video.obj.FrameRate;
     open(v);
     fror = readFrame(mg.video.obj); 
@@ -69,10 +71,10 @@ switch med
     [pyr(:,3),~] = buildLpyr(fr(:,:,3),'auto');
     lp1 = pyr;
     lp2 = pyr;
-    numfr = mg.video.obj.FrameRate*mg.video.obj.Duration-1;
+    numfr = mg.video.obj.FrameRate*(mg.video.endtime-mg.video.starttime)-1;
     writeVideo(v,fror);
     indf = 1;
-    while hasFrame(mg.video.obj);
+    while mg.video.obj.CurrentTime<mg.video.endtime;
     progmeter(indf,numfr);
     fror = readFrame(mg.video.obj);
     fr = im2double(fror);
