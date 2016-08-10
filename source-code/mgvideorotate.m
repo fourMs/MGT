@@ -67,7 +67,7 @@ if ischar(varargin{1})
             tmp = imrotate(tmp,angle);
         elseif l == 3
             tmp = imrotate(tmp,angle,method);
-        elseif l == 4
+        elseif l >= 4
             tmp = imrotate(tmp,angle,method,bbox);
         end
         writeVideo(v,tmp);
@@ -96,7 +96,7 @@ elseif isstruct(varargin{1}) && isfield(varargin{1},'video')
             tmp = imrotate(tmp,angle);
         elseif l == 3
             tmp = imrotate(tmp,angle,method);
-        elseif l == 4
+        elseif l >= 4
             tmp = imrotate(tmp,angle,method,bbox);
         end
         writeVideo(v,tmp);
