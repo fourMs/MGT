@@ -78,7 +78,7 @@ switch med
     [pyr(:,3),~] = buildLpyr(fr(:,:,3),'auto');
     lp1 = pyr;
     lp2 = pyr;
-    numfr = mg.video.obj.FrameRate*(mg.video.endtime-mg.video.starttime);
+    numfr = mg.video.obj.FrameRate*(mg.video.endtime-mg.video.starttime)-1;
     writeVideo(v,fror);
     indf = 1;
     while mg.video.obj.CurrentTime < mg.video.endtime;
@@ -191,6 +191,7 @@ switch med
         v.FrameRate = mg.video.obj.FrameRate;
         open(v);
         startind = 1;
+        mg.video.obj.CurrentTime = mg.video.starttime;
         endind = mg.video.obj.FrameRate*mg.video.obj.Duration;
         [pyr,pind] = build_Lpyr_stack(mg,startind,endind);
         filter_pyr = ideal_bandpassing(pyr,3,fl,fh,samplingrate);
@@ -211,8 +212,7 @@ switch med
         end
         indf = 1;
         numf = mg.video.obj.FrameRate*mg.video.obj.Duration;
-        mg.video.obj.CurrentTime = 0;
-        while hasFrame(mg.video.obj)
+        while mg.video.obj.CurrentTime < mg.video.endtime
             progmeter(indf,numf);
             frame = readFrame(mg.video.obj);
             rgbframe = im2double(frame);
