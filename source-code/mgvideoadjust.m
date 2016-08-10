@@ -73,14 +73,14 @@ if ischar(varargin{1})
     mg = mgvideoreader(newname);
 elseif isstruct(varargin{1}) && isfield(varargin{1},'video')
     mg = varargin{1};
-    mg.video.obj.CurrentTime = 0;
+    mg.video.obj.CurrentTime = mg.video.starttime;
     [~,pr,~] = fileparts(mg.video.obj.Name);
     newname = strcat(pr,'adjustvideo.avi');
     v = VideoWriter(newname);    
     v.FrameRate = mg.video.obj.FrameRate;
     open(v);
     i = 1;
-    numf = mg.video.obj.FrameRate*mg.video.obj.Duration;
+    numf = mg.video.obj.FrameRate*(mg.video.endtime-mg.video.starttime);
     disp('****adjusting video contrast****');
     while mg.video.obj.CurrentTime < mg.video.endtime
         progmeter(i,numf);
