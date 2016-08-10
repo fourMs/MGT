@@ -1,7 +1,11 @@
 function mg = mgvideomagnify(varargin)
+% mgvideomagnify magnifies a video with small variations, the magnified
+% video is created with the name of 'original name+magnifyvideo.avi' and
+% written back to disk.
 % mg = mgvideomagnify(mg,'IIR',a1,a2,alpha,lambda_c,attenuation);
 % mg = mgvideomagnify(mg,'Butter',a1,a2,alpha,lambda_c,samplingrate,attentuation)
 % magnify the small movements in a video
+%
 % input:
 % mg: input mg containing video or videofile
 % med:'IIR','Butter';
@@ -9,8 +13,10 @@ function mg = mgvideomagnify(varargin)
 % alpha:magnification factor
 % lambda_c:spatial cutoff frequency
 % attenuation;attenuation factor
+%
 % output:
 % mg: contains magnified video
+% 
 % example:
 % mg = mgvideomagnify('video.mp4','IIR',0.4,0.05,10,16,0.1);
 % mg = mgvideomagnify('video.mp4','Butter',3.6,6.2,60,90,30,0.3)
@@ -57,12 +63,13 @@ elseif isstruct(varargin{1}) && isfield(varargin{1},'video')
     mg = varargin{1};
     [~,pr,~] = fileparts(mg.video.obj.Name);
 end
-newfile = strcat(pr,'magnify.avi');
+newfile = strcat(pr,'magnifyvideo.avi');
 switch med
     case 'IIR'
     v = VideoWriter(newfile);
     v.FrameRate = mg.video.obj.FrameRate;
     open(v);
+    mg.video.obj.CurrentTime = mg.video.starttime;
     fror = readFrame(mg.video.obj); 
     fr = im2double(fror);
     fr = rgb2ntsc(fr);
@@ -71,10 +78,10 @@ switch med
     [pyr(:,3),~] = buildLpyr(fr(:,:,3),'auto');
     lp1 = pyr;
     lp2 = pyr;
-    numfr = mg.video.obj.FrameRate*(mg.video.endtime-mg.video.starttime)-1;
+    numfr = mg.video.obj.FrameRate*(mg.video.endtime-mg.video.starttime);
     writeVideo(v,fror);
     indf = 1;
-    while mg.video.obj.CurrentTime<mg.video.endtime;
+    while mg.video.obj.CurrentTime < mg.video.endtime;
     progmeter(indf,numfr);
     fror = readFrame(mg.video.obj);
     fr = im2double(fror);
@@ -113,7 +120,7 @@ switch med
     indf = indf + 1;
     end
     close(v);
-    s = mgvideoreader('videomagnify.avi');
+    s = mgvideoreader(newfile);
     mg.video.obj = s.video.obj;
     
     case 'Butter'
@@ -121,9 +128,10 @@ switch med
         [h_a,h_b] = butter(1,fh/samplingrate,'low');
         
         
-        v = VideoWriter('videomagnify.avi');
+        v = VideoWriter(newfile);
         v.FrameRate = mg.video.obj.FrameRate;
         open(v);
+        mg.video.obj.CurrentTime = mg.video.starttime;
         fror = readFrame(mg.video.obj); 
         fr = im2double(fror);
         fr = rgb2ntsc(fr);
@@ -133,10 +141,10 @@ switch med
         lp1 = pyr;
         lp2 = pyr;
         pre_pyr = pyr;
-        numfr = mg.video.obj.FrameRate*mg.video.obj.Duration-1;
+        numfr = mg.video.obj.FrameRate*(mg.video.endtime-mg.video.starttime)-1;
         writeVideo(v,fror);
         indf = 1;
-        while hasFrame(mg.video.obj);
+        while mg.video.obj.CurrentTime < mg.video.endtime
             progmeter(indf,numfr);
             fror = readFrame(mg.video.obj);
             fr = im2double(fror);
@@ -176,10 +184,10 @@ switch med
             indf = indf + 1;
         end
         close(v);
-        s = mgvideoreader('videomagnify.avi');
+        s = mgvideoreader(newfile);
         mg.video.obj = s.video.obj;
     case 'Ideal'
-        v = VideoWriter('videomagnify.avi');
+        v = VideoWriter(newfile);
         v.FrameRate = mg.video.obj.FrameRate;
         open(v);
         startind = 1;
@@ -220,17 +228,7 @@ switch med
             indf = indf + 1;
         end
         close(v);
-        s = mgvideoreader('videomagnify.avi');
+        s = mgvideoreader(newfile);
         mg.video.obj = s.video.obj;                               
 end
 
-    
-     
-            
-        
-
-
-
-
-
-    
