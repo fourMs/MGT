@@ -1,7 +1,7 @@
 function mg = mgmotion(f,varargin)
 % function mg = mgmotion(f,varargin)
 % mgmotion computes the motion image,motion gram,quantity of motion,
-% centroid of motion from the video file or musical gestures data structure
+% centroid of motion, width of motion, height of motion from the video file or musical gestures data structure
 % If the method is not given,default method 'Diff', with 'OpticalFlow' method
 % mgmotion computes the optical flow field.  The founction provides also
 % the colour and convert mode, which is to compute the colour scale or
@@ -238,10 +238,12 @@ mg.video.gram.gramx = [];
 mg.video.qom = [];
 mg.video.com = [];
 mg.video.aom = [];
+mg.video.wom = [];
+mg.video.hom = [];
 mg.video.starttime = starttime;
 mg.video.endtime = endtime;
-hblob = vision.BlobAnalysis;
-hblob.AreaOutputPort = true;
+% hblob = vision.BlobAnalysis;
+% hblob.AreaOutputPort = true;
 if isfield(mg.video,'mode') && isfield(mg.video.mode,'colour')
     if strcmpi(mg.video.mode.colour,'on')
         colourflag = true;
@@ -287,9 +289,14 @@ if strcmpi(method,'Diff')
                 end    
             end
             [com,qom] = mgcentroid(rgb2gray(diff));
-            hautoh = vision.Autothresholder;
-            bw = step(hautoh,rgb2gray(diff));
-            aom = sum(step(hblob,bw));
+%             hautoh = vision.Autothresholder;
+%             level = multithresh(rgb2gray(diff));
+%             bw = step(hautoh,rgb2gray(diff));
+%             bw = rgb2gray(diff) >= level;
+%             aom = sum(step(hblob,bw));
+            [bbox,aom] = findboundingbox(diff);
+            mg.video.wom = [mg.video.wom;bbox(3)];
+            mg.video.hom = [mg.video.hom;bbox(4)];
             mg.video.aom = [mg.video.aom;aom];
             mg.video.qom = [mg.video.qom;qom];
             mg.video.com = [mg.video.com;com];
@@ -317,10 +324,16 @@ if strcmpi(method,'Diff')
                 diff = mgmotionfilter(diff,filtertype,thres);
             end
             [com,qom] = mgcentroid(diff);
-            hautoh = vision.Autothresholder;
-            bw = step(hautoh,diff);
-            aom = sum(step(hblob,bw));
+%             hautoh = vision.Autothresholder;
+%             level = multithresh(diff);
+%             bw = imquantize(diff,level);
+%             bw = diff >= level;
+%             bw = step(hautoh,diff);
+%             aom = sum(step(hblob,bw));
+            [bbox,aom] = findboundingbox(diff);
             mg.video.aom = [mg.video.aom;aom];
+            mg.video.wom = [mg.video.wom;bbox(3)];
+            mg.video.hom = [mg.video.hom;bbox(4)];
             gramx = mean(diff);
             gramy = mean(diff,2);
             mg.video.gram.gramy = [mg.video.gram.gramy;gramx];
