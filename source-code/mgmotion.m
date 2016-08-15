@@ -10,7 +10,8 @@ function mg = mgmotion(f,varargin)
 % mg.video.mode.colour = 'On'
 % mg.video.mode.convert = 'On'
 %
-% syntax: mg = mgmotion(mg,method,starttime,endtime,filtertype,thres)
+% syntax: 
+% mg = mgmotion(mg,method,starttime,endtime,filtertype,thres)
 % mg = mgmotion(filename);
 % mg = mgmotion(mg,'Diff');
 % mg = mgmotion(filename,'Diff',starttime,endtime,'Regular',0.3);
