@@ -18,6 +18,6 @@ There are some test files (audio, video, mocap) in the "data" folder. Try out th
 
 ## History
 
-The [Musical Gestures Toolbox for Max](http://www.uio.no/english/research/groups/fourms/downloads/software/musicalgesturestoolbox/) has been developed by @alexarje since 2004, and parts of it is currently embedded in the Jamoma project. 
+The [Musical Gestures Toolbox for Max](http://www.uio.no/english/research/groups/fourms/downloads/software/musicalgesturestoolbox/) has been developed by [alexarje](https://github.com/alexarje) since 2004, and parts of it is currently embedded in the Jamoma project. 
 
-The first version of the Musical Gestures Toolbox for Matlab was made by @benlyyan as part of his M.Sc. at the University of Oslo ([Video analysis of music-related body motion in Matlab](https://www.duo.uio.no/handle/10852/51118)), and is currently maintained by the @fourMs group. 
+The first version of the Musical Gestures Toolbox for Matlab was made by [benlyyan](https://github.com/benlyyan) as part of his M.Sc. at the University of Oslo ([Video analysis of music-related body motion in Matlab](https://www.duo.uio.no/handle/10852/51118)), and is currently maintained by the [fourMs group](https://github.com/fourMs). 
