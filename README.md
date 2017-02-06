@@ -1,24 +1,23 @@
 # Musical Gestures Toolbox for Matlab
 
+MGT is a Matlab toolbox for analysing music-related body motion, using sets of audio, video and motion capture data as source material. 
+
+The current version requires Matlab 2015, and builds on some other Matlab toolboxes: [matlabPyrTools](http://se.mathworks.com/matlabcentral/fileexchange/52571-matlabpyrtools), [MoCap Toolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mocaptoolbox) and [MIRtoolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mirtoolbox). 
+
+## Installation
+
+*Important:Since many problems in Matlab2016,I suggest if anybody is still using Matlab2015a, please test it in Matlab2015a. Then I will make a new version for Matlab2016a.*
+
+1. Install the dependencies: [matlabPyrTools](http://se.mathworks.com/matlabcentral/fileexchange/52571-matlabpyrtools), [MoCap Toolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mocaptoolbox) and [MIRtoolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mirtoolbox)
+
+2. Add the files in "source-code" to your Matlab path. In the matlab "Home" section, find "set path" and click it. Then it opens a file selection dialog. Next, click the "Add Folder" and choose the unzipped folder and finally click "save". 
+
+## Usage
+
+There are some test files (audio, video, mocap) in the "data" folder. Try out the m-files in the examples folder. 
 
 ## History
 
-The first version of the port was done by @benlyyan as part of his M.Sc. at the University of Oslo ([Video analysis of music-related body motion in Matlab](https://www.duo.uio.no/handle/10852/51118))
+The [Musical Gestures Toolbox for Max](http://www.uio.no/english/research/groups/fourms/downloads/software/musicalgesturestoolbox/) has been developed by @alexarje since 2004, and parts of it is currently embedded in the Jamoma project. 
 
-Important:Since many problems in Matlab2016,I suggest if anybody is still using Matlab2015a, please test it in Matlab2015a. Then I will make a new version for Matlab2016a.
-
-MGT is a music gestures toolbox which is useful to analyze video based music-related body motion. It has been developed in Matlab. Current version requires Matlab 2015, and helpful toolboxes like matlabPyrtools, mocaptoolbox, mirtoolbox. 
-This  repository includes data-set, example, source-code, MGT.zip, mirtoolbox.zip, mocaptoolbox.zip. User can choose to download .zip. 
-
-1. In the data-set folder, the pianist data set contains the pianist.tsv, pianist.wav, pianist.mp4, which are related to mocap data, audio, video, respectively. This data set is used for illustration of how to use the MGT to analyze music-related motion. The corresponing demo can be found in the example folder. 
-
-2. In the source-code, the functionalities of the MGT are listed, which are the same as the MGT.zip.
-
-3. Mirtoolbox, Mocaptoolbox, matlabPyrtools are the helpful toolboxes. In order to use MGT, they need to be installed as well.
-
-To install the MGT:
-
-1. at first, download the MGT.zip and helpful toolboxes, put them in a directory and unzip them.
-
-2. Launch your Matlab, enter the directory which contains the previous unzipped files. Run install.m in matlab command console. Note that if the helpful toolboxes have been installed in the matlab, you can simply install MGT like this: addpath('./MGT'), or you can by set path in the matlab "Home" section, find "set path" and click it. Then it opens a file selection dialog. Next, click the "Add Folder" and choose the unzipped folder and finally click "save". 
-
+The first version of the Musical Gestures Toolbox for Matlab was made by @benlyyan as part of his M.Sc. at the University of Oslo ([Video analysis of music-related body motion in Matlab](https://www.duo.uio.no/handle/10852/51118)), and is currently maintained by the @fourMs group. 
