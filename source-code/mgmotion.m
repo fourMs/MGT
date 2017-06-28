@@ -366,18 +366,18 @@ if strcmpi(method,'Diff')
     imwrite(mg.video.gram.y, tmpfile);
 
     % Plot graphs
-    figure,subplot(211),plot(mg.video.qom)
-    title('Quantity of Motion');
-    set(gca,'XTick',[0:2*mg.video.obj.FrameRate:mg.video.nframe])
-    set(gca,'XTickLabel',[starttime*mg.video.obj.FrameRate:...
-        2*mg.video.obj.FrameRate:endtime*mg.video.obj.FrameRate]/mg.video.obj.FrameRate);
-    xlabel('Time (s)')
-    ylabel('Quantity')
-    subplot(212),plot(mg.video.com(:,1),mg.video.com(:,2),'.')
-    axis equal;
-    title('Centroid of Motion');
-    xlabel('x direction')
-    ylabel('y direction')
+%    figure,subplot(211),plot(mg.video.qom)
+%    title('Quantity of Motion');
+%    set(gca,'XTick',[0:2*mg.video.obj.FrameRate:mg.video.nframe])
+%    set(gca,'XTickLabel',[starttime*mg.video.obj.FrameRate:...
+%        2*mg.video.obj.FrameRate:endtime*mg.video.obj.FrameRate]/mg.video.obj.FrameRate);
+%    xlabel('Time (s)')
+%    ylabel('Quantity')
+%    subplot(212),plot(mg.video.com(:,1),mg.video.com(:,2),'.')
+%    axis equal;
+%    title('Centroid of Motion');
+%    xlabel('x direction')
+%    ylabel('y direction')
     s = mgvideoreader(newfile);
     mg.video.obj = s.video.obj;
 elseif strcmpi(method,'OpticalFlow')
@@ -424,17 +424,18 @@ elseif strcmpi(method,'OpticalFlow')
     close(v)
     disp(' ');
     disp(['The motion video is created with name ',newfile]);
-    figure,subplot(211),plot(mg.video.qom)
-    title('Quantity of motion by opticalflow');
-    set(gca,'XTick',[0:2*mg.video.obj.FrameRate:ind])
-    set(gca,'XTickLabel',[starttime*mg.video.obj.FrameRate:2*mg.video.obj.FrameRate:endtime*mg.video.obj.FrameRate]/mg.video.obj.FrameRate);
-    xlabel('Time (s)')
-    ylabel('Quantity')
-    subplot(212),plot(mg.video.com(:,1),mg.video.com(:,2),'.')
-    axis equal
-    title('Centroid of motion by opticalflow');
-    xlabel('x direction')
-    ylabel('y direction')
+
+%    figure,subplot(211),plot(mg.video.qom)
+%    title('Quantity of motion by opticalflow');
+%    set(gca,'XTick',[0:2*mg.video.obj.FrameRate:ind])
+%    set(gca,'XTickLabel',[starttime*mg.video.obj.FrameRate:2*mg.video.obj.FrameRate:endtime*mg.video.obj.FrameRate]/mg.video.obj.FrameRate);
+%    xlabel('Time (s)')
+%    ylabel('Quantity')
+%    subplot(212),plot(mg.video.com(:,1),mg.video.com(:,2),'.')
+%    axis equal
+%    title('Centroid of motion by opticalflow');
+%    xlabel('x direction')
+%    ylabel('y direction')
 end
 mg.video.obj.CurrentTime = 0;
 mg.type = 'mg data';

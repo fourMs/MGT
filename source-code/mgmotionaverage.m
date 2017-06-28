@@ -83,7 +83,7 @@ elseif isstruct(f) && isfield(f,'video')
     end
 end
 ave2 = uint8(ave/i);
-figure, imshow(ave2);
+%figure, imshow(ave2);
 % Write to file
 [~,pr,~] = fileparts(mg.video.obj.Name);
 tmpfile=strcat(pr,'_ave.tiff');
