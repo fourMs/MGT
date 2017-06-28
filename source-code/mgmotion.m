@@ -384,7 +384,7 @@ if strcmpi(method,'Diff')
 elseif strcmpi(method,'OpticalFlow')
     mg.video.obj.CurrentTime = starttime;
     [~,pr,~] = fileparts(mg.video.obj.Name);
-    newfile = strcat(pr,'_optical.avi');
+    newfile = strcat(pr,'_flow.avi');
     v = VideoWriter(newfile);
     v.FrameRate = mg.video.obj.FrameRate;
     ind = 1;
