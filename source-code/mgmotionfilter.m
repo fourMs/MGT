@@ -1,6 +1,6 @@
 function f = mgmotionfilter(varargin)
 % f = mgmotionfilter(varargin)
-% mgmotionfilter filter the motion image or optical flow field
+% mgmotionfilter filters the motion image or optical flow field
 % It provides three options, 'Regular','Binary','Blob' options.
 % syntax: f = mgmotionfilter(f,method,thres)
 % f = mgmotionfilter(f), default method 'Regular', thres =  0.1;
@@ -45,6 +45,3 @@ switch med
     case 'Blob'
         f = imerode(f,thres);
 end
-
-
-

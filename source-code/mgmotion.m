@@ -358,6 +358,14 @@ if strcmpi(method,'Diff')
     disp(['The motion video is created with name ',newfile]);
     mg.video.nframe = v.FrameCount;
 %     mg.video.nframe = ind - 1;
+
+    % Write motiongrams to files
+    tmpfile=strcat(pr,'_mgx.tiff');
+    imwrite(mg.video.gram.x, tmpfile);
+    tmpfile=strcat(pr,'_mgy.tiff');
+    imwrite(mg.video.gram.y, tmpfile);
+
+    % Plot graphs
     figure,subplot(211),plot(mg.video.qom)
     title('Quantity of Motion');
     set(gca,'XTick',[0:2*mg.video.obj.FrameRate:mg.video.nframe])

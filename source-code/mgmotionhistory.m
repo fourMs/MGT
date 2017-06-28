@@ -1,6 +1,7 @@
 function mgmotionhistory(vidfile,nframe,type,varargin)
-% mgmotionhistory(vidfile,nframe,type,starttime,endtime) compute the motion history image
-% it writes the motion history video back to disk.
+% mgmotionhistory(vidfile,nframe,type,starttime,endtime)
+% compute the motion history image.
+%
 % syntax:
 % mgmotionhistory(vidfile) using defualt nframe = 5 to create grayscale motion
 % history image
@@ -10,15 +11,14 @@ function mgmotionhistory(vidfile,nframe,type,varargin)
 %
 % input:
 % vidfile: video file name
-% nframe: gives the number of frames to create motion history image,defualt
-% value 5
-% type: 'gray' or 'color'
+% nframe: gives the number of frames to create motion history (default=20)
+% type: 'gray' or 'color' (default='gray')
 % starttime: starting time of the video to create motion history image
 % endtime: end time of the video to create motion history image
 %
 % output: a history video written back to disk
 %
-% example:
+% examples:
 % mgmotionhistory(videofile,3,'gray',0,20)
 % mgmotionhistory(videofile)
 % mgmotionhistory(videofile,10,'color')
@@ -32,14 +32,14 @@ if nargin == 1 && ischar(vidfile)
         disp('please input a video file!');
         return
     end
-    nf = 5;
+    nf = 20;
     method = 'gray';
     starttime = mg.video.starttime;
     endtime = mg.video.endtime;
 elseif nargin == 2 && ischar(vidfile)
     file = vidfile;
     if ischar(nframe)
-        nf = 5;
+        nf = 20;
         method = nframe;
     else
         method = 'gray';
@@ -67,11 +67,11 @@ elseif nargin == 3 && ischar(vidfile)
     if ischar(type)
         method = type;
     else
-        disp('please input a proper type:gray or color');
+        disp('please input a proper type: gray or color');
         return
     end
     starttime = mg.video.starttime;
-    endtime = mg.video.endtime;    
+    endtime = mg.video.endtime;
 elseif nargin == 5 && ischar(vidfile)
     file = vidfile;
     nf = nframe;
@@ -85,7 +85,7 @@ elseif nargin == 5 && ischar(vidfile)
     if ischar(type)
         method = type;
     else
-        disp('please input a proper type:gray or color');
+        disp('please input a proper type: gray or color');
         return
     end
     if length(varargin) == 1
@@ -98,7 +98,7 @@ elseif nargin == 5 && ischar(vidfile)
 end
 
 mg.video.obj.CurrentTime = starttime;
-newfile = strcat(pr,'history.avi');
+newfile = strcat(pr,'_history.avi');
 v = VideoWriter(newfile);
 v.FrameRate = mg.video.obj.FrameRate;
 open(v);
@@ -119,6 +119,7 @@ if strcmpi(method,'gray')
         writeVideo(v,imadd(history,nextf));
     end
     while mg.video.obj.CurrentTime < endtime
+        progmeter(indf,numfr)
         temparray = temparray(:,:,[2:end 1]);
         nextf = rgb2gray(readFrame(mg.video.obj));
         temp = imsubtract(nextf,fr2);
@@ -126,7 +127,7 @@ if strcmpi(method,'gray')
         temparray(:,:,end) = temp;
         history = uint8(sum(temparray,3));
         writeVideo(v,imadd(history,nextf));
-    end       
+    end
 elseif strcmpi(method,'color')
     temparray = zeros(mg.video.obj.Height,mg.video.obj.Width,3,nf-1,'uint8');
     fr1 = readFrame(mg.video.obj);
@@ -156,13 +157,8 @@ elseif strcmpi(method,'color')
         history = uint8(sum(temparray,4));
         writeVideo(v,imadd(history,nextf));
         indf = indf + 1;
-    end           
+    end
 end
-disp(['the motion history video is created with name ',newfile]);
+disp(' ')
+disp(['The motion history video is created with name ',newfile]);
 close(v)
-
-    
-
-    
-        
-    
