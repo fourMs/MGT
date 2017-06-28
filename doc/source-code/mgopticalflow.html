@@ -1,0 +1,78 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mgopticalflow</title>
+  <meta name="keywords" content="mgopticalflow">
+  <meta name="description" content="function flow = mgopticalflow(fr2,fr1)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">source-code</a> &gt; mgopticalflow.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for source-code&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>mgopticalflow
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function flow = mgopticalflow(fr2,fr1)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function flow = mgopticalflow(fr2,fr1) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> function flow = mgopticalflow(fr2,fr1)
+ mgopticalflow estimates the motion using the Horn-Schunck method
+ syntax:flow = mgopticalflow(fr2,fr1)</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="ComputeFlow.html" class="code" title="function [U, V] = ComputeFlow(dx,dy,dt)">ComputeFlow</a>	function [U,V] = ComputeFlow(dx,dy,dt)</li><li><a href="Gradient.html" class="code" title="function [dx, dy, dt] = Gradient(imNew,imPrev)">Gradient</a>	function [dx,dy,dt] = Gradient(imNew,imPrev)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="mgmotion.html" class="code" title="function mg = mgmotion(f,varargin)">mgmotion</a>	function mg = mgmotion(f,varargin)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function flow = mgopticalflow(fr2,fr1)</a>
+0002 <span class="comment">% function flow = mgopticalflow(fr2,fr1)</span>
+0003 <span class="comment">% mgopticalflow estimates the motion using the Horn-Schunck method</span>
+0004 <span class="comment">% syntax:flow = mgopticalflow(fr2,fr1)</span>
+0005 
+0006 <span class="comment">% input:</span>
+0007 <span class="comment">% fr2: second input image</span>
+0008 <span class="comment">% fr1: first input image</span>
+0009 
+0010 <span class="comment">% output:</span>
+0011 <span class="comment">% flow: optical flow field containing two components,horizontal and</span>
+0012 <span class="comment">% vertical direction</span>
+0013 
+0014 <span class="comment">% also see:opticalFlowLK, estimateFlow</span>
+0015 [dx,dy,dt] = <a href="Gradient.html" class="code" title="function [dx, dy, dt] = Gradient(imNew,imPrev)">Gradient</a>(fr2,fr1);
+0016 [U,V] = <a href="ComputeFlow.html" class="code" title="function [U, V] = ComputeFlow(dx,dy,dt)">ComputeFlow</a>(dx,dy,dt);
+0017 flow = opticalFlow(U,V);
+0018 <span class="comment">% qom = sum(sum(flow.Magnitude));</span>
+0019 <span class="comment">% [m,n] = size(flow.Magnitude);</span>
+0020 <span class="comment">% x = 1:n;</span>
+0021 <span class="comment">% y = 1:m;</span>
+0022 <span class="comment">% meanx = mean(flow.Magnitude);</span>
+0023 <span class="comment">% comx = x*meanx'/sum(meanx);</span>
+0024 <span class="comment">% meany = mean(flow.Magnitude,2);</span>
+0025 <span class="comment">% comy = y*meany/sum(meany);</span>
+0026 <span class="comment">% com = [comx,comy];</span>
+0027 
+0028 
+0029</pre></div>
+<hr><address>Generated on Wed 28-Jun-2017 21:10:02 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

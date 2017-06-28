@@ -1,0 +1,287 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mgvideoplot1</title>
+  <meta name="keywords" content="mgvideoplot1">
+  <meta name="description" content="function mgvideoplot(varargin)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">source-code</a> &gt; mgvideoplot1.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for source-code&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>mgvideoplot1
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function mgvideoplot(varargin)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function mgvideoplot1(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> function mgvideoplot(varargin)
+ mgvideoplot plots the motion image,motion grams,boundingbox over time
+ when choosing the &quot;Motiongram&quot; option, the input mg must contain the 
+ motion information, meaning computed by mgmotion; 
+ When choose the &quot;Boundingbox&quot; or &quot;Opticalflow&quot; option, the input mg must
+ contain the video information, meaning the output of mgreadsegment,
+ mgvideoreader,etc.
+ syntax: mgvideoplot1(mgmo,'Motiongram')
+ mgvideoplot1(mg,'Boundingbox');
+ mgvideoplot1(mg,'Opticalflow');
+ input:
+ mg: musical gestures data structure containing video and mocap data at
+ least
+ output:
+ a figure showing the motion image ,motion grams,mocap gram
+ comments:the motion should computed by 'Diff' method.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="ComputeFlow.html" class="code" title="function [U, V] = ComputeFlow(dx,dy,dt)">ComputeFlow</a>	function [U,V] = ComputeFlow(dx,dy,dt)</li><li><a href="Gradient.html" class="code" title="function [dx, dy, dt] = Gradient(imNew,imPrev)">Gradient</a>	function [dx,dy,dt] = Gradient(imNew,imPrev)</li><li><a href="mgmocapgram.html" class="code" title="function rgb = mgmocapgram(d)">mgmocapgram</a>	</li><li><a href="mgmotion.html" class="code" title="function mg = mgmotion(f,varargin)">mgmotion</a>	function mg = mgmotion(f,varargin)</li><li><a href="mgvideoreader.html" class="code" title="function mg = mgvideoreader(varargin)">mgvideoreader</a>	function mg = mgvideoreader(varargin)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function mgvideoplot1(varargin)</a>
+0002 <span class="comment">% function mgvideoplot(varargin)</span>
+0003 <span class="comment">% mgvideoplot plots the motion image,motion grams,boundingbox over time</span>
+0004 <span class="comment">% when choosing the &quot;Motiongram&quot; option, the input mg must contain the</span>
+0005 <span class="comment">% motion information, meaning computed by mgmotion;</span>
+0006 <span class="comment">% When choose the &quot;Boundingbox&quot; or &quot;Opticalflow&quot; option, the input mg must</span>
+0007 <span class="comment">% contain the video information, meaning the output of mgreadsegment,</span>
+0008 <span class="comment">% mgvideoreader,etc.</span>
+0009 <span class="comment">% syntax: mgvideoplot1(mgmo,'Motiongram')</span>
+0010 <span class="comment">% mgvideoplot1(mg,'Boundingbox');</span>
+0011 <span class="comment">% mgvideoplot1(mg,'Opticalflow');</span>
+0012 <span class="comment">% input:</span>
+0013 <span class="comment">% mg: musical gestures data structure containing video and mocap data at</span>
+0014 <span class="comment">% least</span>
+0015 <span class="comment">% output:</span>
+0016 <span class="comment">% a figure showing the motion image ,motion grams,mocap gram</span>
+0017 <span class="comment">% comments:the motion should computed by 'Diff' method.</span>
+0018 
+0019 l = length(varargin);
+0020 mg = varargin{1};
+0021 <span class="keyword">if</span> isfield(mg,<span class="string">'mocap'</span>)
+0022     positionVector1 = [0.075, 0.5, 0.4, 0.4];
+0023     positionVector2 = [0.5, 0.5, 0.4, 0.4];
+0024     positionVector3 = [0.075, 0.05, 0.4, 0.4];
+0025     positionVector4 = [0.55, 0.05,0.35,0.4];
+0026 <span class="keyword">else</span>
+0027     positionVector1 = [0.075, 0.5, 0.4, 0.4];
+0028     positionVector2 = [0.5, 0.5, 0.4, 0.4];
+0029     positionVector3 = [0.075, 0.05, 0.4, 0.4];
+0030 <span class="keyword">end</span>
+0031 <span class="keyword">if</span> isfield(mg,<span class="string">'video'</span>)
+0032     mg.video.obj.CurrentTime = 0;
+0033 <span class="keyword">end</span>
+0034 med = varargin{2};
+0035 <span class="keyword">switch</span> med
+0036     <span class="keyword">case</span> <span class="string">'Motiongram'</span>
+0037         <span class="keyword">if</span> ischar(varargin{1})
+0038             motionfile = varargin{1};
+0039             [~,~,ex] = fileparts(motionfile);
+0040             <span class="keyword">if</span> ismember(ex,{<span class="string">'.mp4'</span>;<span class="string">'.avi'</span>;<span class="string">'.mov'</span>;<span class="string">'.m4v'</span>;<span class="string">'.mpg'</span>})
+0041                 <a href="mgmotion.html" class="code" title="function mg = mgmotion(f,varargin)">mgmotion</a> = <a href="mgvideoreader.html" class="code" title="function mg = mgvideoreader(varargin)">mgvideoreader</a>(motionfile);
+0042                 m = mgmotion.video.obj.Height;
+0043                 n = mgmotion.video.obj.Width;
+0044                 tmp1 = zeros(m,n);
+0045                 tmp2 = zeros(m,n);
+0046             <span class="keyword">else</span>
+0047                 error(<span class="string">'unknown video format,please check the video file'</span>);
+0048             <span class="keyword">end</span>
+0049             <span class="keyword">if</span> l == 2;
+0050                 type = <span class="string">'Off'</span>;
+0051             <span class="keyword">elseif</span> l == 4 &amp;&amp; strcmpi(varargin{3},<span class="string">'Converted'</span>)
+0052                 type =  varargin{4};
+0053             <span class="keyword">end</span>
+0054         <span class="keyword">elseif</span> isstruct(varargin{1})
+0055             <span class="keyword">if</span> isfield(varargin{1},<span class="string">'video'</span>)
+0056                 <a href="mgmotion.html" class="code" title="function mg = mgmotion(f,varargin)">mgmotion</a> = varargin{1};
+0057             <span class="keyword">elseif</span> isfield(varargin{1},<span class="string">'obj'</span>)
+0058                 mgmotion.video = varargin{1};
+0059             <span class="keyword">end</span>
+0060             <span class="keyword">if</span> l == 2
+0061                 type = <span class="string">'Off'</span>;
+0062             <span class="keyword">elseif</span> l == 4 &amp;&amp; strcmpi(varargin{3},<span class="string">'Converted'</span>)
+0063                 type = varargin{4};
+0064             <span class="keyword">end</span>
+0065             mgmotion.video.obj.CurrentTime = 0;
+0066             m = mgmotion.video.obj.Height;
+0067             n = mgmotion.video.obj.Width;
+0068             tmp1 = zeros(m,n);
+0069             tmp2 = zeros(m,n);
+0070         <span class="keyword">end</span>
+0071     i = 1;
+0072     figure;
+0073     <span class="keyword">while</span> hasFrame(mgmotion.video.obj)
+0074         tmp = readFrame(mgmotion.video.obj);
+0075         subplot(<span class="string">'Position'</span>,positionVector1)
+0076         imshow(tmp);
+0077         title(<span class="string">'motion image'</span>)
+0078         pause(1/mgmotion.video.obj.FrameRate);
+0079         subplot(<span class="string">'Position'</span>,positionVector2)
+0080         <span class="keyword">if</span> strcmpi(type,<span class="string">'Off'</span>)
+0081             <span class="keyword">if</span> isfield(mgmotion.video,<span class="string">'gram'</span>) &amp;&amp; i &gt; n
+0082                 tmp1 = mgmotion.video.gram.gramx(:,i-n+1:i);
+0083                 imshow(tmp1,[])
+0084                 title(<span class="string">'Horizontal motiongram'</span>)
+0085             <span class="keyword">elseif</span> isfield(mgmotion.video,<span class="string">'gram'</span>)
+0086                 tmp1(:,1:i) = mgmotion.video.gram.gramx(:,1:i);
+0087                 imshow(tmp1,[])
+0088                 title(<span class="string">'Horizontal motiongram'</span>)
+0089             <span class="keyword">end</span>
+0090             subplot(<span class="string">'Position'</span>,positionVector3);
+0091             <span class="keyword">if</span> isfield(mgmotion.video,<span class="string">'gram'</span>) &amp;&amp; i &gt; m
+0092                 tmp2 = mgmotion.video.gram.gramy(i-m+1:i,:);
+0093                 imshow(tmp2,[])
+0094                 title(<span class="string">'Vertical motiongram'</span>)
+0095             <span class="keyword">elseif</span> isfield(mgmotion.video,<span class="string">'gram'</span>)
+0096                 tmp2(1:i,:) = mgmotion.video.gram.gramy(1:i,:);
+0097                 imshow(tmp2,[]);
+0098                 title(<span class="string">'Vertical motiongram'</span>)
+0099             <span class="keyword">else</span>
+0100                 error(<span class="string">'Please compute the motiongram first.'</span>);
+0101             <span class="keyword">end</span>
+0102             <span class="keyword">if</span> isfield(mg,<span class="string">'mocap'</span>)
+0103             tmp3 = mctrim(mgmotion.mocap,(i-1)/30,i/30);
+0104             rgb = <a href="mgmocapgram.html" class="code" title="function rgb = mgmocapgram(d)">mgmocapgram</a>(tmp3);
+0105             subplot(<span class="string">'Position'</span>,positionVector4);
+0106             image([0 mgmotion.mocap.nFrames/mgmotion.mocap.freq],[1 mgmotion.mocap.nMarkers],rgb);
+0107             ax = gca;
+0108             ax.XTickLabel = [0:1/60:1/30];
+0109             ax.XTickLabel = [(i-1)/30:1/60:i/30];
+0110             <span class="keyword">if</span> ~isempty(mgmotion.mocap.markerName)
+0111                 <span class="keyword">if</span> ischar(mgmotion.mocap.markerName{1})
+0112                     set(gca,<span class="string">'YTick'</span>,1:mgmotion.mocap.nMarkers,<span class="string">'YTickLabel'</span>,mgmotion.mocap.markerName)
+0113                 <span class="keyword">elseif</span> iscell(mgmotion.mocap.markerName{1})
+0114                     set(gca,<span class="string">'YTick'</span>,1:mgmotion.mocap.nMarkers,<span class="string">'YTickLabel'</span>,[mgmotion.mocap.markerName{:}])
+0115                 <span class="keyword">else</span>
+0116                     disp(<span class="string">'unknown markerName type'</span>)
+0117                 <span class="keyword">end</span>
+0118             <span class="keyword">end</span>
+0119         
+0120             xlabel(<span class="string">'time(s)'</span>)
+0121             title(<span class="string">'mocapgram'</span>)
+0122             <span class="keyword">else</span>
+0123                 error(<span class="string">'Please import the mocap data first'</span>);
+0124             <span class="keyword">end</span>
+0125             pause(1/mgmotion.video.obj.FrameRate);
+0126             
+0127          <span class="keyword">elseif</span> strcmp(type,<span class="string">'On'</span>)
+0128             subplot(<span class="string">'Position'</span>,positionVector2);
+0129             <span class="keyword">if</span> isfield(mgmotion.video,<span class="string">'gram'</span>) &amp;&amp; i &gt; n
+0130                 tmp1 = imcomplement(mgmotion.video.gram.gramx(:,i-n+1:i));
+0131                 imshow(tmp1,[])
+0132                 title(<span class="string">'Horizontal motiongram'</span>)
+0133             <span class="keyword">elseif</span> isfield(mgmotion.video,<span class="string">'gram'</span>)
+0134                 tmp1(:,1:i) = imcomplement(mgmotion.video.gram.gramx(:,1:i));
+0135                 imshow(tmp1,[])
+0136                 title(<span class="string">'Horizontal motiongram'</span>)
+0137             <span class="keyword">end</span>
+0138             subplot(<span class="string">'Position'</span>,positionVector3);
+0139             <span class="keyword">if</span> isfield(mgmotion.video,<span class="string">'gram'</span>) &amp;&amp; i &gt; m
+0140                 tmp2 = imcomplement(mgmotion.video.gram.gramy(i-m+1,:));
+0141                 imshow(tmp2,[])
+0142                 title(<span class="string">'Vertical motiongram'</span>)
+0143             <span class="keyword">elseif</span> isfield(mgmotion.video,<span class="string">'gram'</span>)
+0144                 tmp2(1:i,:) = imcomplement(mgmotion.video.gram.gramy(1:i,:));
+0145                 imshow(tmp2,[]);
+0146                 title(<span class="string">'Vertical motiongram'</span>)
+0147             <span class="keyword">end</span>
+0148             <span class="keyword">if</span> isfield(mg,<span class="string">'mocap'</span>)
+0149             tmp3 = mctrim(mgmotion.mocap,(i-1)/30,i/30);
+0150             rgb = <a href="mgmocapgram.html" class="code" title="function rgb = mgmocapgram(d)">mgmocapgram</a>(tmp3);
+0151             subplot(<span class="string">'Position'</span>,positionVector4);
+0152             image([0 mgmotion.mocap.nFrames/mgmotion.mocap.freq],[1 mgmotion.mocap.nMarkers],rgb);
+0153             ax = gca;
+0154             ax.XTickLabel = [0:1/60:1/30];
+0155             ax.XTickLabel = [(i-1)/30:1/60:i/30];
+0156             <span class="keyword">if</span> ~isempty(mgmotion.mocap.markerName)
+0157                 <span class="keyword">if</span> ischar(mgmotion.mocap.markerName{1})
+0158                     set(gca,<span class="string">'YTick'</span>,1:mgmotion.mocap.nMarkers,<span class="string">'YTickLabel'</span>,mgmotion.mocap.markerName)
+0159                 <span class="keyword">elseif</span> iscell(mgmotion.mocap.markerName{1})
+0160                     set(gca,<span class="string">'YTick'</span>,1:mgmotion.mocap.nMarkers,<span class="string">'YTickLabel'</span>,[mgmotion.mocap.markerName{:}])
+0161                 <span class="keyword">else</span>
+0162                     disp(<span class="string">'unknown markerName type'</span>)
+0163                 <span class="keyword">end</span>
+0164             <span class="keyword">end</span> 
+0165             xlabel(<span class="string">'time(s)'</span>)
+0166             title(<span class="string">'mocapgram'</span>)
+0167             <span class="keyword">end</span>
+0168             pause(1/mgmotion.video.obj.FrameRate);
+0169         <span class="keyword">end</span>
+0170         i = i + 1;
+0171     <span class="keyword">end</span>
+0172         
+0173     <span class="keyword">case</span> <span class="string">'Boundingbox'</span>
+0174           hblob = vision.BlobAnalysis;
+0175           hblob.BoundingBoxOutputPort = true;
+0176           hblob.AreaOutputPort = true;
+0177           hblob.CentroidOutputPort = true;
+0178           thres = vision.Autothresholder;
+0179           fr = rgb2gray(readFrame(mg.video.obj));
+0180           <span class="keyword">while</span> hasFrame(mg.video.obj)
+0181               pfr = readFrame(mg.video.obj);
+0182               pfr = rgb2gray(pfr);
+0183               tmp = abs(pfr-fr);
+0184               bw = step(thres,tmp);
+0185               [AREA,CENTROID,BBOX] = step(hblob,bw);
+0186               [~,ind] = sort(AREA,<span class="string">'descend'</span>);
+0187               <span class="keyword">if</span> length(ind) &gt; 2
+0188                   ind = ind(1:2);
+0189               <span class="keyword">end</span>
+0190               objim = insertShape(pfr,<span class="string">'Rectangle'</span>,BBOX(ind,:),<span class="string">'color'</span>,<span class="string">'red'</span>);
+0191               imshow(objim);
+0192               pause(1/mg.video.obj.FrameRate);
+0193               fr = pfr;
+0194           <span class="keyword">end</span>
+0195     <span class="keyword">case</span> <span class="string">'Opticalflow'</span>
+0196         fr = rgb2gray(readFrame(mg.video.obj));
+0197         figure,
+0198         <span class="keyword">while</span> hasFrame(mg.video.obj)
+0199             bfr = rgb2gray(readFrame(mg.video.obj));
+0200             [dx,dy,dt] = <a href="Gradient.html" class="code" title="function [dx, dy, dt] = Gradient(imNew,imPrev)">Gradient</a>(bfr,fr);
+0201             [U,V] = <a href="ComputeFlow.html" class="code" title="function [U, V] = ComputeFlow(dx,dy,dt)">ComputeFlow</a>(dx,dy,dt);
+0202             FL = opticalFlow(U,V);
+0203             imshow(bfr);
+0204             hold on
+0205             plot(FL,<span class="string">'DecimationFactor'</span>,[20 20],<span class="string">'ScaleFactor'</span>,10);
+0206             title(<span class="string">'Video frame with optical flow field'</span>)
+0207             hold off
+0208             fr = bfr;
+0209         <span class="keyword">end</span>
+0210     <span class="keyword">case</span> <span class="string">'Gradient'</span>
+0211         fr = rgb2gray(readFrame(mg.video.obj));
+0212         figure, hold on 
+0213         <span class="keyword">while</span> hasFrame(mg.video.obj)
+0214             bfr = rgb2gray(readFrame(mg.video.obj));
+0215             [dy,dx,dt] = <a href="Gradient.html" class="code" title="function [dx, dy, dt] = Gradient(imNew,imPrev)">Gradient</a>(bfr,fr);
+0216             subplot(121),imshow(dy,[]);
+0217             title(<span class="string">'dy'</span>);
+0218             subplot(122),imshow(dx,[]);
+0219             title(<span class="string">'dx'</span>)
+0220             pause(1/mg.video.obj.FrameRate);
+0221             fr = bfr;
+0222         <span class="keyword">end</span>
+0223         hold off
+0224 <span class="keyword">end</span>
+0225</pre></div>
+<hr><address>Generated on Wed 28-Jun-2017 21:10:02 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

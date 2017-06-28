@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mgautocor</title>
+  <meta name="keywords" content="mgautocor">
+  <meta name="description" content="function out = mgautocor(fn,max,method)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">source-code</a> &gt; mgautocor.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for source-code&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>mgautocor
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function out = mgautocor(fn,max,method)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function [per,ac,eac,lag] = mgautocor(mg,type,maxp,method) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> function out = mgautocor(fn,max,method)
+ mgautocor computes the period of the input data and returns the
+ period,autocorrelation functions and enhanced autocorrelation functions
+ and lags
+ syntax:[per,ac,eac,lag] = mgautocor(out,type,maxp,method);
+
+ input:
+ mg: musical gestures data structure
+ maxp: maximum period ,default value,2
+ method: 'first','highest' maximal value of the autocorrelation function
+ is taken as periodicity estimation
+
+ output:
+ per: a scalar containing the period estimation of the quantity of motion
+ ac: a vector containing the autocorrelation functions of quantity of
+ motion
+ eac: a vector containing the enhanced autocorrelation functions of
+ quantity of motion
+ lag: a vector containing the lag values for the autocorrelation functions
+
+ eg:[per,ac,eac,lag] = mgautocor(mg);</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="mgdemo1.html" class="code" title="">mgdemo1</a>	function mgdemo1</li><li><a href="mgdemo2.html" class="code" title="">mgdemo2</a>	function mgdemo2</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [per,ac,eac,lag] = mgautocor(mg,type,maxp,method)</a>
+0002 <span class="comment">% function out = mgautocor(fn,max,method)</span>
+0003 <span class="comment">% mgautocor computes the period of the input data and returns the</span>
+0004 <span class="comment">% period,autocorrelation functions and enhanced autocorrelation functions</span>
+0005 <span class="comment">% and lags</span>
+0006 <span class="comment">% syntax:[per,ac,eac,lag] = mgautocor(out,type,maxp,method);</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% input:</span>
+0009 <span class="comment">% mg: musical gestures data structure</span>
+0010 <span class="comment">% maxp: maximum period ,default value,2</span>
+0011 <span class="comment">% method: 'first','highest' maximal value of the autocorrelation function</span>
+0012 <span class="comment">% is taken as periodicity estimation</span>
+0013 <span class="comment">%</span>
+0014 <span class="comment">% output:</span>
+0015 <span class="comment">% per: a scalar containing the period estimation of the quantity of motion</span>
+0016 <span class="comment">% ac: a vector containing the autocorrelation functions of quantity of</span>
+0017 <span class="comment">% motion</span>
+0018 <span class="comment">% eac: a vector containing the enhanced autocorrelation functions of</span>
+0019 <span class="comment">% quantity of motion</span>
+0020 <span class="comment">% lag: a vector containing the lag values for the autocorrelation functions</span>
+0021 <span class="comment">%</span>
+0022 <span class="comment">% eg:[per,ac,eac,lag] = mgautocor(mg);</span>
+0023 <span class="keyword">if</span> nargin == 2
+0024     maxp = 2;
+0025     method = <span class="string">'first'</span>;
+0026 <span class="keyword">end</span>
+0027 <span class="keyword">if</span> nargin == 3
+0028     <span class="keyword">if</span> isletter(maxp)
+0029         method = maxp;
+0030         maxp = 2;
+0031     <span class="keyword">else</span>
+0032         method = <span class="string">'first'</span>;
+0033     <span class="keyword">end</span>
+0034 <span class="keyword">end</span>
+0035 <span class="keyword">if</span> strcmpi(type,<span class="string">'video'</span>)
+0036 mg.video.qom = detrend(mg.video.qom);
+0037 frate = mg.video.obj.FrameRate;
+0038 maxlag = round(maxp*frate);
+0039 lagfr = [0:maxlag]';
+0040 lag = lagfr/frate;
+0041 tmp = mg.video.qom - mean(mg.video.qom);
+0042 tmp1 = xcorr(tmp,maxlag);
+0043 tmp1 = tmp1((maxlag+1):end);
+0044 ac = tmp1;
+0045 tmp1 = tmp1/max(tmp1);
+0046 ind = find(diff(sign(diff(tmp1)))==-2);
+0047 <span class="keyword">if</span> isempty(ind)
+0048     per = NaN;
+0049 <span class="keyword">elseif</span> strcmpi(method,<span class="string">'highest'</span>)
+0050     w = min(ind);
+0051     [q,ww] = max(tmp1(w:end));
+0052     ma = w + ww - 1;
+0053 <span class="keyword">elseif</span> strcmp(method,<span class="string">'first'</span>)
+0054     ma = min(ind) + 1;
+0055 <span class="keyword">end</span>
+0056 <span class="keyword">if</span> ma == 1
+0057     per = NaN;
+0058 <span class="keyword">elseif</span> ma == length(tmp1)
+0059     per = NaN;
+0060 <span class="keyword">else</span>
+0061     fra = -(tmp1(ma+1)-tmp1(ma-1))/(tmp1(ma-1)+tmp1(ma+1)-2*tmp1(ma));
+0062     per = (ma-1+fra)/frate;
+0063 <span class="keyword">end</span>
+0064 tmp2 = max(tmp1,0);
+0065 tmp3 = tmp2-interp1(lagfr,tmp2,lagfr/2);
+0066 eac = max(tmp3,0);
+0067 <span class="keyword">elseif</span> strcmpi(type,<span class="string">'mocap'</span>) &amp;&amp; isfield(mg,<span class="string">'mocap'</span>)
+0068     mocap = mg.mocap;
+0069     [m,n] = size(mocap.data);
+0070     <span class="keyword">for</span> i =  1:m-1
+0071         mocap.diffdata(i,:) = abs((mocap.data(i+1,:) - mocap.data(i,:)));
+0072     <span class="keyword">end</span>
+0073     mocap_diff = mocap;
+0074     mocap_diff.data = mocap.diffdata;
+0075     mocap_diff.nFrames = mocap_diff.nFrames - 1;
+0076     mocap_diff = mcnorm(mocap_diff);
+0077     <span class="keyword">if</span> size(mocap_diff.data,2) &gt; 1
+0078         mocap_diff.data = sum(mocap_diff.data,2);
+0079     <span class="keyword">end</span>
+0080     [per,ac,eac,lag] = mcperiod(mocap_diff,maxp,method);
+0081 <span class="keyword">end</span>
+0082 
+0083 
+0084</pre></div>
+<hr><address>Generated on Wed 28-Jun-2017 21:10:02 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

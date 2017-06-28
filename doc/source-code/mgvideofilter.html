@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mgvideofilter</title>
+  <meta name="keywords" content="mgvideofilter">
+  <meta name="description" content="mg = mgvideofilter(varargin)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">source-code</a> &gt; mgvideofilter.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for source-code&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>mgvideofilter
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>mg = mgvideofilter(varargin)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function mg = mgvideofilter(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> mg = mgvideofilter(varargin)
+ mgvideofilter performs a spatial filtering of the video
+
+ syntax: mg = mgvideofilter(filename,type,med,h);
+ mg = mgvideofilter(mg,type,med,h);
+
+ input:
+ filename: video file
+ mg: input mg containing the video data;
+ type: 'Spatial';
+ med: 'Median', 'Average';
+ h: element structure (pixels)
+
+ output:
+ mg: filtered video
+
+ example:
+ mg = mgvideofilter(videofile,Spatial,Average,[3,3]);
+
+ todo:
+ implement temporal filter
+
+ also see:
+ mgmotionaverage</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="mgvideoreader.html" class="code" title="function mg = mgvideoreader(varargin)">mgvideoreader</a>	function mg = mgvideoreader(varargin)</li><li><a href="progmeter.html" class="code" title="function progmeter(i,n,w)">progmeter</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function mg = mgvideofilter(varargin)</a>
+0002 <span class="comment">% mg = mgvideofilter(varargin)</span>
+0003 <span class="comment">% mgvideofilter performs a spatial filtering of the video</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% syntax: mg = mgvideofilter(filename,type,med,h);</span>
+0006 <span class="comment">% mg = mgvideofilter(mg,type,med,h);</span>
+0007 <span class="comment">%</span>
+0008 <span class="comment">% input:</span>
+0009 <span class="comment">% filename: video file</span>
+0010 <span class="comment">% mg: input mg containing the video data;</span>
+0011 <span class="comment">% type: 'Spatial';</span>
+0012 <span class="comment">% med: 'Median', 'Average';</span>
+0013 <span class="comment">% h: element structure (pixels)</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% output:</span>
+0016 <span class="comment">% mg: filtered video</span>
+0017 <span class="comment">%</span>
+0018 <span class="comment">% example:</span>
+0019 <span class="comment">% mg = mgvideofilter(videofile,Spatial,Average,[3,3]);</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% todo:</span>
+0022 <span class="comment">% implement temporal filter</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% also see:</span>
+0025 <span class="comment">% mgmotionaverage</span>
+0026 
+0027 <span class="keyword">if</span> isempty(varargin)
+0028     <span class="keyword">return</span>;
+0029 <span class="keyword">end</span>
+0030 l = length(varargin);
+0031 <span class="keyword">if</span> l == 1
+0032     type = <span class="string">'Spatial'</span>;
+0033     med = <span class="string">'Median'</span>;
+0034     value = [3 3];
+0035 <span class="keyword">elseif</span> l &gt;=4
+0036     type = varargin{2};
+0037     med = varargin{3};
+0038     value = varargin{4};
+0039 <span class="keyword">end</span>
+0040 <span class="keyword">if</span> ischar(varargin{1})
+0041     file = varargin{1};
+0042     [~,pr,ex] = fileparts(file);
+0043     <span class="keyword">if</span> ismember(ex,{<span class="string">'.mp4'</span>;<span class="string">'.avi'</span>;<span class="string">'mpg'</span>;<span class="string">'mov'</span>;<span class="string">'m4v'</span>})
+0044         mg = <a href="mgvideoreader.html" class="code" title="function mg = mgvideoreader(varargin)">mgvideoreader</a>(file);
+0045     <span class="keyword">else</span>
+0046         error(<span class="string">'unknown video format,please the video format'</span>);
+0047     <span class="keyword">end</span>
+0048 <span class="keyword">elseif</span> isstruct(varargin{1}) &amp;&amp; isfield(varargin{1},<span class="string">'video'</span>)
+0049     mg = varargin{1};
+0050 <span class="keyword">end</span>
+0051 numf = floor(mg.video.obj.FrameRate*mg.video.obj.Duration);
+0052 newfile = strcat(pr,<span class="string">'filtervideo.avi'</span>);
+0053 <span class="keyword">if</span> strcmpi(type,<span class="string">'Spatial'</span>)
+0054     <span class="keyword">if</span> strcmpi(med,<span class="string">'Median'</span>)
+0055         v = VideoWriter(newfile);
+0056         v.FrameRate = mg.video.obj.FrameRate;
+0057         open(v);
+0058         i = 1;
+0059         <span class="keyword">while</span> mg.video.obj.CurrentTime &lt; mg.video.endtime
+0060             <a href="progmeter.html" class="code" title="function progmeter(i,n,w)">progmeter</a>(i,numf);
+0061             tmp = readFrame(mg.video.obj);
+0062             tmp(:,:,1) = medfilt2(tmp(:,:,1),value);
+0063             tmp(:,:,2) = medfilt2(tmp(:,:,2),value);
+0064             tmp(:,:,3) = medfilt2(tmp(:,:,3),value);
+0065             writeVideo(v,tmp);
+0066             i = i + 1;
+0067         <span class="keyword">end</span>
+0068         close(v);
+0069         s = <a href="mgvideoreader.html" class="code" title="function mg = mgvideoreader(varargin)">mgvideoreader</a>(newfile);
+0070         mg.video.obj = s.video.obj;
+0071         mg.type = <span class="string">'mg data'</span>;
+0072         mg.createtime = datestr(datetime(<span class="string">'today'</span>));
+0073     <span class="keyword">elseif</span> strcmpi(med,<span class="string">'Average'</span>)
+0074         v = VideoWriter(newfile);
+0075         v.FrameRate = mg.video.obj.FrameRate;
+0076         open(v);
+0077         i = 1;
+0078         value = fspecial(<span class="string">'average'</span>,value);
+0079         <span class="keyword">while</span> mg.video.obj.CurrentTime &lt; mg.video.endtime
+0080             <a href="progmeter.html" class="code" title="function progmeter(i,n,w)">progmeter</a>(i,numf);
+0081             tmp = readFrame(mg.video.obj);
+0082             tmp = imfilter(tmp,value,<span class="string">'replicate'</span>);
+0083             writeVideo(v,tmp);
+0084             i = i + 1;
+0085         <span class="keyword">end</span>
+0086         close(v);
+0087         s = <a href="mgvideoreader.html" class="code" title="function mg = mgvideoreader(varargin)">mgvideoreader</a>(newfile);
+0088         mg.video.obj = s.video.obj;
+0089         mg.type = <span class="string">'mg data'</span>;
+0090         mg.createtime = datestr(datetime(<span class="string">'today'</span>));
+0091     <span class="keyword">end</span>
+0092 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 28-Jun-2017 21:10:02 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

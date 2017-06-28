@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mgmotionfilter</title>
+  <meta name="keywords" content="mgmotionfilter">
+  <meta name="description" content="f = mgmotionfilter(varargin)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">source-code</a> &gt; mgmotionfilter.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for source-code&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>mgmotionfilter
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>f = mgmotionfilter(varargin)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function f = mgmotionfilter(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> f = mgmotionfilter(varargin)
+ mgmotionfilter filters the motion image or optical flow field
+ It provides three options, 'Regular','Binary','Blob' options.
+ syntax: f = mgmotionfilter(f,method,thres)
+ f = mgmotionfilter(f), default method 'Regular', thres =  0.1;
+ input:
+ f :input motion image or optical flow field.
+ method :'Regular', turn all values below thres to 0;
+ 'Binary', turn all values below thres to 0, above thres to 1;
+ 'Blob', remove individual pixels with erosion.
+ thres: for 'Regular','Binary' option, thres is the value of threshold;for
+ 'Blob' option, thres is element structure created by strel.
+ output:
+ f: filtered f</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="mgmotion.html" class="code" title="function mg = mgmotion(f,varargin)">mgmotion</a>	function mg = mgmotion(f,varargin)</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function f = mgmotionfilter(varargin)</a>
+0002 <span class="comment">% f = mgmotionfilter(varargin)</span>
+0003 <span class="comment">% mgmotionfilter filters the motion image or optical flow field</span>
+0004 <span class="comment">% It provides three options, 'Regular','Binary','Blob' options.</span>
+0005 <span class="comment">% syntax: f = mgmotionfilter(f,method,thres)</span>
+0006 <span class="comment">% f = mgmotionfilter(f), default method 'Regular', thres =  0.1;</span>
+0007 <span class="comment">% input:</span>
+0008 <span class="comment">% f :input motion image or optical flow field.</span>
+0009 <span class="comment">% method :'Regular', turn all values below thres to 0;</span>
+0010 <span class="comment">% 'Binary', turn all values below thres to 0, above thres to 1;</span>
+0011 <span class="comment">% 'Blob', remove individual pixels with erosion.</span>
+0012 <span class="comment">% thres: for 'Regular','Binary' option, thres is the value of threshold;for</span>
+0013 <span class="comment">% 'Blob' option, thres is element structure created by strel.</span>
+0014 <span class="comment">% output:</span>
+0015 <span class="comment">% f: filtered f</span>
+0016 
+0017 l  = length(varargin);
+0018 <span class="keyword">if</span> l == 1
+0019     f = varargin{1};
+0020     med = <span class="string">'Regular'</span>;
+0021     thres = 0.1;
+0022 <span class="keyword">elseif</span> l &gt;=3
+0023     f = varargin{1};
+0024     med = varargin{2};
+0025     thres = varargin{3};
+0026     <span class="keyword">if</span> strcmpi(med,<span class="string">'regular'</span>)
+0027         med = <span class="string">'Regular'</span>;
+0028     <span class="keyword">elseif</span> strcmpi(med,<span class="string">'binary'</span>)
+0029         med = <span class="string">'Binary'</span>;
+0030     <span class="keyword">elseif</span> strcmpi(med,<span class="string">'blob'</span>)
+0031         med = <span class="string">'Blob'</span>;
+0032     <span class="keyword">end</span>
+0033 <span class="keyword">end</span>
+0034 <span class="keyword">switch</span> med
+0035     <span class="keyword">case</span> <span class="string">'Regular'</span>
+0036         thres = min(f(:))+(max(f(:))-min(f(:)))*thres;
+0037         f(find(f&lt;thres)) = 0;
+0038         f = medfilt2(f,[5,5]);
+0039     <span class="keyword">case</span> <span class="string">'Binary'</span>
+0040 <span class="comment">%         thres = min(f(:))+(max(f(:))-min(f(:)))*thres;</span>
+0041         thres = max(f(:))*thres;
+0042         f(find(f&lt;thres)) = 0;
+0043         f(find(f&gt;=thres)) = 1;
+0044         f = 255*medfilt2(f,[5,5]);
+0045     <span class="keyword">case</span> <span class="string">'Blob'</span>
+0046         f = imerode(f,thres);
+0047 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Wed 28-Jun-2017 21:10:02 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

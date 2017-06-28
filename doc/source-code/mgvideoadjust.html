@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mgvideoadjust</title>
+  <meta name="keywords" content="mgvideoadjust">
+  <meta name="description" content="function mg = mgvideoadjust(varargin)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">source-code</a> &gt; mgvideoadjust.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for source-code&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>mgvideoadjust
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function mg = mgvideoadjust(varargin)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function mg = mgvideoadjust(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> function mg = mgvideoadjust(varargin)
+ adjust the contrast of the video, for RGB image,three channels must be
+ given
+ finally,wirtes adjusted video in the disk and returns a musical gestures
+ data structure
+ syntax: mg = mgvideoadjust(file);
+ mg = mgvideoadjust(mg);
+ mg = mgvideoadjust(file,[low_in1 low_in2 low_in3;high_in1 high_in2 high_in3],
+ [low_out1 low_out2 low_out3;high_out1 high_out2 high_out3])
+ mg = mgvideoadjust(mg,[low_in;high_in],[low_out;high_out])
+ input:
+ mg:musical gestures data structure
+ file:the file name of video
+ [low_in;high_in],[low_out;high_out]:mapping value in video frame to new
+ values such that the values between [low_in;high_in] map to values
+ between [low_out;high_out]
+ output:
+ mg:a musical gestures data structure contains the adjusted video</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="mgvideoreader.html" class="code" title="function mg = mgvideoreader(varargin)">mgvideoreader</a>	function mg = mgvideoreader(varargin)</li><li><a href="progmeter.html" class="code" title="function progmeter(i,n,w)">progmeter</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function mg = mgvideoadjust(varargin)</a>
+0002 <span class="comment">% function mg = mgvideoadjust(varargin)</span>
+0003 <span class="comment">% adjust the contrast of the video, for RGB image,three channels must be</span>
+0004 <span class="comment">% given</span>
+0005 <span class="comment">% finally,wirtes adjusted video in the disk and returns a musical gestures</span>
+0006 <span class="comment">% data structure</span>
+0007 <span class="comment">% syntax: mg = mgvideoadjust(file);</span>
+0008 <span class="comment">% mg = mgvideoadjust(mg);</span>
+0009 <span class="comment">% mg = mgvideoadjust(file,[low_in1 low_in2 low_in3;high_in1 high_in2 high_in3],</span>
+0010 <span class="comment">% [low_out1 low_out2 low_out3;high_out1 high_out2 high_out3])</span>
+0011 <span class="comment">% mg = mgvideoadjust(mg,[low_in;high_in],[low_out;high_out])</span>
+0012 <span class="comment">% input:</span>
+0013 <span class="comment">% mg:musical gestures data structure</span>
+0014 <span class="comment">% file:the file name of video</span>
+0015 <span class="comment">% [low_in;high_in],[low_out;high_out]:mapping value in video frame to new</span>
+0016 <span class="comment">% values such that the values between [low_in;high_in] map to values</span>
+0017 <span class="comment">% between [low_out;high_out]</span>
+0018 <span class="comment">% output:</span>
+0019 <span class="comment">% mg:a musical gestures data structure contains the adjusted video</span>
+0020 
+0021 <span class="keyword">if</span> isempty(varargin)
+0022     <span class="keyword">return</span>;
+0023 <span class="keyword">end</span>
+0024 l = length(varargin);
+0025 <span class="keyword">if</span> l == 3
+0026     mapin = varargin{2};
+0027     mapout = varargin{3};
+0028 <span class="keyword">elseif</span> l == 4
+0029     mapin = varargin{2};
+0030     mapout = varargin{3};
+0031     gamma = varargin{4};
+0032 <span class="keyword">end</span>
+0033 <span class="keyword">if</span> ischar(varargin{1})
+0034     fn = varargin{1};
+0035     [~,pr,ex] = fileparts(fn);
+0036     <span class="keyword">if</span> ismember(ex,{<span class="string">'.mp4'</span>;<span class="string">'.avi'</span>;<span class="string">'.mpg'</span>;<span class="string">'.mov'</span>;<span class="string">'.m4v'</span>})
+0037         mg = <a href="mgvideoreader.html" class="code" title="function mg = mgvideoreader(varargin)">mgvideoreader</a>(fn);
+0038     <span class="keyword">else</span>
+0039         error(<span class="string">'unknown video format,please check the video format'</span>);
+0040     <span class="keyword">end</span>
+0041     newname = strcat(pr,<span class="string">'adjustvideo.avi'</span>);
+0042     v = VideoWriter(newname);
+0043     v.FrameRate = mg.video.obj.FrameRate;
+0044     open(v);
+0045     i = 1;
+0046     numf = mg.video.obj.FrameRate*mg.video.obj.Duration;
+0047     disp(<span class="string">'****adjusting video contrast****'</span>);
+0048     <span class="keyword">while</span> mg.video.obj.CurrentTime &lt; mg.video.endtime
+0049         <a href="progmeter.html" class="code" title="function progmeter(i,n,w)">progmeter</a>(i,numf);
+0050         tmp = readFrame(mg.video.obj);
+0051         <span class="keyword">if</span> l == 1
+0052             tmp = rgb2gray(tmp);
+0053             tmp = imadjust(tmp);
+0054         <span class="keyword">elseif</span> l == 3
+0055             <span class="keyword">if</span> size(mapin,2) == 1 || size(mapin,1) ==1
+0056                 tmp = rgb2gray(tmp);
+0057                 tmp = imadjust(tmp,mapin,mapout);
+0058             <span class="keyword">elseif</span> size(mapin,2) == 3
+0059                 tmp = imadjust(tmp,mapin,mapout);
+0060             <span class="keyword">end</span>
+0061         <span class="keyword">elseif</span> l == 4
+0062             <span class="keyword">if</span> size(mapin,2) == 1 || size(mapin,1) == 1
+0063                 tmp = rgb2gray(tmp);
+0064                 tmp = imadjust(tmp,mapin,mapout,gamma);
+0065             <span class="keyword">elseif</span> size(mapin,2) == 3
+0066                 tmp = imadjust(tmp,mapin,mapout,gamma);
+0067             <span class="keyword">end</span>
+0068         <span class="keyword">end</span>
+0069         writeVideo(v,tmp);
+0070         i = i + 1;
+0071     <span class="keyword">end</span>
+0072     close(v);
+0073     mg = <a href="mgvideoreader.html" class="code" title="function mg = mgvideoreader(varargin)">mgvideoreader</a>(newname);
+0074 <span class="keyword">elseif</span> isstruct(varargin{1}) &amp;&amp; isfield(varargin{1},<span class="string">'video'</span>)
+0075     mg = varargin{1};
+0076     mg.video.obj.CurrentTime = mg.video.starttime;
+0077     [~,pr,~] = fileparts(mg.video.obj.Name);
+0078     newname = strcat(pr,<span class="string">'adjustvideo.avi'</span>);
+0079     v = VideoWriter(newname);    
+0080     v.FrameRate = mg.video.obj.FrameRate;
+0081     open(v);
+0082     i = 1;
+0083     numf = mg.video.obj.FrameRate*(mg.video.endtime-mg.video.starttime);
+0084     disp(<span class="string">'****adjusting video contrast****'</span>);
+0085     <span class="keyword">while</span> mg.video.obj.CurrentTime &lt; mg.video.endtime
+0086         <a href="progmeter.html" class="code" title="function progmeter(i,n,w)">progmeter</a>(i,numf);
+0087         tmp = readFrame(mg.video.obj);
+0088         <span class="keyword">if</span> l == 1
+0089             tmp = rgb2gray(tmp);
+0090             tmp = imadjust(tmp);
+0091         <span class="keyword">elseif</span> l == 3
+0092             <span class="keyword">if</span> size(mapin,2) == 1 || size(mapin,1) ==1
+0093                 tmp = rgb2gray(tmp);
+0094                 tmp = imadjust(tmp,mapin,mapout);
+0095             <span class="keyword">elseif</span> size(mapin,2) == 3
+0096                 tmp = imadjust(tmp,mapin,mapout);
+0097             <span class="keyword">end</span>
+0098         <span class="keyword">elseif</span> l == 4
+0099             <span class="keyword">if</span> size(mapin,2) == 1 || size(mapin,1) == 1
+0100                 tmp = rgb2gray(tmp);
+0101                 tmp = imadjust(tmp,mapin,mapout,gamma);
+0102             <span class="keyword">elseif</span> size(mapin,2) == 3
+0103                 tmp = imadjust(tmp,mapin,mapout,gamma); 
+0104             <span class="keyword">end</span>
+0105         <span class="keyword">end</span>
+0106         writeVideo(v,tmp);
+0107         i = i + 1;
+0108     <span class="keyword">end</span>
+0109     close(v);
+0110     tmp = <a href="mgvideoreader.html" class="code" title="function mg = mgvideoreader(varargin)">mgvideoreader</a>(newname);
+0111     mg.video.obj = tmp.video.obj;
+0112     mg.video.starttime = 0;
+0113     mg.video.endtime = tmp.video.obj.Duration;
+0114 <span class="keyword">end</span>
+0115         
+0116         
+0117     
+0118         
+0119         
+0120</pre></div>
+<hr><address>Generated on Wed 28-Jun-2017 21:10:02 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
