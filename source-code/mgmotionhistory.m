@@ -118,8 +118,9 @@ if strcmpi(method,'gray')
         history = imadd(temp,history);
         writeVideo(v,imadd(history,nextf));
     end
+    disp('*****creating motion history video*****')
     while mg.video.obj.CurrentTime < endtime
-        progmeter(indf,numfr)
+%        progmeter(indf,numfr)
         temparray = temparray(:,:,[2:end 1]);
         nextf = rgb2gray(readFrame(mg.video.obj));
         temp = imsubtract(nextf,fr2);
