@@ -1,5 +1,5 @@
 function mg = mgmotion(f,varargin)
-% function mg = mgmotion(f,varargin)
+%MGMOTION - Calculate various motion features from a video file
 % mgmotion computes a motion image, motiongram, quantity of motion, centroid of
 % motion, width of motion, and height of motion from the video file or musical
 % gestures data structure. The default method is frame differencing ('Diff'),
