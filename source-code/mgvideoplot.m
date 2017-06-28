@@ -1,6 +1,6 @@
 function mgvideoplot(varargin)
 % function mgvideoplot(varargin)
-% mgvideoplot plots the motion image,motion grams mocap grams over time
+% mgvideoplot plots the motion image, motiongrams mocap grams over time
 % syntax: mgvideoplot(mg,'Converted','On')
 % mgvideoplot(mg,'Converted','Off')
 % input:
@@ -42,7 +42,7 @@ elseif isstruct(varargin{1})
         type = 'Off';
     elseif l == 3 && strcmp(varargin{2},'Converted')
         type = varargin{3};
-    end   
+    end
     m = mgmotion.video.obj.Height;
     n = mgmotion.video.obj.Width;
     tmp1 = zeros(m,n);
@@ -58,21 +58,21 @@ while hasFrame(mgmotion.video.obj)
     subplot('Position',positionVector2)
     if strcmp(type,'Off')
     if isfield(mgmotion.video,'gram') && i > n
-        tmp1 = mgmotion.video.gram.gramx(:,i-n+1:i);
+        tmp1 = mgmotion.video.gram.x(:,i-n+1:i);
         imshow(tmp1,[])
         title('Horizontal motiongram')
     elseif isfield(mgmotion.video,'gram')
-        tmp1(:,1:i) = mgmotion.video.gram.gramx(:,1:i);
+        tmp1(:,1:i) = mgmotion.video.gram.x(:,1:i);
         imshow(tmp1,[])
         title('Horizontal motiongram')
     end
     subplot('Position',positionVector3);
     if isfield(mgmotion.video,'gram') && i > m
-        tmp2 = mgmotion.video.gram.gramy(i-m+1:i,:);
+        tmp2 = mgmotion.video.gram.y(i-m+1:i,:);
         imshow(tmp2,[])
         title('Vertical motiongram')
     elseif isfield(mgmotion.video,'gram')
-        tmp2(1:i,:) = mgmotion.video.gram.gramy(1:i,:);
+        tmp2(1:i,:) = mgmotion.video.gram.y(1:i,:);
         imshow(tmp2,[]);
         title('Vertical motiongram')
     end
@@ -92,28 +92,28 @@ while hasFrame(mgmotion.video.obj)
              disp('unknown markerName type')
         end
     end
-        
-    xlabel('time(s)')
+
+    xlabel('Time (s)')
     title('mocapgram')
     pause(1/mgmotion.video.obj.FrameRate);
     elseif strcmp(type,'On')
         subplot('Position',positionVector2);
         if isfield(mgmotion.video,'gram') && i > n
-            tmp1 = imcomplement(mgmotion.video.gram.gramx(:,i-n+1:i));
+            tmp1 = imcomplement(mgmotion.video.gram.x(:,i-n+1:i));
             imshow(tmp1,[])
             title('Horizontal motiongram')
         elseif isfield(mgmotion.video,'gram')
-            tmp1(:,1:i) = imcomplement(mgmotion.video.gram.gramx(:,1:i));
+            tmp1(:,1:i) = imcomplement(mgmotion.video.gram.x(:,1:i));
             imshow(tmp1,[])
             title('Horizontal motiongram')
         end
         subplot('Position',positionVector3);
         if isfield(mgmotion.video,'gram') && i > m
-            tmp2 = imcomplement(mgmotion.video.gram.gramy(i-m+1,:));
+            tmp2 = imcomplement(mgmotion.video.gram.y(i-m+1,:));
             imshow(tmp2,[])
             title('Vertical motiongram')
         elseif isfield(mgmotion.video,'gram')
-            tmp2(1:i,:) = imcomplement(mgmotion.video.gram.gramy(1:i,:));
+            tmp2(1:i,:) = imcomplement(mgmotion.video.gram.y(1:i,:));
             imshow(tmp2,[]);
             title('Vertical motiongram')
         end
@@ -132,15 +132,10 @@ while hasFrame(mgmotion.video.obj)
             else
                  disp('unknown markerName type')
             end
-        end 
+        end
         xlabel('time(s)')
         title('mocapgram')
         pause(1/mgmotion.video.obj.FrameRate);
     end
    i = i + 1;
 end
-
-
-
-
-            
