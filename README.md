@@ -16,11 +16,25 @@ The current version is developed with Matlab 2015b, and builds on some other Mat
 
 2. Add the files in the folder "source-code" to your Matlab path: under the "Home" section, click "set path". Click the "Add Folder" button and choose the "source-code" folder and finally click "save".
 
-3. Start using the toolbox.
+3. Try out the m-files in the examples folder. There are some test files (audio, video, mocap) in the "example_data" folder.
 
-## Usage
+## Functions
 
-There are some test files (audio, video, mocap) in the "data" folder. Try out the m-files in the examples folder.
+The Musical Gestures Toolbox contains a set of functions for the analysis and visualization of video, audio, and mocap data. There are four categories of functions:
+
+- Data input and edit functions
+- Data preprocessing functions
+- Visualization functions
+- Middle and higher level feature extraction functions
+
+## Data Structures
+
+The Musical Gestures Toolbox uses only one struct data structure. This struct contains three fields,video,audio,mocap, which corresponds three types input data. A Musical Gestures data structure is created by the function mginitstruct. For instance:
+
+    mg=mginitstruct;
+
+Then a struct mg is created with three fields. Here video field contains data and general parameters of video. Since this is a core part of Musical Gestures Toolbox, it will be introduced in detail. As for other two fields, audio and mocap,please refer to reference documentation respectively. Normally, the field video is a struct as well containing several fields. Data field stores each frame of the video. Gram field stores the information of horizontal and vertical motion gram. Motion field contains the motion information be- tween two successive frames. Qom field contains quantity of motion of each frame. Com field contains centroid of motion of each frame. Nframe field contains the number of the frames of the video. The framerate of video is stored in the field framerate. Usually, it is 30 frames per second. Duration field is for length of the video. Musical Gestures Toolbox uses two general methods to estimate the motion, one is motion gram, another is optical flow. The method field is used for the option of these two methods. Other two fields filename and path are for the name of video and path.
+
 
 ## History
 
