@@ -1,11 +1,12 @@
 function mgwaveplot(varargin)
 % function mgwaveplot(varargin)
-% mgwaveplot plots the waveform of the audio,and spectrum, rms,envelop of the audio
+% mgwaveplot plots the waveform of the audio, spectrum, and rms envelope
 % syntax: mgwaveplot(mg)
-% input: 
+% input:
 % mg: musical gestures data structure containing the audio information
 % output:
 % a figure showing the waveform,spectrum,rms,envelop of the audio
+
 close all
 if isempty(varargin)
     return
@@ -21,6 +22,7 @@ ax2 = gca;
 spec = mirspectrum(audio,'Frame','dB')
 title('Spectrogram')
 xlabel('time(s)')
+
 ax3 = gca;
 ax31 = gca;
 spec_rms = mirspectrum(rms)
@@ -34,7 +36,7 @@ ax3_copy = copyobj(ax3,h);
 ax4_copy = copyobj(ax4,h);
 subplot(2,2,1,ax1_copy);
 subplot(2,2,2,ax2_copy);
-subplot(2,2,3,ax3_copy); 
+subplot(2,2,3,ax3_copy);
 subplot(2,2,4,ax4_copy);
 figureobj = findobj('Type','figure');
 l = length(figureobj);
@@ -42,6 +44,7 @@ close(figure(l-1))
 close(figure(l-2))
 close(figure(l-3))
 close(figure(l-4))
+
 if isfield(s,'video')
     if isfield(s.video,'qom')
         figure;
@@ -61,4 +64,3 @@ if isfield(s,'video')
 
     end
 end
-

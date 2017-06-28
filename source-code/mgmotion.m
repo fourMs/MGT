@@ -4,10 +4,10 @@ function mg = mgmotion(f,varargin)
 % motion, width of motion, and height of motion from the video file or musical
 % gestures data structure. The default method is frame differencing ('Diff'),
 % and an optical flow field can be calculated with the 'OpticalFlow' method. The
-% founction also provides the colour and convert mode, which is to compute the
-% colour scale or convert white on black. To use the mode, you need to set mode
+% founction also provides the color and convert mode, which is to compute the
+% color scale or convert white on black. To use the mode, you need to set mode
 % in the command, e.g.,
-% mg.video.mode.colour = 'On'
+% mg.video.mode.color = 'On'
 % mg.video.mode.convert = 'On'
 %
 % syntax:
@@ -33,6 +33,7 @@ function mg = mgmotion(f,varargin)
 % image, motiongram, qom, com
 
 % mg = mginitstruct;
+thres = 0.05;
 l = length(varargin);
 if ischar(f)
     if l < 1
@@ -245,14 +246,14 @@ mg.video.starttime = starttime;
 mg.video.endtime = endtime;
 % hblob = vision.BlobAnalysis;
 % hblob.AreaOutputPort = true;
-if isfield(mg.video,'mode') && isfield(mg.video.mode,'colour')
-    if strcmpi(mg.video.mode.colour,'on')
-        colourflag = true;
+if isfield(mg.video,'mode') && isfield(mg.video.mode,'color')
+    if strcmpi(mg.video.mode.color,'on')
+        colorflag = true;
     else
-        colourflag = false;
+        colorflag = false;
     end
 else
-    colourflag = false;
+    colorflag = false;
 end
 
 if isfield(mg.video,'mode') && isfield(mg.video.mode,'convert')
@@ -267,7 +268,7 @@ end
 
 if strcmpi(method,'Diff')
     mg.video.obj.CurrentTime = starttime;
-    if colourflag == true
+    if colorflag == true
         fr = readFrame(mg.video.obj);
     else
         fr = rgb2gray(readFrame(mg.video.obj));
@@ -279,7 +280,7 @@ if strcmpi(method,'Diff')
     ind = 1;
     numf = mg.video.obj.FrameRate*(endtime-starttime)-1;
     open(v);
-    if colourflag == true
+    if colorflag == true
         while mg.video.obj.CurrentTime < endtime
             progmeter(ind,numf);
             pfr = readFrame(mg.video.obj);
