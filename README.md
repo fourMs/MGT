@@ -29,11 +29,21 @@ The Musical Gestures Toolbox contains a set of functions for the analysis and vi
 
 ## Data Structures
 
-The Musical Gestures Toolbox uses only one struct data structure. This struct contains three fields,video,audio,mocap, which corresponds three types input data. A Musical Gestures data structure is created by the function mginitstruct. For instance:
+The Musical Gestures Toolbox uses only one `struct` data structure. This structure contains three fields: video, audio, and mocap, which corresponds to these three types of data, respectively. An MGT data structure is created with the function:
 
     mg=mginitstruct;
 
-Then a struct mg is created with three fields. Here video field contains data and general parameters of video. Since this is a core part of Musical Gestures Toolbox, it will be introduced in detail. As for other two fields, audio and mocap,please refer to reference documentation respectively. Normally, the field video is a struct as well containing several fields. Data field stores each frame of the video. Gram field stores the information of horizontal and vertical motion gram. Motion field contains the motion information be- tween two successive frames. Qom field contains quantity of motion of each frame. Com field contains centroid of motion of each frame. Nframe field contains the number of the frames of the video. The framerate of video is stored in the field framerate. Usually, it is 30 frames per second. Duration field is for length of the video. Musical Gestures Toolbox uses two general methods to estimate the motion, one is motion gram, another is optical flow. The method field is used for the option of these two methods. Other two fields filename and path are for the name of video and path.
+This produces a structure `mg` with three fields. The video field (mg.video) contains data and general parameters of the video file:
+
+- .obj: stores each frame of the video
+- .gram: after running the function `mgmotion`, motiongram data are written to `.gram.x` and `.gram.y`.
+- .qom: quantity of motion of each frame
+- .com: centroid of motion of each frame
+- .nframe: the number of frames in the video file. The framerate of the video is stored in the field framerate. This is most often 25 or 30 frames per second. Duration field is for length of the video.
+- .method: the toolbox uses two general methods to estimate the motion: either based on frame differencing ('Diff') or optical flow ('OpticalFlow').
+
+The data structures for mocap and audio are copied from the [MoCap](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mocaptoolbox)
+and [MIR](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mirtoolbox) toolboxes.
 
 
 ## History
