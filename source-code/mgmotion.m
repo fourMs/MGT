@@ -1,21 +1,17 @@
 function mg = mgmotion(f,varargin)
 % function mg = mgmotion(f,varargin)
-% mgmotion computes a motion image, motiongram, quantity of motion,
-% centroid of motion, width of motion, and height of motion from the
-% video file or musical gestures data structure.
-%
-% The default method is frame differencing ('Diff'), and an optical flow
-% field can be calculated with the 'OpticalFlow' method.
-%
-% The founction also provides
-% the colour and convert mode, which is to compute the colour scale or
-% convert white on black. To use the mode, you need to set mode in the
-% command, e.g.,
+% mgmotion computes a motion image, motiongram, quantity of motion, centroid of
+% motion, width of motion, and height of motion from the video file or musical
+% gestures data structure. The default method is frame differencing ('Diff'),
+% and an optical flow field can be calculated with the 'OpticalFlow' method. The
+% founction also provides the colour and convert mode, which is to compute the
+% colour scale or convert white on black. To use the mode, you need to set mode
+% in the command, e.g.,
 % mg.video.mode.colour = 'On'
 % mg.video.mode.convert = 'On'
 %
 % syntax:
-% mg = mgmotion(mg,method,starttime,endtime,filtertype,thres)
+% mg = mgmotion(mg,method,starttime,endtime,filtertype,thresh)
 % mg = mgmotion(filename);
 % mg = mgmotion(mg,'Diff');
 % mg = mgmotion(filename,'Diff',starttime,endtime,'Regular',0.3);
@@ -238,8 +234,8 @@ elseif isstruct(f) && isfield(f,'video')
     end
 end
 mg.video.method = method;
-mg.video.gram.gramy = [];
-mg.video.gram.gramx = [];
+mg.video.gram.y = [];
+mg.video.gram.x = [];
 mg.video.qom = [];
 mg.video.com = [];
 mg.video.aom = [];
@@ -277,7 +273,7 @@ if strcmpi(method,'Diff')
         fr = rgb2gray(readFrame(mg.video.obj));
     end
     [~,pr,~] = fileparts(mg.video.obj.Name);
-    newfile = strcat(pr,'motion.avi');
+    newfile = strcat(pr,'_motion.avi');
     v = VideoWriter(newfile);
     v.FrameRate = mg.video.obj.FrameRate;
     ind = 1;
@@ -307,8 +303,8 @@ if strcmpi(method,'Diff')
             mg.video.com = [mg.video.com;com];
             gramx = mean(diff);
             gramy = mean(diff,2);
-            mg.video.gram.gramy = [mg.video.gram.gramy;gramx];
-            mg.video.gram.gramx = [mg.video.gram.gramx,gramy];
+            mg.video.gram.y = [mg.video.gram.y;gramx];
+            mg.video.gram.x = [mg.video.gram.x,gramy];
             if convertflag == true
                diff = imcomplement(diff);
             end
@@ -317,8 +313,8 @@ if strcmpi(method,'Diff')
             ind = ind + 1;
         end
         if convertflag == true
-            mg.video.gram.gramx = imcomplement(mg.video.gram.gramx);
-            mg.video.gram.gramy = imcomplement(mg.video.gram.gramy);
+            mg.video.gram.x = imcomplement(mg.video.gram.x);
+            mg.video.gram.y = imcomplement(mg.video.gram.y);
         end
     else
         while mg.video.obj.CurrentTime < endtime
@@ -335,14 +331,14 @@ if strcmpi(method,'Diff')
 %             bw = diff >= level;
 %             bw = step(hautoh,diff);
 %             aom = sum(step(hblob,bw));
-            [bbox,aom] = findboundingbox(diff);
-            mg.video.aom = [mg.video.aom;aom];
-            mg.video.wom = [mg.video.wom;bbox(3)];
-            mg.video.hom = [mg.video.hom;bbox(4)];
+%            [bbox,aom] = findboundingbox(diff);
+%            mg.video.aom = [mg.video.aom;aom];
+%            mg.video.wom = [mg.video.wom;bbox(3)];
+%            mg.video.hom = [mg.video.hom;bbox(4)];
             gramx = mean(diff);
             gramy = mean(diff,2);
-            mg.video.gram.gramy = [mg.video.gram.gramy;gramx];
-            mg.video.gram.gramx = [mg.video.gram.gramx,gramy];
+            mg.video.gram.y = [mg.video.gram.y;gramx];
+            mg.video.gram.x = [mg.video.gram.x,gramy];
             mg.video.qom = [mg.video.qom;qom];
             mg.video.com = [mg.video.com;com];
             if convertflag == true
@@ -353,24 +349,25 @@ if strcmpi(method,'Diff')
             ind = ind + 1;
         end
         if convertflag == true
-            mg.video.gram.gramy = imcomplement(mg.video.gram.gramy);
-            mg.video.gram.gramx = imcomplement(mg.video.gram.gramx);
+            mg.video.gram.y = imcomplement(mg.video.gram.y);
+            mg.video.gram.x = imcomplement(mg.video.gram.x);
         end
     end
     close(v)
-    disp(['the motion video is created with name ',newfile]);
+    disp(' ');
+    disp(['The motion video is created with name ',newfile]);
     mg.video.nframe = v.FrameCount;
 %     mg.video.nframe = ind - 1;
     figure,subplot(211),plot(mg.video.qom)
-    title('Quantity of motion by motiongram');
+    title('Quantity of Motion');
     set(gca,'XTick',[0:2*mg.video.obj.FrameRate:mg.video.nframe])
     set(gca,'XTickLabel',[starttime*mg.video.obj.FrameRate:...
         2*mg.video.obj.FrameRate:endtime*mg.video.obj.FrameRate]/mg.video.obj.FrameRate);
-    xlabel('time(s)')
+    xlabel('Time (s)')
     ylabel('Quantity')
     subplot(212),plot(mg.video.com(:,1),mg.video.com(:,2),'.')
     axis equal;
-    title('Centroid of motion by motiongram');
+    title('Centroid of Motion');
     xlabel('x direction')
     ylabel('y direction')
     s = mgvideoreader(newfile);
@@ -378,7 +375,7 @@ if strcmpi(method,'Diff')
 elseif strcmpi(method,'OpticalFlow')
     mg.video.obj.CurrentTime = starttime;
     [~,pr,~] = fileparts(mg.video.obj.Name);
-    newfile = strcat(pr,'optical.avi');
+    newfile = strcat(pr,'_optical.avi');
     v = VideoWriter(newfile);
     v.FrameRate = mg.video.obj.FrameRate;
     ind = 1;
@@ -405,8 +402,8 @@ elseif strcmpi(method,'OpticalFlow')
         com = [comx,comy];
         gramx = mean(magnitude);
         gramy = mean(magnitude,2);
-        mg.video.gram.gramy = [mg.video.gram.gramy;gramx];
-        mg.video.gram.gramx = [mg.video.gram.gramx,gramy];
+        mg.video.gram.y = [mg.video.gram.y;gramx];
+        mg.video.gram.x = [mg.video.gram.x,gramy];
         mg.video.qom = [mg.video.qom;qom];
         mg.video.com = [mg.video.com;com];
         imshow(fr1),hold on;
@@ -417,12 +414,13 @@ elseif strcmpi(method,'OpticalFlow')
         ind = ind + 1;
     end
     close(v)
-    disp(['the motion video is created with name ',newfile]);
+    disp(' ');
+    disp(['The motion video is created with name ',newfile]);
     figure,subplot(211),plot(mg.video.qom)
     title('Quantity of motion by opticalflow');
     set(gca,'XTick',[0:2*mg.video.obj.FrameRate:ind])
     set(gca,'XTickLabel',[starttime*mg.video.obj.FrameRate:2*mg.video.obj.FrameRate:endtime*mg.video.obj.FrameRate]/mg.video.obj.FrameRate);
-    xlabel('time(s)')
+    xlabel('Time (s)')
     ylabel('Quantity')
     subplot(212),plot(mg.video.com(:,1),mg.video.com(:,2),'.')
     axis equal
