@@ -1,16 +1,20 @@
 function mg = mgmotion(f,varargin)
 % function mg = mgmotion(f,varargin)
-% mgmotion computes the motion image,motion gram,quantity of motion,
-% centroid of motion, width of motion, height of motion from the video file or musical gestures data structure
-% If the method is not given,default method 'Diff', with 'OpticalFlow' method
-% mgmotion computes the optical flow field.  The founction provides also
+% mgmotion computes a motion image, motiongram, quantity of motion,
+% centroid of motion, width of motion, and height of motion from the
+% video file or musical gestures data structure.
+%
+% The default method is frame differencing ('Diff'), and an optical flow
+% field can be calculated with the 'OpticalFlow' method.
+%
+% The founction also provides
 % the colour and convert mode, which is to compute the colour scale or
 % convert white on black. To use the mode, you need to set mode in the
-% command, f.g., 
+% command, e.g.,
 % mg.video.mode.colour = 'On'
 % mg.video.mode.convert = 'On'
 %
-% syntax: 
+% syntax:
 % mg = mgmotion(mg,method,starttime,endtime,filtertype,thres)
 % mg = mgmotion(filename);
 % mg = mgmotion(mg,'Diff');
@@ -20,16 +24,16 @@ function mg = mgmotion(f,varargin)
 %
 % input:
 % filename: the name of the video file
-% 'Diff','OpticalFlow': indicate the methods used to compute the
-% motion.'Diff' method takes the absolute difference value between
-% two successive frames.'OpticalFlow' method uses the optical filed to estimate motion 
+% 'Diff', 'OpticalFlow': indicate the methods used to compute the
+% motion. 'Diff' method takes the absolute difference value between
+% two successive frames. 'OpticalFlow' method uses the optical filed to estimate motion
 % mg: musical gestures data structure
 % filtertype: Binary, Regular, Blob, when choose the Blob, the element
 % structure need be constructed using function strel
-% thres: threshold [0,1]
+% thresh: threshold [0,1]
 %
 % output:
-% mg,a musical gestures data structure containing the computed motion
+% mg, a musical gestures data structure containing the computed motion
 % image, motiongram, qom, com
 
 % mg = mginitstruct;
@@ -41,7 +45,7 @@ if ischar(f)
         mg = mgvideoreader(f);
         endtime = mg.video.endtime;
         filterflag = 0;
-    elseif l == 1 
+    elseif l == 1
         if strcmpi(varargin{1},'Diff') || strcmpi(varargin{1},'OpticalFlow')
             method = varargin{1};
             starttime = 0;
@@ -72,7 +76,7 @@ if ischar(f)
         else
             error('Please specify a method for motion estimation, Diff or OpticalFlow');
         end
-    elseif l == 3        
+    elseif l == 3
         if strcmpi(varargin{1},'Diff') || strcmpi(varargin{1},'OpticalFlow')
             method = varargin{1};
             if isnumeric(varargin{2})  && isnumeric(varargin{3})
@@ -87,7 +91,7 @@ if ischar(f)
                 filtertype = varargin{3};
                 filterflag = 1;
                 thres = 0.2; % default;
-            elseif ischar(varargin{2}) 
+            elseif ischar(varargin{2})
                 starttime = 0;
                 mg = mgvideoreader(f);
                 endtime = mg.video.endtime;
@@ -96,7 +100,7 @@ if ischar(f)
                 filterflag = 1;
             else
                 error('Please input proper parameters.');
-            end    
+            end
         else
             error('please specify a method for motion estimation,Diff or OpticalFlow.');
         end
@@ -138,11 +142,11 @@ if ischar(f)
             end
         else
             error('Please specify a method for motion estimation,Diff or OpticalFlow');
-        end                
+        end
     end
 elseif isstruct(f) && isfield(f,'video')
     mg = f;
-    if l < 1 
+    if l < 1
         method = 'Diff';
         starttime = mg.video.starttime;
         endtime = mg.video.endtime;
@@ -154,7 +158,7 @@ elseif isstruct(f) && isfield(f,'video')
             endtime = mg.video.endtime;
             filterflag = 0;
         else
-            error('Please specify a method for motion estimation.');  
+            error('Please specify a method for motion estimation.');
         end
     elseif l == 2
         if ismember(lower(varargin{1}),lower({'Diff','OpticalFlow'})) && isnumeric(varargin{2})
@@ -170,7 +174,7 @@ elseif isstruct(f) && isfield(f,'video')
             endtime = mg.video.endtime;
             thres = 0.2; % default;
         else
-            error('Please specify a method for motion estimation,Diff or OpticalFlow'); 
+            error('Please specify a method for motion estimation,Diff or OpticalFlow');
         end
     elseif l == 3
         if ismember(lower(varargin{1}),lower({'Diff','OpticalFlow'}))
@@ -216,7 +220,7 @@ elseif isstruct(f) && isfield(f,'video')
                 error('Please input proper parameters');
             end
         else
-            error('Please specify a method for motion estimation');  
+            error('Please specify a method for motion estimation');
         end
     elseif l == 5
         if ischar(varargin{1}) && ischar(varargin{4})
@@ -265,11 +269,11 @@ else
     convertflag = false;
 end
 
-if strcmpi(method,'Diff')   
+if strcmpi(method,'Diff')
     mg.video.obj.CurrentTime = starttime;
     if colourflag == true
         fr = readFrame(mg.video.obj);
-    else 
+    else
         fr = rgb2gray(readFrame(mg.video.obj));
     end
     [~,pr,~] = fileparts(mg.video.obj.Name);
@@ -287,7 +291,7 @@ if strcmpi(method,'Diff')
             if filterflag
                 for i = 1:size(diff,3)
                     diff(:,:,i) = mgmotionfilter(diff(:,:,i),filtertype,thres);
-                end    
+                end
             end
             [com,qom] = mgcentroid(rgb2gray(diff));
 %             hautoh = vision.Autothresholder;

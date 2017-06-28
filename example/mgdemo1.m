@@ -1,5 +1,5 @@
 % function mgdemo1
-% This example shows how you can read Video,Mocap,Audio files into Matlab
+% This example shows how you can read Video, Mocap, Audio files into Matlab
 % and visulize the data
 
 % read video file into matlab
@@ -17,7 +17,7 @@ mgseg = mgmap(mgseg,'Both');
 % written back to disk.
 % mgsam = mgvideosample(mgseg,[2,2],'samplevideo.avi');
 
-%% if needed 
+%% if needed
 % crop the region of interest in a video
 % mgcrop = mgvideocrop(mg);
 % mgcrop = mgvideocrop(mgsam);
@@ -39,10 +39,10 @@ title('enhanced period')
 xlabel('seconds')
 ylabel('magnitude')
 %%
-% plot the motion image motion grams over time. If 'Converted' is set to
+% plot the motion image motiongrams over time. If 'Converted' is set to
 % 'On' , then mgvideoplot will plot white-black motiongrams.
 mgvideoplot(mgsegmo,'Converted','Off');
-% 
+%
 % mgvideoplot(mgsegmo,'Converted','On')
 %%
 % plot the whole motion grams
@@ -116,11 +116,3 @@ plot(features1_norm(:,2),features1_norm(:,3),'.')
 features2 = mgstatistics(mgseg_motion,'Video','SecondOrder');
 features2_norm = features2./repmat(max(features2),size(mgsegmo.video.gram.gramy,1),1);
 plot(features2_norm(:,7),features2_norm(:,8),'.')
-
-
-
-
-
-
-
-
