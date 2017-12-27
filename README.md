@@ -8,6 +8,11 @@ The current version is developed with Matlab 2015b, and builds on some other Mat
 - [MoCap Toolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mocaptoolbox)
 - [MIRtoolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mirtoolbox)
 
+It also requires the following MathWorks toolboxes: 
+
+- Computer Vision System Toolbox
+- Image Processing Toolbox
+
 ## Installation
 
 *Important: A lot of things changed between Matlab versions 2015b and 2016a (and later). For now, the toolbox works best with 2015b (and prior). Parts of it probably also works with later versions, and we are eager to get everything updated to the latest version. Sorry for the inconvenience, and we appreciate all help in fixing bugs.*
