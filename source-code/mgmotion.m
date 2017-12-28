@@ -357,7 +357,6 @@ if strcmpi(method,'Diff')
             mg.video.gram.x = imcomplement(mg.video.gram.x);
         end
     end
-    end
     close(v)
     disp(' ');
     disp(['The motion video is created with name ',newfile]);
