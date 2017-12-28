@@ -71,7 +71,7 @@ elseif l == 3
         end
         close(v); 
         fprintf('\n');
-        disp(['the cropped video is created with name ',newname]);
+        disp(['the trimmed video is created with name ',newname]);
         s = mgvideoreader(newname);
         mg.video = s.video;
         mg.video.orig_starttime = starttime;
@@ -122,7 +122,7 @@ elseif isstruct(varargin{1})
             end
             close(v); 
             fprintf('\n');
-            disp(['the cropped video is created with name ',newname]);
+            disp(['the trimmed video is created with name ',newname]);
             tmp = mgvideoreader(newname);
             mg.video.obj = tmp.video.obj;
             mg.video.starttime = 0;
