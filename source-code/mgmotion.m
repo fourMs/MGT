@@ -287,7 +287,7 @@ if strcmpi(method,'Diff')
             diff = abs(pfr-fr);
             if filterflag
                 for i = 1:size(diff,3)
-                    diff(:,:,i) = mgmotionfilter(diff(:,:,i),filtertype,thres);
+                    diff(:,:,i) = mgmotionfilter(diff(:,:,i),filtertype,thresh);
                 end
             end
             [com,qom] = mgcentroid(rgb2gray(diff));
