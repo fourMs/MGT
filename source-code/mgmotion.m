@@ -296,10 +296,10 @@ if strcmpi(method,'Diff')
 %             bw = step(hautoh,rgb2gray(diff));
 %             bw = rgb2gray(diff) >= level;
 %             aom = sum(step(hblob,bw));
-            [bbox,aom] = findboundingbox(diff);
-            mg.video.wom = [mg.video.wom;bbox(3)];
-            mg.video.hom = [mg.video.hom;bbox(4)];
-            mg.video.aom = [mg.video.aom;aom];
+%            [bbox,aom] = findboundingbox(diff);
+%            mg.video.wom = [mg.video.wom;bbox(3)];
+%            mg.video.hom = [mg.video.hom;bbox(4)];
+%            mg.video.aom = [mg.video.aom;aom];
             mg.video.qom = [mg.video.qom;qom];
             mg.video.com = [mg.video.com;com];
             gramx = mean(diff);
