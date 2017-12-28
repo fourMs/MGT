@@ -55,28 +55,29 @@ if ischar(f)
     end
 elseif isstruct(f) && isfield(f,'video')
     if l == 1
-        starttime = f.video.starttime;
-        endtime = f.video.endtime;
+        starttime = mg.video.starttime;
+        endtime = mg.video.endtime;
     elseif l == 2
         starttime = varargin{2};
-        endtime = f.video.endtime;
+        endtime = mg.video.endtime;
     elseif l == 3
         starttime = varargin{2};
         endtime = varargin{3};
     end
-    f.video.obj.CurrentTime = starttime;
+    mg.video.obj.CurrentTime = starttime;
     i = 0;
-    if isfield(f.video,'mode') && strcmpi(f.video.mode.color,'on')
-        ave = zeros(f.video.obj.Height,f.video.obj.Width,3);
-        while f.video.obj.CurrentTime < endtime
-            fr = readFrame(f.video.obj);
+
+    if isfield(mg.video,'mode') && strcmpi(mg.video.mode.color,'on')
+        ave = zeros(mg.video.obj.Height,mg.video.obj.Width,3);
+        while mg.video.obj.CurrentTime < endtime
+            fr = readFrame(mg.video.obj);
             ave = double(ave) + double(fr);
             i = i + 1;
         end
     else
-        ave = zeros(f.video.obj.Height,f.video.obj.Width);
-        while f.video.obj.CurrentTime < endtime
-            fr = rgb2gray(readFrame(f.video.obj));
+        ave = zeros(mg.video.obj.Height,mg.video.obj.Width);
+        while mg.video.obj.CurrentTime < endtime
+            fr = rgb2gray(readFrame(mg.video.obj));
             ave = double(ave) + double(fr);
             i = i + 1;
         end
