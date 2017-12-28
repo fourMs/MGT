@@ -1,6 +1,6 @@
 function ave = mgmotionaverage(varargin)
 % function mgmotionaverage(varargin)
-% create an image by taking average of the video frames
+% create an image by calculating the average of the video frames
 % if you want to compute average image on the color scale, make sure the
 % input is a mg structure which contains the video information, for
 % example, created by function mgread. Then set the mode like
@@ -33,7 +33,7 @@ if ischar(f)
     try
         mg = mgvideoreader(f);
     catch
-        error('wrong input file,please check the format...');
+        error('wrong input file, please check the format...');
     end
     if l == 1
         starttime = mg.video.starttime;
@@ -82,8 +82,13 @@ elseif isstruct(f) && isfield(f,'video')
         end
     end
 end
-ave2 = uint8(ave/i);
+
+% Normalizing values to [0,1]
+%ave2 = uint8(ave/i); % old approach didnt work well
+ave2=(ave-min(ave(:))) ./ max(ave(:)-min(ave(:)));
+
 %figure, imshow(ave2);
+
 % Write to file
 [~,pr,~] = fileparts(mg.video.obj.Name);
 tmpfile=strcat(pr,'_average.tiff');
