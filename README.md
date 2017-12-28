@@ -2,20 +2,21 @@
 
 The Musical Gestures Toolbox (MGT) is a Matlab toolbox for analysing music-related body motion, using sets of audio, video and motion capture data as source material.
 
-The current version is developed with Matlab 2015b, and builds on some other Matlab toolboxes:
+Parts of the toolbox requires the following MathWorks toolboxes: 
+
+- Computer Vision System Toolbox
+- Image Processing Toolbox
+
+It also relies on these third-party toolboxes:
 
 - [matlabPyrTools](http://se.mathworks.com/matlabcentral/fileexchange/52571-matlabpyrtools)
 - [MoCap Toolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mocaptoolbox)
 - [MIRtoolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mirtoolbox)
 
-It also requires the following MathWorks toolboxes: 
-
-- Computer Vision System Toolbox
-- Image Processing Toolbox
 
 ## Installation
 
-*Important: A lot of things changed between Matlab versions 2015b and 2016a (and later). For now, the toolbox works best with 2015b (and prior). Parts of it probably also works with later versions, and we are eager to get everything updated to the latest version. Sorry for the inconvenience, and we appreciate all help in fixing bugs.*
+*Important: The toolbox has mainly been tested on Windows, most recently with Matlab 2017a. A lot of things changed after Matlab 2015b, and we know that there are issues with running it on Mac and Linux. We are eager to get everything fixed, and we appreciate all help in finding (and fixing!) bugs.*
 
 1. Install the dependencies: [matlabPyrTools](http://se.mathworks.com/matlabcentral/fileexchange/52571-matlabpyrtools), [MoCap Toolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mocaptoolbox) and [MIRtoolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mirtoolbox).
 
