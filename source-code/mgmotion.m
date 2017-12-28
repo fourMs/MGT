@@ -11,12 +11,12 @@ function mg = mgmotion(f,varargin)
 % mg.video.mode.convert = 'On'
 %
 % syntax:
-% mg = mgmotion(mg,method,starttime,endtime,filtertype,threshh)
+% mg = mgmotion(mg,method,starttime,endtime,filtertype,thresh)
 % mg = mgmotion(filename);
 % mg = mgmotion(mg,'Diff');
 % mg = mgmotion(filename,'Diff',starttime,endtime,'Regular',0.3);
 % mg = mgmotion(filename,'OpticalFlow',starttime,'Binary',0.2);
-% mg = mgmotion(mg,'OpticalFlow');
+% mg = mgmotion(mg,'OpticalFlow');  
 %
 % input:
 % filename: the name of the video file
@@ -33,8 +33,10 @@ function mg = mgmotion(f,varargin)
 % image, motiongram, qom, com
 
 % mg = mginitstruct;
+
 thresh = 0.1;
 l = length(varargin);
+
 if ischar(f)
     if l < 1
         method = 'Diff'; % default;
