@@ -35,7 +35,6 @@ function mg = mgmotion(f,varargin)
 % mg = mginitstruct;
 
 thresh = 0.1;
-frameskip=10;
 
 l = length(varargin);
 
@@ -322,16 +321,13 @@ if strcmpi(method,'Diff')
             mg.video.gram.y = imcomplement(mg.video.gram.y);
         end
     else
-        k=0; % index to keep track of frames
         while mg.video.obj.CurrentTime < endtime
             progmeter(ind,numf);
             pfr = rgb2gray(readFrame(mg.video.obj));
-            k=k+1;
-            if mod(k,frameskip)==0
-                diff = abs(pfr-fr);
-                if filterflag
-                    diff = mgmotionfilter(diff,filtertype,thresh);
-                end
+            diff = abs(pfr-fr);
+            if filterflag
+               diff = mgmotionfilter(diff,filtertype,thresh);
+            end
             [com,qom] = mgcentroid(diff);
 %             hautoh = vision.Autothresholder;
 %             level = multithresh(diff);
