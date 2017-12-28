@@ -1,7 +1,7 @@
 function [per,ac,eac,lag] = mgautocor(mg,type,maxp,method)
 % function out = mgautocor(fn,max,method)
 % mgautocor computes the period of the input data and returns the
-% period,autocorrelation functions and enhanced autocorrelation functions
+% period, autocorrelation functions and enhanced autocorrelation functions
 % and lags
 % syntax:[per,ac,eac,lag] = mgautocor(out,type,maxp,method);
 %

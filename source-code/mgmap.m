@@ -1,8 +1,8 @@
 function mg = mgmap(varargin)
 % function mg = mgcrop(varargin)
-% mgmap extract the same segment of audio, mocap data
-% according to video, if the filename of audio is not given, then mgmap trys to 
-% read audio data from video.In this case, the input mg must contain the
+% mgmap extracts the same segment of audio and mocap data
+% according to video. If the filename of audio is not given, then mgmap tries to 
+% read audio data from video. In this case, the input mg must contain the
 % originl video information such that the corresponding audio can be
 % extracted. e.g out of mgvideoreader.
 %

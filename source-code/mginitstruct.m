@@ -1,6 +1,7 @@
 function mg = mginitstruct(varargin)
 % function mg = mginitstruct;
-% initiate a musical gestures data structure containing video, audio, mocap fields
+% mginitstruct initiates a musical gestures data structure, containing video, audio, 
+% and mocap fields
 % syntax: mg = mginitstruct;
 % output: mg, musical gestures data structure
 
