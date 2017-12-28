@@ -26,7 +26,7 @@ function mg = mgmotion(f,varargin)
 % two successive frames. 'OpticalFlow' calculates the optical flow field
 % filtertype: Binary, Regular, Blob. When choosing Blob, the element
 % structure needs to be constructed using function strel
-% thresh: threshold [0,1]
+% thresh: threshold [0,1] (default=0.1)
 %
 % output:
 % mg, a musical gestures data structure containing the computed motion
@@ -41,14 +41,16 @@ if ischar(f)
         starttime = 0;
         mg = mgvideoreader(f);
         endtime = mg.video.endtime;
-        filterflag = 0;
+        %filterflag = 0;
+        filterflag = 1;
     elseif l == 1
         if strcmpi(varargin{1},'Diff') || strcmpi(varargin{1},'OpticalFlow')
             method = varargin{1};
             starttime = 0;
             mg = mgvideoreader(f);
             endtime = mg.video.endtime;
-            filterflag = 0;
+%            filterflag = 0;
+            filterflag = 1;
         else
             error('please specify a method for motion estimation,Diff or OpticalFlow.');
         end
@@ -59,13 +61,14 @@ if ischar(f)
                 starttime = varargin{2};
                 mg = mgvideoreader(f,'Extract',starttime);
                 endtime = mg.video.endtime;
-                filterflag = 0;
+                %filterflag = 0;
+                filterflag = 1;
             elseif ischar(varargin{2})&& (strcmpi(varargin{2},'Regular') || strcmpi(varargin{2},'Binary'))
                 starttime = 0;
                 mg = mgvideoreader(f);
                 endtime = mg.video.endtime;
                 filtertype = varargin{2};
-                thresh = 0.2; % default;
+                thresh = 0.1; % default;
                 filterflag = 1;
             else
                 error('Please specify a filter type, Regular or Binary');
@@ -80,14 +83,15 @@ if ischar(f)
                 starttime = varargin{2};
                 endtime = varargin{3};
                 mg = mgvideoreader(f,'Extract',starttime,endtime);
-                filterflag = 0;
+                %filterflag = 0;
+                filterflag = 1;
             elseif isnumeric(varargin{2}) && ischar(varargin{3})
                 starttime = varargin{2};
                 mg = mgvideoreader(f,'Extract',starttime);
                 endtime = mg.video.endtime;
                 filtertype = varargin{3};
                 filterflag = 1;
-                thresh = 0.2; % default;
+                thresh = 0.1; % default;
             elseif ischar(varargin{2})
                 starttime = 0;
                 mg = mgvideoreader(f);
@@ -109,7 +113,7 @@ if ischar(f)
                 endtime = varargin{3};
                 mg = mgvideoreader(f,'Extract',starttime,endtime);
                 filtertype = varargin{4};
-                thresh = 0.2;
+                thresh = 0.1;
                 filterflag = 1;
             elseif isnumeric(varargin{2}) && ischar(varargin{3}) && isnumeric(varargin{4})
                 starttime = varargin{2};
@@ -147,13 +151,15 @@ elseif isstruct(f) && isfield(f,'video')
         method = 'Diff';
         starttime = mg.video.starttime;
         endtime = mg.video.endtime;
-        filterflag = 0;
+        %filterflag = 0;
+        filterflag = 1;
     elseif l == 1
         if ismember(lower(varargin{1}),lower({'Diff','OpticalFlow'}))
             method = varargin{1};
             starttime = mg.video.starttime;
             endtime = mg.video.endtime;
-            filterflag = 0;
+            %filterflag = 0;
+            filterflag = 1;
         else
             error('Please specify a method for motion estimation.');
         end
@@ -162,14 +168,15 @@ elseif isstruct(f) && isfield(f,'video')
             method = varargin{1};
             starttime = varargin{2};
             endtime = mg.video.endtime;
-            filterflag = 0;
+            %filterflag = 0;
+            filterflag = 1;
         elseif ismember(lower(varargin{1}),lower({'Diff','OpticalFlow'})) && ismember(lower(varargin{2}),lower({'Binary','Regular'}))
             method = varargin{1};
             filtertype = varargin{2};
             filterflag = 1;
             starttime = mg.video.starttime;
             endtime = mg.video.endtime;
-            thresh = 0.2; % default;
+            thresh = 0.1; % default;
         else
             error('Please specify a method for motion estimation, Diff or OpticalFlow');
         end
@@ -179,12 +186,13 @@ elseif isstruct(f) && isfield(f,'video')
             if isnumeric(varargin{2}) && isnumeric(varargin{3})
                 starttime = varargin{2};
                 endtime = varargin{3};
-                filterflag = 0;
+                %filterflag = 0;
+                filterflag = 1;
             elseif isnumeric(varargin{2}) && ismember(lower(varargin{3}),lower({'Binary','Regular'}))
                 starttime = varargin{2};
                 endtime = mg.video.endtime;
                 filtertype = varargin{3};
-                thresh = 0.2;
+                thresh = 0.1;
                 filterflag = 1;
             elseif ischar(varargin{2}) && isnumeric(varargin{3})
                 starttime = mg.video.starttime;
@@ -205,7 +213,7 @@ elseif isstruct(f) && isfield(f,'video')
                 starttime = varargin{2};
                 endtime = varargin{3};
                 filtertype = varargin{4};
-                thresh = 0.2;
+                thresh = 0.1;
                 filterflag = 1;
             elseif isnumeric(varargin{2}) && ischar(varargin{3}) && isnumeric(varargin{4})
                 starttime = varargin{2};
