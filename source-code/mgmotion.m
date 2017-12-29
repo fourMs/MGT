@@ -35,9 +35,8 @@ function mg = mgmotion(f,varargin)
 % mg = mginitstruct;
 
 thresh = 0.1;
-frameInterval = 25;
+frameInterval = 1;
 ii = 0;
-
 l = length(varargin);
 
 if ischar(f)
