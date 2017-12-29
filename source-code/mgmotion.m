@@ -2,10 +2,10 @@ function mg = mgmotion(f,varargin)
 %MGMOTION - Calculate various motion features from a video file
 % mgmotion computes a motion video, motiongram, quantity of motion, centroid of
 % motion, width of motion, and height of motion from the video file or musical
-% gestures data structure. The default method is to use plain frame differencing 
-% ('Diff'). A more expensive optical flow field can be calculated with the 
-% 'OpticalFlow' method. The mgmotion founction also provides a color mode, and the 
-% possibility to convert images with white on black instead of black on white. To 
+% gestures data structure. The default method is to use plain frame differencing
+% ('Diff'). A more expensive optical flow field can be calculated with the
+% 'OpticalFlow' method. The mgmotion founction also provides a color mode, and the
+% possibility to convert images with white on black instead of black on white. To
 % use these modes, you need to set mode in the command, e.g.,
 % mg.video.mode.color = 'On'
 % mg.video.mode.convert = 'On'
@@ -16,7 +16,7 @@ function mg = mgmotion(f,varargin)
 % mg = mgmotion(mg,'Diff');
 % mg = mgmotion(filename,'Diff',starttime,endtime,'Regular',0.3);
 % mg = mgmotion(filename,'OpticalFlow',starttime,'Binary',0.2);
-% mg = mgmotion(mg,'OpticalFlow');  
+% mg = mgmotion(mg,'OpticalFlow');
 %
 % input:
 % filename: the name of the video file
@@ -35,6 +35,8 @@ function mg = mgmotion(f,varargin)
 % mg = mginitstruct;
 
 thresh = 0.1;
+frameInterval = 1;
+ii = 0;
 
 l = length(varargin);
 
@@ -53,7 +55,7 @@ if ischar(f)
             endtime = mg.video.endtime;
             filterflag = 0;
         else
-            error('please specify a method for motion estimation,Diff or OpticalFlow.');
+            error('please specify a method for motion estimation, Diff or OpticalFlow.');
         end
     elseif l == 2
         if strcmpi(varargin{1},'Diff') || strcmpi(varargin{1},'OpticalFlow')
@@ -237,6 +239,7 @@ elseif isstruct(f) && isfield(f,'video')
         error('Wrong number of input parameters');
     end
 end
+
 mg.video.method = method;
 mg.video.gram.y = [];
 mg.video.gram.x = [];
@@ -249,6 +252,7 @@ mg.video.starttime = starttime;
 mg.video.endtime = endtime;
 % hblob = vision.BlobAnalysis;
 % hblob.AreaOutputPort = true;
+
 if isfield(mg.video,'mode') && isfield(mg.video.mode,'color')
     if strcmpi(mg.video.mode.color,'on')
         colorflag = true;
@@ -285,38 +289,41 @@ if strcmpi(method,'Diff')
     open(v);
     if colorflag == true
         h = waitbar(0,'Processing video...');
-        while mg.video.obj.CurrentTime < endtime
+        while hasFrame(mg.video.obj)
             %progmeter(ind,numf);
             waitbar(mg.video.obj.CurrentTime/mg.video.obj.Duration,h);
             pfr = readFrame(mg.video.obj);
-            diff = abs(pfr-fr);
-            if filterflag
-                for i = 1:size(diff,3)
-                    diff(:,:,i) = mgmotionfilter(diff(:,:,i),filtertype,thresh);
+            ii = ii + 1;
+            if mod(ii,frameInterval) == 0
+                diff = abs(pfr-fr);
+                if filterflag
+                    for i = 1:size(diff,3)
+                        diff(:,:,i) = mgmotionfilter(diff(:,:,i),filtertype,thresh);
+                    end
                 end
+                [com,qom] = mgcentroid(rgb2gray(diff));
+                %             hautoh = vision.Autothresholder;
+                %             level = multithresh(rgb2gray(diff));
+                %             bw = step(hautoh,rgb2gray(diff));
+                %             bw = rgb2gray(diff) >= level;
+                %             aom = sum(step(hblob,bw));
+                %            [bbox,aom] = findboundingbox(diff);
+                %            mg.video.wom = [mg.video.wom;bbox(3)];
+                %            mg.video.hom = [mg.video.hom;bbox(4)];
+                %            mg.video.aom = [mg.video.aom;aom];
+                mg.video.qom = [mg.video.qom;qom];
+                mg.video.com = [mg.video.com;com];
+                gramx = mean(diff);
+                gramy = mean(diff,2);
+                mg.video.gram.y = [mg.video.gram.y;gramx];
+                mg.video.gram.x = [mg.video.gram.x,gramy];
+                if convertflag == true
+                    diff = imcomplement(diff);
+                end
+                writeVideo(v,diff);
+                fr = pfr;
+                ind = ind + 1;
             end
-            [com,qom] = mgcentroid(rgb2gray(diff));
-%             hautoh = vision.Autothresholder;
-%             level = multithresh(rgb2gray(diff));
-%             bw = step(hautoh,rgb2gray(diff));
-%             bw = rgb2gray(diff) >= level;
-%             aom = sum(step(hblob,bw));
-%            [bbox,aom] = findboundingbox(diff);
-%            mg.video.wom = [mg.video.wom;bbox(3)];
-%            mg.video.hom = [mg.video.hom;bbox(4)];
-%            mg.video.aom = [mg.video.aom;aom];
-            mg.video.qom = [mg.video.qom;qom];
-            mg.video.com = [mg.video.com;com];
-            gramx = mean(diff);
-            gramy = mean(diff,2);
-            mg.video.gram.y = [mg.video.gram.y;gramx];
-            mg.video.gram.x = [mg.video.gram.x,gramy];
-            if convertflag == true
-               diff = imcomplement(diff);
-            end
-            writeVideo(v,diff);
-            fr = pfr;
-            ind = ind + 1;
         end
         close(h);
         if convertflag == true
@@ -325,37 +332,41 @@ if strcmpi(method,'Diff')
         end
     else
         h = waitbar(0,'Processing video...');
-        while mg.video.obj.CurrentTime < endtime
+        while hasFrame(mg.video.obj)
             %progmeter(ind,numf);
             waitbar(mg.video.obj.CurrentTime/mg.video.obj.Duration,h);
             pfr = rgb2gray(readFrame(mg.video.obj));
-            diff = abs(pfr-fr);
-            if filterflag
-               diff = mgmotionfilter(diff,filtertype,thresh);
+            ii = ii + 1;
+            if mod(ii,frameInterval) == 0
+                
+                diff = abs(pfr-fr);
+                if filterflag
+                    diff = mgmotionfilter(diff,filtertype,thresh);
+                end
+                [com,qom] = mgcentroid(diff);
+                %             hautoh = vision.Autothresholder;
+                %             level = multithresh(diff);
+                %             bw = imquantize(diff,level);
+                %             bw = diff >= level;
+                %             bw = step(hautoh,diff);
+                %             aom = sum(step(hblob,bw));
+                %            [bbox,aom] = findboundingbox(diff);
+                %            mg.video.aom = [mg.video.aom;aom];
+                %            mg.video.wom = [mg.video.wom;bbox(3)];
+                %            mg.video.hom = [mg.video.hom;bbox(4)];
+                gramx = mean(diff);
+                gramy = mean(diff,2);
+                mg.video.gram.y = [mg.video.gram.y;gramx];
+                mg.video.gram.x = [mg.video.gram.x,gramy];
+                mg.video.qom = [mg.video.qom;qom];
+                mg.video.com = [mg.video.com;com];
+                if convertflag == true
+                    diff = imcomplement(diff);
+                end
+                writeVideo(v,diff);
+                fr = pfr;
+                ind = ind + 1;
             end
-            [com,qom] = mgcentroid(diff);
-%             hautoh = vision.Autothresholder;
-%             level = multithresh(diff);
-%             bw = imquantize(diff,level);
-%             bw = diff >= level;
-%             bw = step(hautoh,diff);
-%             aom = sum(step(hblob,bw));
-%            [bbox,aom] = findboundingbox(diff);
-%            mg.video.aom = [mg.video.aom;aom];
-%            mg.video.wom = [mg.video.wom;bbox(3)];
-%            mg.video.hom = [mg.video.hom;bbox(4)];
-            gramx = mean(diff);
-            gramy = mean(diff,2);
-            mg.video.gram.y = [mg.video.gram.y;gramx];
-            mg.video.gram.x = [mg.video.gram.x,gramy];
-            mg.video.qom = [mg.video.qom;qom];
-            mg.video.com = [mg.video.com;com];
-            if convertflag == true
-               diff = imcomplement(diff);
-            end
-            writeVideo(v,diff);
-            fr = pfr;
-            ind = ind + 1;
         end
         close(h);
         if convertflag == true
@@ -367,27 +378,27 @@ if strcmpi(method,'Diff')
     disp(' ');
     disp(['The motion video is created with name ',newfile]);
     mg.video.nframe = v.FrameCount;
-%     mg.video.nframe = ind - 1;
-
+    %     mg.video.nframe = ind - 1;
+    
     % Write motiongrams to files
     tmpfile=strcat(pr,'_mgx.tiff');
     imwrite(mg.video.gram.x, tmpfile);
     tmpfile=strcat(pr,'_mgy.tiff');
     imwrite(mg.video.gram.y, tmpfile);
-
+    
     % Plot graphs
-%    figure,subplot(211),plot(mg.video.qom)
-%    title('Quantity of Motion');
-%    set(gca,'XTick',[0:2*mg.video.obj.FrameRate:mg.video.nframe])
-%    set(gca,'XTickLabel',[starttime*mg.video.obj.FrameRate:...
-%        2*mg.video.obj.FrameRate:endtime*mg.video.obj.FrameRate]/mg.video.obj.FrameRate);
-%    xlabel('Time (s)')
-%    ylabel('Quantity')
-%    subplot(212),plot(mg.video.com(:,1),mg.video.com(:,2),'.')
-%    axis equal;
-%    title('Centroid of Motion');
-%    xlabel('x direction')
-%    ylabel('y direction')
+    %    figure,subplot(211),plot(mg.video.qom)
+    %    title('Quantity of Motion');
+    %    set(gca,'XTick',[0:2*mg.video.obj.FrameRate:mg.video.nframe])
+    %    set(gca,'XTickLabel',[starttime*mg.video.obj.FrameRate:...
+    %        2*mg.video.obj.FrameRate:endtime*mg.video.obj.FrameRate]/mg.video.obj.FrameRate);
+    %    xlabel('Time (s)')
+    %    ylabel('Quantity')
+    %    subplot(212),plot(mg.video.com(:,1),mg.video.com(:,2),'.')
+    %    axis equal;
+    %    title('Centroid of Motion');
+    %    xlabel('x direction')
+    %    ylabel('y direction')
     s = mgvideoreader(newfile);
     mg.video.obj = s.video.obj;
 elseif strcmpi(method,'OpticalFlow')
@@ -402,53 +413,57 @@ elseif strcmpi(method,'OpticalFlow')
     fh = figure('visible','off');
     fr1 = rgb2gray(readFrame(mg.video.obj));
     h = waitbar(0,'Processing video...');
-    while mg.video.obj.CurrentTime < endtime
+    while hasFrame(mg.video.obj)
         %progmeter(ind,numf);
         waitbar(mg.video.obj.CurrentTime/mg.video.obj.Duration,h);
         fr2 = rgb2gray(readFrame(mg.video.obj));
-        flow = mgopticalflow(fr2,fr1);
-        magnitude = flow.Magnitude;
-        if filterflag
-            magnitude = mgmotionfilter(magnitude,filtertype,thresh);
+        ii = ii + 1;
+        if mod(ii,frameInterval) == 0
+            
+            flow = mgopticalflow(fr2,fr1);
+            magnitude = flow.Magnitude;
+            if filterflag
+                magnitude = mgmotionfilter(magnitude,filtertype,thresh);
+            end
+            qom = sum(sum(magnitude));
+            [m,n] = size(magnitude);
+            x = 1:n;
+            y = 1:m;
+            meanx = mean(magnitude);
+            comx = x*meanx'/sum(meanx);
+            meany = mean(magnitude,2);
+            comy = y*meany/sum(meany);
+            com = [comx,comy];
+            gramx = mean(magnitude);
+            gramy = mean(magnitude,2);
+            mg.video.gram.y = [mg.video.gram.y;gramx];
+            mg.video.gram.x = [mg.video.gram.x,gramy];
+            mg.video.qom = [mg.video.qom;qom];
+            mg.video.com = [mg.video.com;com];
+            imshow(fr1),hold on;
+            plot(flow,'DecimationFactor',[20 20],'ScaleFactor',10);
+            hold off;
+            writeVideo(v,getframe(fh));
+            fr1 = fr2;
+            ind = ind + 1;
         end
-        qom = sum(sum(magnitude));
-        [m,n] = size(magnitude);
-        x = 1:n;
-        y = 1:m;
-        meanx = mean(magnitude);
-        comx = x*meanx'/sum(meanx);
-        meany = mean(magnitude,2);
-        comy = y*meany/sum(meany);
-        com = [comx,comy];
-        gramx = mean(magnitude);
-        gramy = mean(magnitude,2);
-        mg.video.gram.y = [mg.video.gram.y;gramx];
-        mg.video.gram.x = [mg.video.gram.x,gramy];
-        mg.video.qom = [mg.video.qom;qom];
-        mg.video.com = [mg.video.com;com];
-        imshow(fr1),hold on;
-        plot(flow,'DecimationFactor',[20 20],'ScaleFactor',10);
-        hold off;
-        writeVideo(v,getframe(fh));
-        fr1 = fr2;
-        ind = ind + 1;
     end
     close(h);
     close(v);
     disp(' ');
     disp(['The motion video is created with name ',newfile]);
-
-%    figure,subplot(211),plot(mg.video.qom)
-%    title('Quantity of motion by opticalflow');
-%    set(gca,'XTick',[0:2*mg.video.obj.FrameRate:ind])
-%    set(gca,'XTickLabel',[starttime*mg.video.obj.FrameRate:2*mg.video.obj.FrameRate:endtime*mg.video.obj.FrameRate]/mg.video.obj.FrameRate);
-%    xlabel('Time (s)')
-%    ylabel('Quantity')
-%    subplot(212),plot(mg.video.com(:,1),mg.video.com(:,2),'.')
-%    axis equal
-%    title('Centroid of motion by opticalflow');
-%    xlabel('x direction')
-%    ylabel('y direction')
+    
+    %    figure,subplot(211),plot(mg.video.qom)
+    %    title('Quantity of motion by opticalflow');
+    %    set(gca,'XTick',[0:2*mg.video.obj.FrameRate:ind])
+    %    set(gca,'XTickLabel',[starttime*mg.video.obj.FrameRate:2*mg.video.obj.FrameRate:endtime*mg.video.obj.FrameRate]/mg.video.obj.FrameRate);
+    %    xlabel('Time (s)')
+    %    ylabel('Quantity')
+    %    subplot(212),plot(mg.video.com(:,1),mg.video.com(:,2),'.')
+    %    axis equal
+    %    title('Centroid of motion by opticalflow');
+    %    xlabel('x direction')
+    %    ylabel('y direction')
 end
 mg.video.obj.CurrentTime = 0;
 mg.type = 'mg data';
