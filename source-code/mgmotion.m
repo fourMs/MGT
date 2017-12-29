@@ -284,8 +284,10 @@ if strcmpi(method,'Diff')
     numf = mg.video.obj.FrameRate*(endtime-starttime)-1;
     open(v);
     if colorflag == true
+        h = waitbar(0,'Processing video...');
         while mg.video.obj.CurrentTime < endtime
-            progmeter(ind,numf);
+            %progmeter(ind,numf);
+            waitbar(mg.video.obj.CurrentTime/mg.video.obj.Duration,h);
             pfr = readFrame(mg.video.obj);
             diff = abs(pfr-fr);
             if filterflag
@@ -316,13 +318,16 @@ if strcmpi(method,'Diff')
             fr = pfr;
             ind = ind + 1;
         end
+        close(h);
         if convertflag == true
             mg.video.gram.x = imcomplement(mg.video.gram.x);
             mg.video.gram.y = imcomplement(mg.video.gram.y);
         end
     else
+        h = waitbar(0,'Processing video...');
         while mg.video.obj.CurrentTime < endtime
-            progmeter(ind,numf);
+            %progmeter(ind,numf);
+            waitbar(mg.video.obj.CurrentTime/mg.video.obj.Duration,h);
             pfr = rgb2gray(readFrame(mg.video.obj));
             diff = abs(pfr-fr);
             if filterflag
@@ -352,6 +357,7 @@ if strcmpi(method,'Diff')
             fr = pfr;
             ind = ind + 1;
         end
+        close(h);
         if convertflag == true
             mg.video.gram.y = imcomplement(mg.video.gram.y);
             mg.video.gram.x = imcomplement(mg.video.gram.x);
@@ -395,8 +401,10 @@ elseif strcmpi(method,'OpticalFlow')
     open(v);
     fh = figure('visible','off');
     fr1 = rgb2gray(readFrame(mg.video.obj));
+    h = waitbar(0,'Processing video...');
     while mg.video.obj.CurrentTime < endtime
-        progmeter(ind,numf);
+        %progmeter(ind,numf);
+        waitbar(mg.video.obj.CurrentTime/mg.video.obj.Duration,h);
         fr2 = rgb2gray(readFrame(mg.video.obj));
         flow = mgopticalflow(fr2,fr1);
         magnitude = flow.Magnitude;
@@ -425,7 +433,8 @@ elseif strcmpi(method,'OpticalFlow')
         fr1 = fr2;
         ind = ind + 1;
     end
-    close(v)
+    close(h);
+    close(v);
     disp(' ');
     disp(['The motion video is created with name ',newfile]);
 
