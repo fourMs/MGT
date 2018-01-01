@@ -467,3 +467,10 @@ end
 mg.video.obj.CurrentTime = 0;
 mg.type = 'mg data';
 mg.createtime = datestr(datetime('today'));
+
+% Write data to text file
+csvdata = [mg.video.qom mg.video.com];
+newfile = strcat(pr,'_data.csv');
+    
+csvwrite(newfile, csvdata); % Need to write header info as well
+% xlswrite(newfile, csvdata);
