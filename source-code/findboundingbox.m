@@ -1,6 +1,6 @@
 function [bbox,aom] = findboundingbox(f)
 % bbox = findboundingbox(f) 
-% find the boundingbox and aom of the image f
+% find the bounding box and area of motion of the image f
 if size(f,3) == 3
     f = rgb2gray(f);
 end
@@ -14,8 +14,3 @@ bbox = min(stats);
 [row,col] = find(bw>0);
 bbox(3) = max(col) - min(col);
 bbox(4) = max(row) - min(row);
-
-
-
-
-

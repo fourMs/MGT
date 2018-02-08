@@ -474,3 +474,5 @@ newfile = strcat(pr,'_data.csv');
     
 csvwrite(newfile, csvdata); % Need to write header info as well
 % xlswrite(newfile, csvdata);
+
+mgmotionplot(mg);
