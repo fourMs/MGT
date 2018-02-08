@@ -10,7 +10,7 @@ Parts of the toolbox requires the following MathWorks toolboxes:
 It also relies on these third-party toolboxes:
 
 - [matlabPyrTools](http://se.mathworks.com/matlabcentral/fileexchange/52571-matlabpyrtools)
-- [MoCap Toolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mocaptoolbox)
+- [MoCap Toolbox](https://www.jyu.fi/hytk/fi/laitokset/mutku/en/research/materials/mocaptoolbox)
 - [MIRtoolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mirtoolbox)
 
 
