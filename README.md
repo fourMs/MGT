@@ -30,6 +30,9 @@ The Musical Gestures Toolbox contains a set of functions for the analysis and vi
 - Visualization functions
 - Middle and higher level feature extraction functions
 
+## Tutorial
+
+There is a more or less complete introduction to the main features in the software carpentry workshop [Quantitative Video analysis for Qualitative Research](https://alexarje.github.io/video-analysis-workshop/).
 
 ## History
 
