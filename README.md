@@ -8,18 +8,18 @@ The Musical Gestures Toolbox (MGT) is a Matlab toolbox for analysing music-relat
 
 1. Ensure that you have the relevant Matlab dependencies installed: 
 
-- Computer Vision System Toolbox
-- Image Processing Toolbox
+    - Computer Vision System Toolbox
+    - Image Processing Toolbox
 
 2. Install the dependencies: 
 
-- [matlabPyrTools](http://se.mathworks.com/matlabcentral/fileexchange/52571-matlabpyrtools)
-- [MoCap Toolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mocaptoolbox)
-- [MIRtoolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mirtoolbox).
+    - [matlabPyrTools](http://se.mathworks.com/matlabcentral/fileexchange/52571-matlabpyrtools)
+    - [MoCap Toolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mocaptoolbox) 
+    - [MIRtoolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mirtoolbox).
 
-2. Add the files in the folder "source-code" to your Matlab path: under the "Home" section, click "set path". Click the "Add Folder" button and choose the "source-code" folder and finally click "save".
+3. Add the files in the folder "source-code" to your Matlab path: under the "Home" section, click "set path". Click the "Add Folder" button and choose the "source-code" folder and finally click "save".
 
-3. Try out the m-files in the examples folder. There are some test files (audio, video, mocap) in the "example_data" folder.
+4. Try out the m-files in the examples folder. There are some test files (audio, video, mocap) in the "example_data" folder.
 
 ## Functions
 
