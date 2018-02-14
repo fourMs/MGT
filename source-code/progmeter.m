@@ -1,6 +1,6 @@
 function progmeter(i,n,w)
 
-  disp(' ');
+%  disp(' ');
 if nargin<3,
     w = 1;
 end
@@ -16,7 +16,7 @@ elseif ischar(i)
 end
 
 if mod(i,w*n/100) <= mod(i-1,w*n/100),
-  disp(' ');
+%  disp(' ');
     fwrite(1,sprintf('\b\b\b'));
     fwrite(1,sprintf('%2d%%', round(100*i/n)));
 end
