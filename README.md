@@ -2,27 +2,24 @@
 
 The Musical Gestures Toolbox (MGT) is a Matlab toolbox for analysing music-related body motion, using sets of audio, video and motion capture data as source material.
 
-Parts of the toolbox requires the following MathWorks toolboxes: 
-
-- Computer Vision System Toolbox
-- Image Processing Toolbox
-
-It also relies on these third-party toolboxes:
-
-- [matlabPyrTools](http://se.mathworks.com/matlabcentral/fileexchange/52571-matlabpyrtools)
-- [MoCap Toolbox](https://www.jyu.fi/hytk/fi/laitokset/mutku/en/research/materials/mocaptoolbox)
-- [MIRtoolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mirtoolbox)
-
-
 ## Installation
 
 *Important: The toolbox has mainly been tested on Windows, most recently with Matlab 2017a. A lot of things changed after Matlab 2015b, and we know that there are issues with running it on Mac and Linux. We are eager to get everything fixed, and we appreciate all help in finding (and fixing!) bugs.*
 
-1. Install the dependencies: [matlabPyrTools](http://se.mathworks.com/matlabcentral/fileexchange/52571-matlabpyrtools), [MoCap Toolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mocaptoolbox) and [MIRtoolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mirtoolbox).
+1. Ensure that you have the relevant Matlab dependencies installed: 
 
-2. Add the files in the folder "source-code" to your Matlab path: under the "Home" section, click "set path". Click the "Add Folder" button and choose the "source-code" folder and finally click "save".
+    - Computer Vision System Toolbox
+    - Image Processing Toolbox
 
-3. Try out the m-files in the examples folder. There are some test files (audio, video, mocap) in the "example_data" folder.
+2. Install the dependencies: 
+
+    - [matlabPyrTools](http://se.mathworks.com/matlabcentral/fileexchange/52571-matlabpyrtools)
+    - [MoCap Toolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mocaptoolbox) 
+    - [MIRtoolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mirtoolbox).
+
+3. Add the files in the folder "source-code" to your Matlab path: under the "Home" section, click "set path". Click the "Add Folder" button and choose the "source-code" folder and finally click "save".
+
+4. Try out the m-files in the examples folder. There are some test files (audio, video, mocap) in the "example_data" folder.
 
 ## Functions
 
@@ -33,6 +30,9 @@ The Musical Gestures Toolbox contains a set of functions for the analysis and vi
 - Visualization functions
 - Middle and higher level feature extraction functions
 
+## Tutorial
+
+There is a more or less complete introduction to the main features in the software carpentry workshop [Quantitative Video analysis for Qualitative Research](https://alexarje.github.io/video-analysis-workshop/).
 
 ## History
 
