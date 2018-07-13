@@ -1,4 +1,4 @@
-function mgwrite(mg)
+function mgwrite(mg,fileName)
 % function for writing video files with audio sync
 % 
 % Requires 'Computer Vision System Toolbox 8.1'
@@ -7,6 +7,10 @@ function mgwrite(mg)
 % Quicktime doesn't work for playing the audio, but VLC does
 %
 %
+
+if nargin < 2
+    fileName = 'myFile.avi';
+end
 
 sr = uncell(get(mg.audio.mir,'Sampling'));
 
@@ -20,7 +24,7 @@ numVF = mg.video.obj.FrameRate*(mg.video.endtime-mg.video.starttime);
 numAF = size(audiosignal,1);
 numAFperVF = floor(numAF/numVF);
 
-videoFWriter = vision.VideoFileWriter('myfile.avi', ...
+videoFWriter = vision.VideoFileWriter(fileName, ...
                                       'FileFormat', 'AVI', ...
                                       'AudioInputPort', true, ...
                                       'FrameRate',  mg.video.obj.FrameRate);
