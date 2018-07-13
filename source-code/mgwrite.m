@@ -1,5 +1,12 @@
 function mgwrite(mg,fileName)
 % function for writing video files with audio sync
+%
+% mgwrite(mg)
+% mgwrite(mg,fileName)
+%
+% INPUTS:
+% mg - mgt data structure containing an audio and a video track
+% fileName - file name of saved file (default: myFile.avi)
 % 
 % Requires 'Computer Vision System Toolbox 8.1'
 % Only writes uncompressed video
