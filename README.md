@@ -4,14 +4,12 @@ The Musical Gestures Toolbox (MGT) is a Matlab toolbox for analysing music-relat
 
 ## Installation
 
-*Important: The toolbox has mainly been tested on Windows, most recently with Matlab 2017a. A lot of things changed after Matlab 2015b, and we know that there are issues with running it on Mac and Linux. We are eager to get everything fixed, and we appreciate all help in finding (and fixing!) bugs.*
-
-1. Ensure that you have the relevant Matlab dependencies installed: 
+1. Many of the basic things work with a standard Matlab install, but to use all features you will also need these extra Matlab packages: 
 
     - Computer Vision System Toolbox
     - Image Processing Toolbox
 
-2. Install the dependencies: 
+2. Some of the functions build on code from these third-party toolboxes: 
 
     - [matlabPyrTools](http://se.mathworks.com/matlabcentral/fileexchange/52571-matlabpyrtools)
     - [MoCap Toolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mocaptoolbox) 
@@ -33,6 +31,12 @@ The Musical Gestures Toolbox contains a set of functions for the analysis and vi
 ## Tutorial
 
 There is a more or less complete introduction to the main features in the software carpentry workshop [Quantitative Video analysis for Qualitative Research](https://alexarje.github.io/video-analysis-workshop/).
+
+## Reference
+
+Please use a reference to this publication, if you want to cite the toolbox: 
+
+- Jensenius, Alexander Refsum (2018). [The Musical Gestures Toolbox for Matlab](http://hdl.handle.net/10852/65559). Proceedings of the 19th International Society for Music Information Retrieval Conference, Late Breaking Demos Session.
 
 ## History
 
