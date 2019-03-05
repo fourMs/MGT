@@ -11,7 +11,7 @@ The Musical Gestures Toolbox (MGT) is a Matlab toolbox for analysing music-relat
 
 2. Some of the functions build on code from these third-party toolboxes: 
 
-    - [matlabPyrTools](http://se.mathworks.com/matlabcentral/fileexchange/52571-matlabpyrtools)
+    - [matlabPyrTools](https://github.com/LabForComputationalVision/matlabPyrTools/archive/master.zip)
     - [MoCap Toolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mocaptoolbox) 
     - [MIRtoolbox](https://www.jyu.fi/hum/laitokset/musiikki/en/research/coe/materials/mirtoolbox).
 
