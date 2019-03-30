@@ -103,7 +103,7 @@ elseif isstruct(varargin{1})
         if isfield(mg,'video')
             mg.video.obj.CurrentTime = starttime;
             [~,pr,~] = fileparts(mg.video.obj.Name);
-            newname = strcat(pr,'segment.avi');
+            newname = strcat(pr,'_segment.avi');
             v = VideoWriter(newname);
             v.FrameRate = mg.video.obj.FrameRate;
             open(v);

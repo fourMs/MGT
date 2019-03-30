@@ -165,7 +165,7 @@ This function is called by:
 0103         <span class="keyword">if</span> isfield(mg,<span class="string">'video'</span>)
 0104             mg.video.obj.CurrentTime = starttime;
 0105             [~,pr,~] = fileparts(mg.video.obj.Name);
-0106             newname = strcat(pr,<span class="string">'segment.avi'</span>);
+0106             newname = strcat(pr,<span class="string">'_segment.avi'</span>);
 0107             v = VideoWriter(newname);
 0108             v.FrameRate = mg.video.obj.FrameRate;
 0109             open(v);
