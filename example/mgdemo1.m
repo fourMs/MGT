@@ -4,7 +4,7 @@
 
 % read video file into matlab
 % load mg_structure.mat;
-mg = mgread('pianist.mp4','pianist.wav','pianist.tsv');
+mg = mgread('pianist.avi','pianist.wav','pianist.tsv');
 % extract a segment from 10 seconds to 30 seconds from the mg
 mgseg = mgvideoreader(mg,'Extract',10,30);
 % map the same segment to audio,mocap dataset
@@ -48,19 +48,26 @@ mgvideoplot(mgsegmo,'Converted','Off');
 % plot the whole motion grams
 figure;
 subplot(211)
-gramx = medfilt2(mgsegmo.video.gram.gramx,[3,3]);
-gramx = mgsegmo.video.gram.gramx>0.3;
-gramx = mgsegmo.video.gram.gramx.*gramx;
+gramx = medfilt2(mgsegmo.video.gram.x,[3,3]);
+gramx = mgsegmo.video.gram.x>0.3;
+gramx = mgsegmo.video.gram.x.*gramx;
+%gramx = medfilt2(mgsegmo.video.gram.gramx,[3,3]);
+%gramx = mgsegmo.video.gram.gramx>0.3;
+%gramx = mgsegmo.video.gram.gramx.*gramx;
 
 imagesc(gramx)
-[~,n] = size(mgsegmo.video.gram.gramx);
+[~,n] = size(mgsegmo.video.gram.x);
+%[~,n] = size(mgsegmo.video.gram.gramx);
 set(gca,'XTick',[0:2*mgsegmo.video.obj.FrameRate:n]);
 set(gca,'XTickLabel',[0:2*mgsegmo.video.obj.FrameRate:n]/mgsegmo.video.obj.FrameRate+mgsegmo.video.starttime);
 title('horizontal gram');
 subplot(212)
-gramy = medfilt2(mgsegmo.video.gram.gramy,[3,3]);
-gramy = mgsegmo.video.gram.gramy>0.4;
-gramy = mgsegmo.video.gram.gramy.*gramy;
+gramy = medfilt2(mgsegmo.video.gram.y,[3,3]);
+gramy = mgsegmo.video.gram.y>0.4;
+gramy = mgsegmo.video.gram.y.*gramy;
+%gramy = medfilt2(mgsegmo.video.gram.gramy,[3,3]);
+%gramy = mgsegmo.video.gram.gramy>0.4;
+%gramy = mgsegmo.video.gram.gramy.*gramy;
 imagesc(gramy);
 set(gca,'YTick',[0:2*mgsegmo.video.obj.FrameRate:n]);
 set(gca,'YTickLabel',[0:2*mgsegmo.video.obj.FrameRate:n]/mgsegmo.video.obj.FrameRate+mgsegmo.video.starttime);

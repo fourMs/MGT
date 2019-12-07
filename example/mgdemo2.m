@@ -2,7 +2,7 @@
 % this example shows you how to analysis multiple objects, as the original
 % video recordings are too large.We need to resample the video recordings
 % first. 
-mg = mgread('dance.mp4');
+mg = mgread('dance.avi');
 % extract a temporal segment from the video
 ts = 5;
 te = 25;
@@ -49,14 +49,18 @@ xlabel('seconds')
 ylabel('magnitude')
 
 %%
-gramx = medfilt2(mgsammo.video.gram.gramx,[3,3]);
-gramx = mgsammo.video.gram.gramx>0.3;
-gramx = mgsammo.video.gram.gramx.*gramx;
+gramx = medfilt2(mgsammo.video.gram.x,[3,3]);
+gramx = mgsammo.video.gram.x>0.3;
+gramx = mgsammo.video.gram.x.*gramx;
+%gramx = medfilt2(mgsammo.video.gram.gramx,[3,3]);
+%gramx = mgsammo.video.gram.gramx>0.3;
+%gramx = mgsammo.video.gram.gramx.*gramx;
 figure;
 subplot(211)
 imagesc(gramx)
 fr = mgsammo.video.obj.FrameRate;
-[~,n] = size(mgsammo.video.gram.gramx);
+[~,n] = size(mgsammo.video.gram.x);
+%[~,n] = size(mgsammo.video.gram.gramx);
 set(gca,'XTick',[0:2*fr:mgsammo.video.nframe]);
 set(gca,'XTickLabel',[fr*...
     mgsammo.video.starttime:...
@@ -64,9 +68,12 @@ set(gca,'XTickLabel',[fr*...
     mgsammo.video.endtime*fr]...
     /fr);
 title('horizontal gram');
-gramy = medfilt2(mgsammo.video.gram.gramy,[3,3]);
-gramy = mgsammo.video.gram.gramy>0.4;
-gramy = mgsammo.video.gram.gramy.*gramy;
+gramy = medfilt2(mgsammo.video.gram.y,[3,3]);
+gramy = mgsammo.video.gram.y>0.4;
+gramy = mgsammo.video.gram.y.*gramy;
+%gramy = medfilt2(mgsammo.video.gram.gramy,[3,3]);
+%gramy = mgsammo.video.gram.gramy>0.4;
+%gramy = mgsammo.video.gram.gramy.*gramy;
 subplot(212)
 imagesc(gramy);
 set(gca,'YTick',[0:2*fr:mgsammo.video.nframe]);

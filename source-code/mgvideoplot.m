@@ -138,4 +138,9 @@ while hasFrame(mgmotion.video.obj)
         pause(1/mgmotion.video.obj.FrameRate);
     end
    i = i + 1;
+  
+   if(  (round((i/30) * mgmotion.mocap.freq) + 1) > mgmotion.mocap.nFrames)
+    break;
+   end
+   
 end
