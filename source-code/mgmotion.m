@@ -451,6 +451,7 @@ elseif strcmpi(method,'OpticalFlow')
     close(v);
     disp(' ');
     disp(['The motion video is created with name ',newfile]);
+    mg.video.nframe = v.FrameCount;
     
     %    figure,subplot(211),plot(mg.video.qom)
     %    title('Quantity of motion by opticalflow');
