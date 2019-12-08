@@ -19,7 +19,7 @@ function mg = mgmotion(f,varargin)
 % mg = mgmotion(mg,'OpticalFlow');
 % mg = mgmotion(mg, ...., 'color');
 % mg = mgmotion(mg, ...., 'convert');
-
+% mg = mgmotion(mg, ...., 'interval', 10);
 % input:
 % filename: the name of the video file
 % mg: instead of filename, uses a musical gestures data structure
@@ -62,7 +62,7 @@ cmd.filtertype = [];
 cmd.thresh = 0.1;
 cmd.color = 'off';
 cmd.convert = 'off';
-
+cmd.frameInterval = 1;
 for argi = 1:l
     if( ischar(varargin{argi}))   
         if(strcmpi(varargin{argi},'Diff') || strcmpi(varargin{argi},'OpticalFlow') )
@@ -92,6 +92,10 @@ for argi = 1:l
         elseif (strcmpi(varargin{argi},'Convert'))
             disp('Convert mode on is specified in argument');
             cmd.convert = 'on'
+        elseif (strcmpi(varargin{argi},'Interval'))
+            if(argi + 1 <= l &&  isnumeric(varargin{argi + 1}))
+                cmd.frameInterval = varargin{argi+1};
+            end
         end
     end
 end
@@ -104,7 +108,7 @@ endtime = cmd.endtime;
 filterflag = cmd.filterflag;
 filtertype = cmd.filtertype;
 thresh = cmd.thresh;
-
+frameInterval = cmd.frameInterval;
 
 mg.video.method = method;
 mg.video.gram.y = [];
