@@ -54,6 +54,7 @@ if ischar(f)
         i = i + 1;
     end
 elseif isstruct(f) && isfield(f,'video')
+    mg = f;
     if l == 1
         starttime = mg.video.starttime;
         endtime = mg.video.endtime;
