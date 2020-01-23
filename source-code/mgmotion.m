@@ -40,6 +40,8 @@ function mg = mgmotion(f,varargin)
 
 % mg = mginitstruct;
 
+
+
 thresh = 0.1;
 frameInterval = 1;
 ii = 0;
@@ -169,7 +171,11 @@ if strcmpi(method,'Diff')
         fr = rgb2gray(readFrame(mg.video.obj));
     end
     [~,pr,~] = fileparts(mg.video.obj.Name);
-    newfile = strcat(pr,'_motion.avi');
+    newfile = strcat(pwd,'\',pr,'_motion.avi');
+    mg.output.motion.filename = newfile;
+    
+    
+    
     v = VideoWriter(newfile);
     v.FrameRate = mg.video.obj.FrameRate;
     ind = 1;
@@ -312,7 +318,8 @@ if strcmpi(method,'Diff')
 elseif strcmpi(method,'OpticalFlow')
     mg.video.obj.CurrentTime = starttime;
     [~,pr,~] = fileparts(mg.video.obj.Name);
-    newfile = strcat(pr,'_flow.avi');
+    newfile = strcat(pwd,'\',pr,'_flow.avi');
+    mg.output.flow.filename = newfile;
     v = VideoWriter(newfile);
     v.FrameRate = mg.video.obj.FrameRate;
     ind = 1;
