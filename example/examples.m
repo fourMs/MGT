@@ -6,8 +6,12 @@ fn='dance.avi';
 
 % Generate a motion video and motiongrams (both directions)
 % with the file endings _motion.avi and _mgx.tiff/_mgy.tiff
+tic;
+%ticBytes(gcp);
 mgmotion(fn);
-
+%tocBytes(gcp);
+toc;
+return;
 % Generate an optical flow video
 % with the file ending _flow.avi
 mgmotion(fn,'OpticalFlow');

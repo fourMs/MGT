@@ -16,10 +16,14 @@ function mg = mgmotion(f,varargin)
 % mg = mgmotion(mg,'Diff');
 % mg = mgmotion(filename,'Diff',starttime,endtime,'Regular',0.3);
 % mg = mgmotion(filename,'OpticalFlow',starttime,'Binary',0.2);
-% mg = mgmotion(mg,'OpticalFlow');
-% mg = mgmotion(mg, ...., 'color');
-% mg = mgmotion(mg, ...., 'convert');
-% mg = mgmotion(mg, ...., 'interval', 10);
+
+% mg = mgmotion(mg, ..., 'Diff',starttime,endtime , ... );
+% mg = mgmotion(mg, ..., 'Regular', 0.3 , ...);
+% mg = mgmotion(mg, ..., 'Binary', 0.2, ...);
+% mg = mgmotion(mg, ..., 'OpticalFlow', ...);
+% mg = mgmotion(mg, ..., 'color', ...);
+% mg = mgmotion(mg, ..., 'convert', ...);
+% mg = mgmotion(mg, ..., 'interval', 10, ...);
 % input:
 % filename: the name of the video file
 % mg: instead of filename, uses a musical gestures data structure
@@ -63,6 +67,7 @@ cmd.thresh = 0.1;
 cmd.color = 'off';
 cmd.convert = 'off';
 cmd.frameInterval = 1;
+
 for argi = 1:l
     if( ischar(varargin{argi}))   
         if(strcmpi(varargin{argi},'Diff') || strcmpi(varargin{argi},'OpticalFlow') )
@@ -82,6 +87,7 @@ for argi = 1:l
         elseif (strcmpi(varargin{argi},'Regular') || strcmpi(varargin{argi},'Binary') ) 
             disp('filtertype specified in argument');
             cmd.filtertype = varargin{argi};
+            cmd.filterflag = 1;
             if(argi + 1 <= l &&  isnumeric(varargin{argi + 1}))
                 disp('thresh specified in argument');
                 cmd.thresh = varargin{argi+1};
@@ -104,10 +110,10 @@ end
 method = cmd.method;
 starttime = cmd.starttime;
 endtime = cmd.endtime;
-endtime = cmd.endtime;
 filterflag = cmd.filterflag;
 filtertype = cmd.filtertype;
 thresh = cmd.thresh;
+disp(thresh);
 frameInterval = cmd.frameInterval;
 
 mg.video.method = method;
@@ -172,10 +178,15 @@ if strcmpi(method,'Diff')
     open(v);
     if colorflag == true
         h = waitbar(0,'Processing video...');
+        textprogressbar('calculating outputs: ');
         while hasFrame(mg.video.obj)
             %progmeter(ind,numf);
             %waitbar(mg.video.obj.CurrentTime/mg.video.obj.Duration,h);
-            waitbar(mg.video.obj.CurrentTime/mg.video.endtime,h);
+            %waitbar(mg.video.obj.CurrentTime/mg.video.endtime,h);
+            
+            waitbar(ind/numf,h);
+            textprogressbar(ind/numf*100);
+            
             pfr = readFrame(mg.video.obj);
             ii = ii + 1;
             if mod(ii,frameInterval) == 0
@@ -212,6 +223,7 @@ if strcmpi(method,'Diff')
                 end
             end
         end
+        textprogressbar('done');
         close(h);
         if convertflag == true
             mg.video.gram.x = imcomplement(mg.video.gram.x);
@@ -219,10 +231,14 @@ if strcmpi(method,'Diff')
         end
     else
         h = waitbar(0,'Processing video...');
+        textprogressbar('calculating outputs: ');
         while hasFrame(mg.video.obj)
             %progmeter(ind,numf);
             %waitbar(mg.video.obj.CurrentTime/mg.video.obj.Duration,h);
-            waitbar(mg.video.obj.CurrentTime/mg.video.endtime,h);
+            
+            waitbar(ind/numf,h);
+            textprogressbar(ind/numf*100);
+            
             pfr = rgb2gray(readFrame(mg.video.obj));
             ii = ii + 1;
             if mod(ii,frameInterval) == 0
@@ -259,6 +275,7 @@ if strcmpi(method,'Diff')
                 end
             end
         end
+        textprogressbar('done');
         close(h);
         if convertflag == true
             mg.video.gram.y = imcomplement(mg.video.gram.y);

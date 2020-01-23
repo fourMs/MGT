@@ -16,6 +16,8 @@ end
 l = length(varargin);
 for i = 1:l
     [~,~,ex] = fileparts(varargin{i});
+    ex = lower(ex);
+    disp(ex);
     if ismember(ex,{'.tsv';'.c3d';'.mat';'.wii'})
          mg.mocap = mcread(varargin{i});
     elseif ismember(ex,{'.mp3';'.wav'})
