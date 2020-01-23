@@ -58,6 +58,8 @@ elseif isstruct(f) && isfield(f,'video')
     disp('input is mg struct');
     mg = f;
     cmd.inputType = 'struct';
+else
+    error('wrong input file, please check the format...');
 end
 
 cmd.method = 'Diff';
@@ -115,7 +117,6 @@ endtime = cmd.endtime;
 filterflag = cmd.filterflag;
 filtertype = cmd.filtertype;
 thresh = cmd.thresh;
-disp(thresh);
 frameInterval = cmd.frameInterval;
 
 mg.video.method = method;
