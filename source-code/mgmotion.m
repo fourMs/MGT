@@ -178,7 +178,7 @@ if strcmpi(method,'Diff')
     open(v);
     if colorflag == true
         h = waitbar(0,'Processing video...');
-        textprogressbar('calculating outputs: ');
+        textprogressbar('Processing video: ');
         while hasFrame(mg.video.obj)
             %progmeter(ind,numf);
             %waitbar(mg.video.obj.CurrentTime/mg.video.obj.Duration,h);
@@ -231,7 +231,7 @@ if strcmpi(method,'Diff')
         end
     else
         h = waitbar(0,'Processing video...');
-        textprogressbar('calculating outputs: ');
+        textprogressbar('Processing video: ');
         while hasFrame(mg.video.obj)
             %progmeter(ind,numf);
             %waitbar(mg.video.obj.CurrentTime/mg.video.obj.Duration,h);
