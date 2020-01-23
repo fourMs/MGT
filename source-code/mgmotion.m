@@ -172,6 +172,7 @@ if strcmpi(method,'Diff')
     end
     [~,pr,~] = fileparts(mg.video.obj.Name);
     newfile = strcat(pwd,'\',pr,'_motion.avi');
+    mg.output.type = 'motion';
     mg.output.motion.filename = newfile;
     
     
@@ -319,7 +320,8 @@ elseif strcmpi(method,'OpticalFlow')
     mg.video.obj.CurrentTime = starttime;
     [~,pr,~] = fileparts(mg.video.obj.Name);
     newfile = strcat(pwd,'\',pr,'_flow.avi');
-    mg.output.flow.filename = newfile;
+    mg.output.type = 'opticalFlow';
+    mg.output.opticalFlow.filename = newfile;
     v = VideoWriter(newfile);
     v.FrameRate = mg.video.obj.FrameRate;
     ind = 1;
