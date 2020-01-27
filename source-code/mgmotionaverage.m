@@ -57,7 +57,7 @@ cmd.endtime = mg.video.endtime;
 cmd.color = 'off';
 %cmd.convert = 'off';
 cmd.frameInterval = 1;
-
+cmd.normalize = 'on'
 
 
 for argi = 1:l
@@ -71,7 +71,14 @@ for argi = 1:l
                     cmd.endtime = varargin{argi+2};
                 end
             end
-
+        elseif (strcmpi(varargin{argi},'Normalize'))
+            disp('normalization option is specified in argument');
+            
+            
+            
+            if (strcmpi(varargin{argi+1},'off'))
+                cmd.normalize = 'off'
+            end
         elseif (strcmpi(varargin{argi},'Color'))
             disp('color mode on is specified in argument');
             cmd.color = 'on'
@@ -202,9 +209,11 @@ elseif isstruct(f) && isfield(f,'video')
 end
 
 % Normalizing values to [0,1]
-%ave2 = uint8(ave/i); % old approach didnt work well
-ave2=(ave-min(ave(:))) ./ max(ave(:)-min(ave(:)));
 
+if (strcmpi(cmd.normalize,'on'))
+    %ave2 = uint8(ave/i); % old approach didnt work well
+    ave2=(ave-min(ave(:))) ./ max(ave(:)-min(ave(:)));
+end
 %figure, imshow(ave2);
 
 % Write to file
