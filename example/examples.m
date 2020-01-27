@@ -5,8 +5,6 @@
 fn='dance.aVi';
 
 
-return;
-
 % Generate an optical flow video
 % with the file ending _flow.avi
 mgmotion(fn,'OpticalFlow','color','convert','Interval', 5);
@@ -22,4 +20,7 @@ mgmotionaverage(fn);
 
 %to load all video files from an entire directory
 %mgmotion_loadMultiple(".\toolbox\MGT-matlab\example\example_data",'Diff','color','convert','Interval', 5);
+%mgmotionhistory_loadMultiple(".\toolbox\MGT-matlab\example\example_data",'nFrame', 20, 'color','Interval', 2);
+%mgmotionaverage_loadMultiple(".\toolbox\MGT-matlab\example\example_data",'color','Interval', 5);
+
 
