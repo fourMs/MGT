@@ -56,7 +56,7 @@ cmd.endtime = mg.video.endtime;
 %cmd.thresh = 0.1;
 cmd.color = 'off';
 %cmd.convert = 'off';
-%cmd.frameInterval = 1;
+cmd.frameInterval = 1;
 
 
 
@@ -75,12 +75,15 @@ for argi = 1:l
         elseif (strcmpi(varargin{argi},'Color'))
             disp('color mode on is specified in argument');
             cmd.color = 'on'
-
+        elseif (strcmpi(varargin{argi},'Interval'))
+            if(argi + 1 <= l &&  isnumeric(varargin{argi + 1}))
+                cmd.frameInterval = varargin{argi+1};
+            end
         end
     end
 end
 
-
+frameInterval = cmd.frameInterval;
 
 if ischar(f)
     try
@@ -103,7 +106,7 @@ if ischar(f)
 %         endtime = varargin{3};
 %     end
     ave = zeros(mg.video.obj.Height,mg.video.obj.Width);
-    i = 0;
+    i = 1;
     mg.video.obj.CurrentTime = starttime;
     
     
@@ -115,18 +118,33 @@ if ischar(f)
     
     if (strcmpi(cmd.color, 'on')) || (isfield(mg.video,'mode') && strcmpi(mg.video.mode.color,'on'))
         ave = zeros(mg.video.obj.Height,mg.video.obj.Width,3);
-        while mg.video.obj.CurrentTime < endtime
+        numfr = mg.video.obj.FrameRate*(endtime-starttime);
+        
+        for indf = 1:frameInterval:numfr
             fr = readFrame(mg.video.obj);
             ave = double(ave) + double(fr);
-            i = i + 1;
+            mg.video.obj.CurrentTime = (1/mg.video.obj.FrameRate)*indf;
         end
+        
+%         while mg.video.obj.CurrentTime < endtime
+%             fr = readFrame(mg.video.obj);
+%             ave = double(ave) + double(fr);
+%             %i = i + 1;
+%         end
     else
         ave = zeros(mg.video.obj.Height,mg.video.obj.Width);
-        while mg.video.obj.CurrentTime < endtime
+        numfr = mg.video.obj.FrameRate*(endtime-starttime);
+        
+        for indf = 1:frameInterval:numfr
             fr = rgb2gray(readFrame(mg.video.obj));
             ave = double(ave) + double(fr);
-            i = i + 1;
+            mg.video.obj.CurrentTime = (1/mg.video.obj.FrameRate)*indf;
         end
+%         while mg.video.obj.CurrentTime < endtime
+%             fr = rgb2gray(readFrame(mg.video.obj));
+%             ave = double(ave) + double(fr);
+%             %i = i + 1;
+%         end
     end
     
     
@@ -149,22 +167,37 @@ elseif isstruct(f) && isfield(f,'video')
 %     end
 
     mg.video.obj.CurrentTime = starttime;
-    i = 0;
+    i = 1;
 
     if (strcmpi(cmd.color, 'on')) || (isfield(mg.video,'mode') && strcmpi(mg.video.mode.color,'on'))
         ave = zeros(mg.video.obj.Height,mg.video.obj.Width,3);
-        while mg.video.obj.CurrentTime < endtime
+        numfr = mg.video.obj.FrameRate*(endtime-starttime);
+        
+        for indf = 1:numfr
             fr = readFrame(mg.video.obj);
             ave = double(ave) + double(fr);
-            i = i + 1;
+            mg.video.obj.CurrentTime = (1/mg.video.obj.FrameRate)*indf;
         end
+        
+%         while mg.video.obj.CurrentTime < endtime
+%             fr = readFrame(mg.video.obj);
+%             ave = double(ave) + double(fr);
+%             %i = i + 1;
+%         end
     else
         ave = zeros(mg.video.obj.Height,mg.video.obj.Width);
-        while mg.video.obj.CurrentTime < endtime
+        numfr = mg.video.obj.FrameRate*(endtime-starttime);
+        
+        for indf = 1:numfr
             fr = rgb2gray(readFrame(mg.video.obj));
             ave = double(ave) + double(fr);
-            i = i + 1;
+            mg.video.obj.CurrentTime = (1/mg.video.obj.FrameRate)*indf;
         end
+%         while mg.video.obj.CurrentTime < endtime
+%             fr = rgb2gray(readFrame(mg.video.obj));
+%             ave = double(ave) + double(fr);
+%             %i = i + 1;
+%         end
     end
 end
 

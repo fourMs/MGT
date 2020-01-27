@@ -59,7 +59,7 @@ cmd.starttime = mg.video.starttime;
 cmd.endtime = mg.video.endtime;
 cmd.nFrame = 20; %default fame number = 20;
 cmd.color = 'off';
-
+cmd.frameInterval = 1;
 
 l = nargin;
 for argi = 1:l
@@ -81,7 +81,11 @@ for argi = 1:l
             cmd.color = 'on'
         elseif (strcmpi(varargin{argi},'Gray'))
             disp('color mode on is specified in argument');
-            cmd.color = 'off'        
+            cmd.color = 'off'      
+        elseif (strcmpi(varargin{argi},'Interval'))
+            if(argi + 1 <= l &&  isnumeric(varargin{argi + 1}))
+                cmd.frameInterval = varargin{argi+1};
+            end
         end
     end
 end
@@ -90,6 +94,7 @@ end
 starttime = cmd.starttime;
 endtime = cmd.endtime;
 colorMode = cmd.color;
+frameInterval = cmd.frameInterval;
 nf = cmd.nFrame;
 
 mg.video.obj.CurrentTime = starttime;
@@ -99,26 +104,20 @@ v.FrameRate = mg.video.obj.FrameRate;
 open(v);
 
 if(strcmpi(cmd.color, 'on'))
+    mg.video.obj.CurrentTime = starttime;
     temparray = zeros(mg.video.obj.Height,mg.video.obj.Width,3,nf-1,'uint8');
-    fr1 = readFrame(mg.video.obj);
+    %fr1 = readFrame(mg.video.obj);
     fr2 = readFrame(mg.video.obj);
-    diff = imsubtract(fr2,fr1);
-    temparray(:,:,:,1) = diff;
-    history = diff;
-    writeVideo(v,imadd(diff,fr2));
-    for i = 1:nf-2
-        nextf = readFrame(mg.video.obj);
-        temp = imsubtract(nextf,fr2);
-        fr2 = nextf;
-        temparray(:,:,:,i+1) = temp;
-        history = imadd(temp,history);
-        writeVideo(v,imadd(history,nextf));
-    end
+    %diff = imsubtract(fr2,fr1);
+    %temparray(:,:,:,1) = diff;
+    %history = diff;
+    %writeVideo(v,imadd(diff,fr2));
+
     disp('*****creating motion history video*****')
-    indf = 1;
     numfr = mg.video.obj.FrameRate*(endtime-starttime)-nf;
     %while mg.video.obj.CurrentTime < endtime
-    while(indf <= numfr)
+    
+    for indf = nf:frameInterval:numfr
         progmeter(indf,numfr)
         temparray = temparray(:,:,:,[2:end 1]);
         nextf = readFrame(mg.video.obj);
@@ -127,30 +126,25 @@ if(strcmpi(cmd.color, 'on'))
         temparray(:,:,:,end) = temp;
         history = uint8(sum(temparray,4));
         writeVideo(v,imadd(history,nextf));
-        indf = indf + 1;
+        mg.video.obj.CurrentTime = (1/mg.video.obj.FrameRate)*indf;
     end
+
 elseif(strcmpi(cmd.color, 'off'))
+    mg.video.obj.CurrentTime = starttime;
     temparray = zeros(mg.video.obj.Height,mg.video.obj.Width,nf-1,'uint8');
-    fr1 = rgb2gray(readFrame(mg.video.obj));
+    %fr1 = rgb2gray(readFrame(mg.video.obj));
     fr2 = rgb2gray(readFrame(mg.video.obj));
-    diff = imsubtract(fr2,fr1);
-    temparray(:,:,1) = diff;
-    history = diff;
-    writeVideo(v,imadd(diff,fr2));
-    for i = 1:nf-2
-        nextf = rgb2gray(readFrame(mg.video.obj));
-        temp = imsubtract(nextf,fr2);
-        fr2 = nextf;
-        temparray(:,:,i+1) = temp;
-        history = imadd(temp,history);
-        writeVideo(v,imadd(history,nextf));
-    end
+    %diff = imsubtract(fr2,fr1);
+    %temparray(:,:,1) = diff;
+    %history = diff;
+    %writeVideo(v,imadd(diff,fr2));
     disp('*****creating motion history video*****')
-    indf = 1;
-    numfr = mg.video.obj.FrameRate*(endtime-starttime)-nf; %why subtract nf???
+    indf = nf;
+    numfr = mg.video.obj.FrameRate*(endtime-starttime)-nf;
     %while mg.video.obj.CurrentTime < endtime
-    while(indf <= numfr)
-%       progmeter(indf,numfr)
+    
+    for indf = nf:frameInterval:numfr
+        progmeter(indf,numfr);
         temparray = temparray(:,:,[2:end 1]);
         nextf = rgb2gray(readFrame(mg.video.obj));
         temp = imsubtract(nextf,fr2);
@@ -158,7 +152,9 @@ elseif(strcmpi(cmd.color, 'off'))
         temparray(:,:,end) = temp;
         history = uint8(sum(temparray,3));
         writeVideo(v,imadd(history,nextf));
-        indf = indf + 1;
+        
+        mg.video.obj.CurrentTime = (1/mg.video.obj.FrameRate)*indf;
+        
     end
 end
 
