@@ -99,7 +99,7 @@ frameInterval = cmd.frameInterval;
             
             if((extension_i == ".avi")||(extension_i == ".mp4")||(extension_i == ".m4v") ||(extension_i == ".mpg") ||(extension_i == ".mov")    )
                 disp(files(i).name);
-                mgmotion(files(i).name, method,color,convert,filtertype,thresh,'Interval',frameInterval);
+                mgmotion(files(i).name, method,color,convert,);
             end
         end
     end
