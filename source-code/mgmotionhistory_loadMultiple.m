@@ -17,6 +17,7 @@ cmd.filtertype = [];
 cmd.thresh = 0.1;
 cmd.color = 'off';
 cmd.convert = 'off';
+cmd.nFrame = 20; %default fame number = 20;
 cmd.frameInterval = 1;
 
 for argi = 1:l
@@ -43,6 +44,9 @@ for argi = 1:l
                 disp('thresh specified in argument');
                 cmd.thresh = varargin{argi+1};
             end
+        elseif (strcmpi(varargin{argi},'nFrame'))
+            disp('nframe specified');
+            cmd.nFrame = varargin{argi+1};
         elseif (strcmpi(varargin{argi},'Color'))
             disp('color mode on is specified in argument');
             cmd.color = 'on'
@@ -81,7 +85,7 @@ filtertype = cmd.filtertype;
 thresh = cmd.thresh;
 disp(thresh);
 frameInterval = cmd.frameInterval;
-
+nf = cmd.nFrame;
 
 
     disp(varargin);
@@ -99,7 +103,7 @@ frameInterval = cmd.frameInterval;
             extension_i = lower(extension_i);
             if((extension_i == ".avi")||(extension_i == ".mp4")||(extension_i == ".m4v") ||(extension_i == ".mpg") ||(extension_i == ".mov")    )
                 disp(files(i).name);
-                mgmotion(files(i).name, method,color,convert,filtertype,thresh,'Interval',frameInterval);
+                mgmotionhistory(files(i).name,'nFrame',nf, color,'Interval',frameInterval);
             end
         end
     end

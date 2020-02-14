@@ -117,6 +117,7 @@ endtime = cmd.endtime;
 filterflag = cmd.filterflag;
 filtertype = cmd.filtertype;
 thresh = cmd.thresh;
+disp(thresh);
 frameInterval = cmd.frameInterval;
 
 mg.video.method = method;
