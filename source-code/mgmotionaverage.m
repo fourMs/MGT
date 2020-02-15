@@ -19,13 +19,10 @@ function ave = mgmotionaverage(varargin)
 % videofile or mg: input video file or data structure which contains video
 % information
 % starttime: specified startting time for averaging video
-% endtime: specified end time for avereaging video
+% endtime: specified end time for averaging video
 %
 % output:
 % ave: average image.
-%
-% todo:
-% fix color output
 
 l = length(varargin);
 if isempty(varargin)
