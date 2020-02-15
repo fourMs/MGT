@@ -5,10 +5,7 @@ function mg = mgmotion(f,varargin)
 % gestures data structure. The default method is to use plain frame differencing
 % ('Diff'). A more expensive optical flow field can be calculated with the
 % 'OpticalFlow' method. The mgmotion founction also provides a color mode, and the
-% possibility to convert images with white on black instead of black on white. To
-% use these modes, you need to set mode in the command, e.g.,
-% mg.video.mode.color = 'On'
-% mg.video.mode.convert = 'On'
+% possibility to invert images with white on black instead of black on white. 
 %
 % syntax:
 % mg = mgmotion(mg,method,starttime,endtime,filtertype,thresh)
@@ -16,23 +13,26 @@ function mg = mgmotion(f,varargin)
 % mg = mgmotion(mg,'Diff');
 % mg = mgmotion(filename,'Diff',starttime,endtime,'Regular',0.3);
 % mg = mgmotion(filename,'OpticalFlow',starttime,'Binary',0.2);
-
 % mg = mgmotion(mg, ..., 'Diff',starttime,endtime , ... );
 % mg = mgmotion(mg, ..., 'Regular', 0.3 , ...);
 % mg = mgmotion(mg, ..., 'Binary', 0.2, ...);
 % mg = mgmotion(mg, ..., 'OpticalFlow', ...);
 % mg = mgmotion(mg, ..., 'color', ...);
-% mg = mgmotion(mg, ..., 'convert', ...);
+% mg = mgmotion(mg, ..., 'invert', ...);
 % mg = mgmotion(mg, ..., 'interval', 10, ...);
+%
 % input:
 % filename: the name of the video file
-% mg: instead of filename, uses a musical gestures data structure
-% 'Diff', 'OpticalFlow': indicate the method used to compute the
-% motion. 'Diff' method calculates the absolute frame difference between
-% two successive frames. 'OpticalFlow' calculates the optical flow field
+% mg: instead of filename it is possible to use a MG data structure
+% Diff: method calculates the absolute frame difference between
+% two successive frames. 
+% OpticalFlow: calculates the optical flow field
 % filtertype: Binary, Regular, Blob. When choosing Blob, the element
 % structure needs to be constructed using function strel
 % thresh: threshold [0,1] (default=0.1)
+% color: does the analysis with 4 planes (default: grayscale)
+% invert: creates motiongrams with white background (default: black)
+% interval: skip frames for more rapid processing
 %
 % output:
 % mg, a musical gestures data structure containing the computed motion
@@ -69,7 +69,7 @@ cmd.filterflag = 0;
 cmd.filtertype = [];
 cmd.thresh = 0.1;
 cmd.color = 'off';
-cmd.convert = 'off';
+cmd.invert = 'off';
 cmd.frameInterval = 1;
 
 for argi = 1:l
@@ -99,9 +99,9 @@ for argi = 1:l
         elseif (strcmpi(varargin{argi},'Color'))
             disp('color mode on is specified in argument');
             cmd.color = 'on'
-        elseif (strcmpi(varargin{argi},'Convert'))
-            disp('Convert mode on is specified in argument');
-            cmd.convert = 'on'
+        elseif (strcmpi(varargin{argi},'invert'))
+            disp('invert mode on is specified in argument');
+            cmd.invert = 'on'
         elseif (strcmpi(varargin{argi},'Interval'))
             if(argi + 1 <= l &&  isnumeric(varargin{argi + 1}))
                 cmd.frameInterval = varargin{argi+1};
@@ -148,17 +148,17 @@ else
 end
 
 
-if(strcmpi(cmd.convert, 'on'))
-    convertflag = true'
+if(strcmpi(cmd.invert, 'on'))
+    invertflag = true'
 else
-    if (isfield (mg.video,'mode') && isfield(mg.video.mode,'convert'))
-        if strcmpi(mg.video.mode.convert,'on')
-            convertflag = true;
+    if (isfield (mg.video,'mode') && isfield(mg.video.mode,'invert'))
+        if strcmpi(mg.video.mode.invert,'on')
+            invertflag = true;
         else
-            convertflag = false;
+            invertflag = false;
         end
     else
-        convertflag = false;
+        invertflag = false;
     end
 end
 
@@ -172,8 +172,8 @@ if strcmpi(method,'Diff')
     else
         fr = rgb2gray(readFrame(mg.video.obj));
     end
-    [~,pr,~] = fileparts(mg.video.obj.Name);
-    newfile = strcat(pwd,'\',pr,'_motion.avi');
+    [filepath,filename,ext] = fileparts(mg.video.obj.Name);
+    newfile = strcat(filename,'_motion.avi');
     mg.output.type = 'motion';
     mg.output.motion.filename = newfile;
     
@@ -221,7 +221,7 @@ if strcmpi(method,'Diff')
                 gramy = mean(diff,2);
                 mg.video.gram.y = [mg.video.gram.y;gramx];
                 mg.video.gram.x = [mg.video.gram.x,gramy];
-                if convertflag == true
+                if invertflag == true
                     diff = imcomplement(diff);
                 end
                 writeVideo(v,diff);
@@ -234,7 +234,7 @@ if strcmpi(method,'Diff')
         end
         textprogressbar('done');
         close(h);
-        if convertflag == true
+        if invertflag == true
             mg.video.gram.x = imcomplement(mg.video.gram.x);
             mg.video.gram.y = imcomplement(mg.video.gram.y);
         end
@@ -273,7 +273,7 @@ if strcmpi(method,'Diff')
                 mg.video.gram.x = [mg.video.gram.x,gramy];
                 mg.video.qom = [mg.video.qom;qom];
                 mg.video.com = [mg.video.com;com];
-                if convertflag == true
+                if invertflag == true
                     diff = imcomplement(diff);
                 end
                 writeVideo(v,diff);
@@ -286,7 +286,7 @@ if strcmpi(method,'Diff')
         end
         textprogressbar('done');
         close(h);
-        if convertflag == true
+        if invertflag == true
             mg.video.gram.y = imcomplement(mg.video.gram.y);
             mg.video.gram.x = imcomplement(mg.video.gram.x);
         end
@@ -298,9 +298,9 @@ if strcmpi(method,'Diff')
     %     mg.video.nframe = ind - 1;
     
     % Write motiongrams to files
-    tmpfile=strcat(pr,'_mgx.tiff');
+    tmpfile=strcat(filename,'_mgx.tiff');
     imwrite(mg.video.gram.x, tmpfile);
-    tmpfile=strcat(pr,'_mgy.tiff');
+    tmpfile=strcat(filename,'_mgy.tiff');
     imwrite(mg.video.gram.y, tmpfile);
     
     % Plot graphs
@@ -320,8 +320,8 @@ if strcmpi(method,'Diff')
     mg.video.obj = s.video.obj;
 elseif strcmpi(method,'OpticalFlow')
     mg.video.obj.CurrentTime = starttime;
-    [~,pr,~] = fileparts(mg.video.obj.Name);
-    newfile = strcat(pwd,'\',pr,'_flow.avi');
+    [filepath,filename,ext] = fileparts(mg.video.obj.Name);
+    newfile = strcat(filename,'_flow.avi');
     mg.output.type = 'opticalFlow';
     mg.output.opticalFlow.filename = newfile;
     v = VideoWriter(newfile);
@@ -391,7 +391,7 @@ mg.createtime = datestr(datetime('today'));
 
 % Write data to text file
 csvdata = [mg.video.qom mg.video.com];
-newfile = strcat(pr,'_data.csv');
+newfile = strcat(filename,'_data.csv');
     
 csvwrite(newfile, csvdata); % Need to write header info as well
 % xlswrite(newfile, csvdata);
