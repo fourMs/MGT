@@ -41,8 +41,7 @@ function mg = mgmotion(f,varargin)
 % mg = mginitstruct;
 
 
-
-thresh = 0.1;
+%thresh = 0.1;
 frameInterval = 1;
 ii = 0;
 l = length(varargin);
@@ -186,14 +185,8 @@ if strcmpi(method,'Diff')
     numf = mg.video.obj.FrameRate*(endtime-starttime); %eg. for 1 second at 25fps,  25*(0-1) = 25 
     open(v);
     if colorflag == true
-        h = waitbar(0,'Processing video...');
         textprogressbar('Processing video: ');
         while hasFrame(mg.video.obj)
-            %progmeter(ind,numf);
-            %waitbar(mg.video.obj.CurrentTime/mg.video.obj.Duration,h);
-            %waitbar(mg.video.obj.CurrentTime/mg.video.endtime,h);
-            
-            waitbar(ind/numf,h);
             textprogressbar(ind/numf*100);
             
             pfr = readFrame(mg.video.obj);
@@ -233,19 +226,13 @@ if strcmpi(method,'Diff')
             end
         end
         textprogressbar('done');
-        close(h);
         if invertflag == true
             mg.video.gram.x = imcomplement(mg.video.gram.x);
             mg.video.gram.y = imcomplement(mg.video.gram.y);
         end
     else
-        h = waitbar(0,'Processing video...');
         textprogressbar('Processing video: ');
         while hasFrame(mg.video.obj)
-            %progmeter(ind,numf);
-            %waitbar(mg.video.obj.CurrentTime/mg.video.obj.Duration,h);
-            
-            waitbar(ind/numf,h);
             textprogressbar(ind/numf*100);
             
             pfr = rgb2gray(readFrame(mg.video.obj));
@@ -285,7 +272,6 @@ if strcmpi(method,'Diff')
             end
         end
         textprogressbar('done');
-        close(h);
         if invertflag == true
             mg.video.gram.y = imcomplement(mg.video.gram.y);
             mg.video.gram.x = imcomplement(mg.video.gram.x);
@@ -332,9 +318,10 @@ elseif strcmpi(method,'OpticalFlow')
     fh = figure('visible','off');
     fr1 = rgb2gray(readFrame(mg.video.obj));
     h = waitbar(0,'Processing video...');
+    %textprogressbar('Processing video: ');
     while hasFrame(mg.video.obj)
-        %progmeter(ind,numf);
         waitbar(mg.video.obj.CurrentTime/mg.video.obj.Duration,h);
+        %textprogressbar(ind/numf*100);
         fr2 = rgb2gray(readFrame(mg.video.obj));
         ii = ii + 1;
         if mod(ii,frameInterval) == 0
@@ -366,9 +353,11 @@ elseif strcmpi(method,'OpticalFlow')
             fr1 = fr2;
             ind = ind + 1;
         end
+        
     end
-    close(h);
-    close(v);
+        %textprogressbar('done');
+        close(h);
+        close(v);
     disp(' ');
     disp(['The motion video is created with name ',newfile]);
     mg.video.nframe = v.FrameCount;
