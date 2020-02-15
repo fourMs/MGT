@@ -4,28 +4,65 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+
+%%%%%%%%%%%%%%%
+% Motion videos
+%%%%%%%%%%%%%%%
+
 % Perform basic motion analysis
 mgmotion('dance.avi');
 
+% Using a binary filter and higher thresholding
+mgmotion('dance.avi','Binary',0.3);
+
+% Using a regular filter
+mgmotion('dance.avi','Regular',0.1);
+
 % Can also be done with invert output
-mgmotion('dance.avi','invert');
+mgmotion('dance.avi','Regular',0.1,'invert');
 
 % Can also be done in color
-mgmotion('dance.avi','color');
+mgmotion('dance.avi','Regular',0.1,'color');
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+% Motion history video
+%%%%%%%%%%%%%%%%%%%%%%
 
 % Make a history video
 mgmotionhistory('dance.avi');
 
-% Make a average video
+% Make a history video in color
+mgmotionhistory('dance.avi',40);
+
+% Make a history video in color
+mgmotionhistory('dance.avi',40,'color');
+
+% Make a motion history video (from the motion video)
+mgmotionhistory('dance_motion.avi',40,'color');
+
+
+%%%%%%%%%%%%%%%%%%%%%%
+% Motion average image
+%%%%%%%%%%%%%%%%%%%%%%
+
+% Make an average image
 mgmotionaverage('dance.avi');
 
-% Make a motion history video
-mgmotionhistory('dance_motion.avi');
+% Make an average image in color
+mgmotionaverage('dance.avi','color');
+
+% Make an average motion image
+mgmotionaverage('dance_motion.avi','color');
+
 
 % Make a average video
 mgmotionaverage('dance_motion.avi');
 
 
+%%%%%%%%%%%%%%%%%%%%%%
+% Pre-processing
+%%%%%%%%%%%%%%%%%%%%%%
 
 % extract a temporal segment from the video
 mgseg= mgvideoreader(mg,'Extract',5,25);
@@ -39,8 +76,12 @@ mgcrop = mgvideocrop(mgsam)
 
 mgsammo = mgmotion(mgsam,'Diff');
 
-% or 
-% mgsamop = mgmotion(mgsam,'OpticalFlow');
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% More advanced functionality
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 %%
 subplot(211)
 plot(mgsammo.video.qom,'-b')
