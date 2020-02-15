@@ -1,27 +1,44 @@
-% function mgdemo2
-% this example shows you how to analysis multiple objects, as the original
-% video recordings are too large.We need to resample the video recordings
-% first. 
-mg = mgread('dance.avi');
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Examples of how to analyse a dance video
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Perform basic motion analysis
+mgmotion('dance.avi');
+
+% Can also be done with invert output
+mgmotion('dance.avi','invert');
+
+% Can also be done in color
+mgmotion('dance.avi','color');
+
+% Make a history video
+mgmotionhistory('dance.avi');
+
+% Make a average video
+mgmotionaverage('dance.avi');
+
+% Make a motion history video
+mgmotionhistory('dance_motion.avi');
+
+% Make a average video
+mgmotionaverage('dance_motion.avi');
+
+
+
 % extract a temporal segment from the video
-ts = 5;
-te = 25;
-mgseg= mgvideoreader(mg,'Extract',ts,te);
+mgseg= mgvideoreader(mg,'Extract',5,25);
 
-% map this segment into audio, and mocap data
-mgseg = mgmap(mgseg,'Both','dance.wav','dance.c3d');
-%% resample the video frames,reduce the size of each frame.
-tic;
+% resample the video frames,reduce the size of each frame.
 mgsam = mgvideosample(mgseg,[4,4],'dancesamplevideo.avi');
-toc;
-% 25m
-%% crop the interest of region of the video frame
-% mgcrop = mgvideocrop(mgsam);
 
-%%
-tic;
+% crop the interest of region of the video frame
+% click and drag in video to select crop area, then double-click to crop
+mgcrop = mgvideocrop(mgsam)
+
 mgsammo = mgmotion(mgsam,'Diff');
-toc;
+
 % or 
 % mgsamop = mgmotion(mgsam,'OpticalFlow');
 %%
