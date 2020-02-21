@@ -185,7 +185,7 @@ if strcmpi(method,'Diff')
     numf = mg.video.obj.FrameRate*(endtime-starttime); %eg. for 1 second at 25fps,  25*(0-1) = 25 
     open(v);
     if colorflag == true
-        textprogressbar('Processing video: ');
+        textprogressbar('Running motion analysis: ');
         while hasFrame(mg.video.obj)
             textprogressbar(ind/numf*100);
             
@@ -231,7 +231,7 @@ if strcmpi(method,'Diff')
             mg.video.gram.y = imcomplement(mg.video.gram.y);
         end
     else
-        textprogressbar('Processing video: ');
+        textprogressbar('Running motion analysis: ');
         while hasFrame(mg.video.obj)
             textprogressbar(ind/numf*100);
             
@@ -317,8 +317,8 @@ elseif strcmpi(method,'OpticalFlow')
     open(v);
     fh = figure('visible','off');
     fr1 = rgb2gray(readFrame(mg.video.obj));
-    h = waitbar(0,'Processing video...');
-    %textprogressbar('Processing video: ');
+    h = waitbar(0,'Running motion analysis...');
+    %textprogressbar('Running motion analysis: ');
     while hasFrame(mg.video.obj)
         waitbar(mg.video.obj.CurrentTime/mg.video.obj.Duration,h);
         %textprogressbar(ind/numf*100);
