@@ -34,7 +34,7 @@ cmd = [];
 
 if(ischar(f))
     disp('input is a file');
- 
+
     [~,pr,ex] = fileparts(f);
     ex = lower(ex);
     if ismember(ex,{'.mp4';'.avi';'.mov';'.mpg';'.m4v'})
@@ -63,12 +63,12 @@ cmd.frameInterval = 1;
 
 l = nargin;
 for argi = 1:l
-    if( ischar(varargin{argi}))   
-        if(argi == 1 ) %the file name is always the first element in the varargin 
+    if( ischar(varargin{argi}))
+        if(argi == 1 ) %the file name is always the first element in the varargin
             if(argi + 1 <= l && isnumeric(varargin{argi + 1}))
                 disp('starttime specified in argument');
                 cmd.starttime = varargin{argi+1};
-                if(argi + 2 <= l &&isnumeric(varargin{argi + 2})) 
+                if(argi + 2 <= l &&isnumeric(varargin{argi + 2}))
                     disp('stoptime specified in argument');
                     cmd.endtime = varargin{argi+2};
                 end
@@ -81,7 +81,7 @@ for argi = 1:l
             cmd.color = 'on'
         elseif (strcmpi(varargin{argi},'Gray'))
             disp('color mode on is specified in argument');
-            cmd.color = 'off'      
+            cmd.color = 'off'
         elseif (strcmpi(varargin{argi},'Interval'))
             if(argi + 1 <= l &&  isnumeric(varargin{argi + 1}))
                 cmd.frameInterval = varargin{argi+1};
@@ -113,10 +113,10 @@ if(strcmpi(cmd.color, 'on'))
     %history = diff;
     %writeVideo(v,imadd(diff,fr2));
 
-    disp('*****creating motion history video*****')
+    disp('Creating motion history video:   ')
     numfr = mg.video.obj.FrameRate*(endtime-starttime)-nf;
     %while mg.video.obj.CurrentTime < endtime
-    
+
     for indf = nf:frameInterval:numfr
         progmeter(indf,numfr)
         temparray = temparray(:,:,:,[2:end 1]);
@@ -138,11 +138,11 @@ elseif(strcmpi(cmd.color, 'off'))
     %temparray(:,:,1) = diff;
     %history = diff;
     %writeVideo(v,imadd(diff,fr2));
-    disp('*****creating motion history video*****')
+    disp('Creating motion history video:   ')
     indf = nf;
     numfr = mg.video.obj.FrameRate*(endtime-starttime)-nf;
     %while mg.video.obj.CurrentTime < endtime
-    
+
     for indf = nf:frameInterval:numfr
         progmeter(indf,numfr);
         temparray = temparray(:,:,[2:end 1]);
@@ -152,9 +152,9 @@ elseif(strcmpi(cmd.color, 'off'))
         temparray(:,:,end) = temp;
         history = uint8(sum(temparray,3));
         writeVideo(v,imadd(history,nextf));
-        
+
         mg.video.obj.CurrentTime = (1/mg.video.obj.FrameRate)*indf;
-        
+
     end
 end
 
@@ -167,7 +167,7 @@ close(v)
 
 return;
 
-% 
+%
 % if nargin == 1 && ischar(f) %if input is a file
 %     file = vidfile;
 %     [~,pr,ex] = fileparts(file);
@@ -243,7 +243,7 @@ return;
 %         endtime = varargin{2};
 %     end
 % end
-% 
+%
 % mg.video.obj.CurrentTime = starttime;
 % newfile = strcat(pr,'_history.avi');
 % v = VideoWriter(newfile);
@@ -265,7 +265,7 @@ return;
 %         history = imadd(temp,history);
 %         writeVideo(v,imadd(history,nextf));
 %     end
-%     disp('*****creating motion history video*****')
+%     disp('Creating motion history video: ')
 %     while mg.video.obj.CurrentTime < endtime
 % %        progmeter(indf,numfr)
 %         temparray = temparray(:,:,[2:end 1]);
@@ -292,7 +292,7 @@ return;
 %         history = imadd(temp,history);
 %         writeVideo(v,imadd(history,nextf));
 %     end
-%     disp('*****creating motion history video*****')
+%     disp('Creating motion history video: ')
 %     indf = 1;
 %     numfr = mg.video.obj.FrameRate*(endtime-starttime)-nf;
 %     while mg.video.obj.CurrentTime < endtime
