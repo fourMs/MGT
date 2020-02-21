@@ -2,8 +2,7 @@
 % Some examples on usage of the Musical Gestures Toolbox for Matlab
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-fn='dance.aVi';
-
+fn='dance.avi';
 
 % Generate an optical flow video
 % with the file ending _flow.avi

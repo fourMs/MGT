@@ -1,10 +1,6 @@
 function ave = mgmotionaverage(varargin)
 % function mgmotionaverage(varargin)
-% create an image by calculating the average of the video frames
-% if you want to compute average image on the color scale, make sure the
-% input is a mg structure which contains the video information, for
-% example, created by function mgread. Then set the mode like
-% mg.video.mode.color = 'on';
+% Create an average image by calculating the average of the video frames.
 %
 % syntax:
 % mgmotionaverage(videofile,starttime,endtime);
@@ -14,18 +10,16 @@ function ave = mgmotionaverage(varargin)
 %
 % mgmotionaverage(videofile, ... , 'color', ...); 
 % mgmotionaverage(mg, ... , 'color', ...);
+% mgmotionaverage(videofile, ... , 'normalize', ...); 
 %
 % input:
 % videofile or mg: input video file or data structure which contains video
 % information
 % starttime: specified startting time for averaging video
-% endtime: specified end time for avereaging video
+% endtime: specified end time for averaging video
 %
 % output:
 % ave: average image.
-%
-% todo:
-% fix color output
 
 l = length(varargin);
 if isempty(varargin)
@@ -71,7 +65,7 @@ for argi = 1:l
                     cmd.endtime = varargin{argi+2};
                 end
             end
-        elseif (strcmpi(varargin{argi},'Normalize'))
+        elseif (strcmpi(varargin{argi},'normalize'))
             disp('normalization option is specified in argument');
             
             
