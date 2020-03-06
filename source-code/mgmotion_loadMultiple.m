@@ -1,5 +1,7 @@
 %% Under development
-function [outputArg1] = mgmotion_loadMultiple(directory,varargin)
+function [outputArg1] = mgmotion(inputTarget,varargin)
+
+
 
 
 thresh = 0.1;
@@ -57,6 +59,10 @@ for argi = 1:l
     end
 end
 
+
+
+
+
 color = [];
 convert = [];
 
@@ -83,9 +89,13 @@ disp(thresh);
 frameInterval = cmd.frameInterval;
 
 
+disp('haha');
+disp(inputTarget);
 
+if exist(inputTarget, 'dir')
+    disp('your folder exists');
     disp(varargin);
-    files = dir(directory);
+    files = dir(inputTarget);
 
     fileCount = size(files);
     fileCount = fileCount(1);
@@ -103,5 +113,22 @@ frameInterval = cmd.frameInterval;
             end
         end
     end
+else
+    disp('is not a folder');
+    mgmotion(inputTarget, method,color,convert,filtertype,thresh,'Interval',frameInterval);
+end
+
+return;
+
+
+
+
+
+
+
+
+    
+    
+    
 end
 

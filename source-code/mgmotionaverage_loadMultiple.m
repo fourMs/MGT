@@ -9,23 +9,21 @@ l = length(varargin);
 cmd = [];
 
 
-cmd.method = 'Diff';
-%cmd.starttime = mg.video.starttime;
-%cmd.endtime = mg.video.endtime;
-cmd.filterflag = 0;
-cmd.filtertype = [];
-cmd.thresh = 0.1;
+%cmd.method = 'Diff';
+cmd.starttime = mg.video.starttime;
+cmd.endtime = mg.video.endtime;
+%cmd.filterflag = 0;
+%cmd.filtertype = [];
+%cmd.thresh = 0.1;
 cmd.color = 'off';
-cmd.convert = 'off';
+%cmd.convert = 'off';
 cmd.frameInterval = 1;
+cmd.normalize = 'on'
+
 
 for argi = 1:l
     if( ischar(varargin{argi}))   
-        if(strcmpi(varargin{argi},'Diff') || strcmpi(varargin{argi},'OpticalFlow') )
-            disp('method specified in argument');
-            
-            cmd.method = varargin{argi};
-            
+        if(argi == 1 ) %the file name is always the first element in the varargin 
             if(argi + 1 <= l && isnumeric(varargin{argi + 1}))
                 disp('starttime specified in argument');
                 cmd.starttime = varargin{argi+1};
@@ -34,21 +32,35 @@ for argi = 1:l
                     cmd.endtime = varargin{argi+2};
                 end
             end
+        elseif (strcmpi(varargin{argi},'normalize'))
+            disp('normalization option is specified in argument');
             
-        elseif (strcmpi(varargin{argi},'Regular') || strcmpi(varargin{argi},'Binary') ) 
-            disp('filtertype specified in argument');
-            cmd.filtertype = varargin{argi};
-            cmd.filterflag = 1;
-            if(argi + 1 <= l &&  isnumeric(varargin{argi + 1}))
-                disp('thresh specified in argument');
-                cmd.thresh = varargin{argi+1};
+            if(argi < l) 
+                if (strcmpi(varargin{argi+1},'off'))
+                    cmd.normalize = 'off'
+                elseif (strcmpi(varargin{argi+1},'on'))
+                    cmd.normalize = 'on'
+                end
+            else
+                cmd.normalize = 'on'
             end
+            
         elseif (strcmpi(varargin{argi},'Color'))
             disp('color mode on is specified in argument');
             cmd.color = 'on'
-        elseif (strcmpi(varargin{argi},'Convert'))
-            disp('Convert mode on is specified in argument');
-            cmd.convert = 'on'
+            
+            
+             if(argi < l) 
+                if (strcmpi(varargin{argi+1},'off'))
+                    cmd.color = 'off'
+                elseif (strcmpi(varargin{argi+1},'on'))
+                    cmd.color = 'on'
+                end
+            else
+                cmd.color = 'on'
+             end
+            
+            
         elseif (strcmpi(varargin{argi},'Interval'))
             if(argi + 1 <= l &&  isnumeric(varargin{argi + 1}))
                 cmd.frameInterval = varargin{argi+1};
@@ -57,20 +69,10 @@ for argi = 1:l
     end
 end
 
-color = [];
-convert = [];
+frameInterval = cmd.frameInterval;
 
-if (strcmpi(cmd.color,'on'))
-    color = 'color';
-else
-    color = 'grayscale';
-end
 
-if (strcmpi(cmd.convert,'on'))
-    convert = 'convert';
-else
-    convert = 'noconversion';
-end
+
 
 
 method = cmd.method;
