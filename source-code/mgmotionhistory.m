@@ -116,7 +116,7 @@ if(strcmpi(cmd.color, 'on'))
     disp('*****creating motion history video*****')
     numfr = mg.video.obj.FrameRate*(endtime-starttime)-nf;
     %while mg.video.obj.CurrentTime < endtime
-    
+    progmeter(0);
     for indf = nf:frameInterval:numfr
         progmeter(indf,numfr)
         temparray = temparray(:,:,:,[2:end 1]);
@@ -142,7 +142,7 @@ elseif(strcmpi(cmd.color, 'off'))
     indf = nf;
     numfr = mg.video.obj.FrameRate*(endtime-starttime)-nf;
     %while mg.video.obj.CurrentTime < endtime
-    
+     progmeter(0);
     for indf = nf:frameInterval:numfr
         progmeter(indf,numfr);
         temparray = temparray(:,:,[2:end 1]);

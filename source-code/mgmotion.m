@@ -116,7 +116,7 @@ endtime = cmd.endtime;
 filterflag = cmd.filterflag;
 filtertype = cmd.filtertype;
 thresh = cmd.thresh;
-disp(thresh);
+%disp(thresh);
 frameInterval = cmd.frameInterval;
 
 mg.video.method = method;
@@ -181,17 +181,18 @@ if strcmpi(method,'Diff')
     v = VideoWriter(newfile);
     v.FrameRate = mg.video.obj.FrameRate;
     ind = 1;
+
     %numf = mg.video.obj.FrameRate*(endtime-starttime)-1;
-    numf = mg.video.obj.FrameRate*(endtime-starttime); %eg. for 1 second at 25fps,  25*(0-1) = 25 
+    %numf = mg.video.obj.FrameRate*(endtime-starttime); %eg. for 1 second at 25fps,  25*(0-1) = 25 
+    disp(' ');
     open(v);
+    progmeter(0);
     if colorflag == true
-        textprogressbar('Running motion analysis: ');
         while hasFrame(mg.video.obj)
-            textprogressbar(ind/numf*100);
-            
+            progmeter(mg.video.obj.CurrentTime,endtime);
             pfr = readFrame(mg.video.obj);
-            ii = ii + 1;
-            if mod(ii,frameInterval) == 0
+          
+            if mod(ind,frameInterval) == 0
                 diff = abs(pfr-fr);
                 if filterflag
                     for i = 1:size(diff,3)
@@ -219,25 +220,33 @@ if strcmpi(method,'Diff')
                 end
                 writeVideo(v,diff);
                 fr = pfr;
+                
                 ind = ind + 1;
-                if(ind > numf)
+  
+%                 disp('current time');
+%                 disp(mg.video.obj.CurrentTime);
+%                 disp('end time');
+%                 disp(endtime);
+%                 disp('');
+
+
+                if(mg.video.obj.CurrentTime > endtime)
                     break;
                 end
             end
         end
-        textprogressbar('done');
+        
         if invertflag == true
             mg.video.gram.x = imcomplement(mg.video.gram.x);
             mg.video.gram.y = imcomplement(mg.video.gram.y);
         end
     else
-        textprogressbar('Running motion analysis: ');
+
         while hasFrame(mg.video.obj)
-            textprogressbar(ind/numf*100);
-            
+            progmeter(mg.video.obj.CurrentTime,endtime);
             pfr = rgb2gray(readFrame(mg.video.obj));
-            ii = ii + 1;
-            if mod(ii,frameInterval) == 0
+
+            if mod(ind,frameInterval) == 0
                 
                 diff = abs(pfr-fr);
                 if filterflag
@@ -266,12 +275,11 @@ if strcmpi(method,'Diff')
                 writeVideo(v,diff);
                 fr = pfr;
                 ind = ind + 1;
-                if(ind > numf)
+                if(mg.video.obj.CurrentTime > endtime)
                     break;
                 end
             end
         end
-        textprogressbar('done');
         if invertflag == true
             mg.video.gram.y = imcomplement(mg.video.gram.y);
             mg.video.gram.x = imcomplement(mg.video.gram.x);

@@ -68,14 +68,32 @@ for argi = 1:l
         elseif (strcmpi(varargin{argi},'normalize'))
             disp('normalization option is specified in argument');
             
-            
-            
-            if (strcmpi(varargin{argi+1},'off'))
-                cmd.normalize = 'off'
+            if(argi < l) 
+                if (strcmpi(varargin{argi+1},'off'))
+                    cmd.normalize = 'off'
+                elseif (strcmpi(varargin{argi+1},'on'))
+                    cmd.normalize = 'on'
+                end
+            else
+                cmd.normalize = 'on'
             end
+            
         elseif (strcmpi(varargin{argi},'Color'))
             disp('color mode on is specified in argument');
             cmd.color = 'on'
+            
+            
+             if(argi < l) 
+                if (strcmpi(varargin{argi+1},'off'))
+                    cmd.color = 'off'
+                elseif (strcmpi(varargin{argi+1},'on'))
+                    cmd.color = 'on'
+                end
+            else
+                cmd.color = 'on'
+             end
+            
+            
         elseif (strcmpi(varargin{argi},'Interval'))
             if(argi + 1 <= l &&  isnumeric(varargin{argi + 1}))
                 cmd.frameInterval = varargin{argi+1};
@@ -120,11 +138,13 @@ if ischar(f)
     if (strcmpi(cmd.color, 'on')) || (isfield(mg.video,'mode') && strcmpi(mg.video.mode.color,'on'))
         ave = zeros(mg.video.obj.Height,mg.video.obj.Width,3);
         numfr = mg.video.obj.FrameRate*(endtime-starttime);
-        
+        progmeter(0);
         for indf = 1:frameInterval:numfr
+            progmeter(mg.video.obj.CurrentTime,endtime);
             fr = readFrame(mg.video.obj);
             ave = double(ave) + double(fr);
             mg.video.obj.CurrentTime = (1/mg.video.obj.FrameRate)*indf;
+            
         end
         
 %         while mg.video.obj.CurrentTime < endtime
@@ -135,8 +155,9 @@ if ischar(f)
     else
         ave = zeros(mg.video.obj.Height,mg.video.obj.Width);
         numfr = mg.video.obj.FrameRate*(endtime-starttime);
-        
+        progmeter(0);
         for indf = 1:frameInterval:numfr
+            progmeter(mg.video.obj.CurrentTime,endtime);
             fr = rgb2gray(readFrame(mg.video.obj));
             ave = double(ave) + double(fr);
             mg.video.obj.CurrentTime = (1/mg.video.obj.FrameRate)*indf;
@@ -173,8 +194,9 @@ elseif isstruct(f) && isfield(f,'video')
     if (strcmpi(cmd.color, 'on')) || (isfield(mg.video,'mode') && strcmpi(mg.video.mode.color,'on'))
         ave = zeros(mg.video.obj.Height,mg.video.obj.Width,3);
         numfr = mg.video.obj.FrameRate*(endtime-starttime);
-        
+        progmeter(0);
         for indf = 1:numfr
+            progmeter(mg.video.obj.CurrentTime,endtime);
             fr = readFrame(mg.video.obj);
             ave = double(ave) + double(fr);
             mg.video.obj.CurrentTime = (1/mg.video.obj.FrameRate)*indf;
@@ -188,8 +210,9 @@ elseif isstruct(f) && isfield(f,'video')
     else
         ave = zeros(mg.video.obj.Height,mg.video.obj.Width);
         numfr = mg.video.obj.FrameRate*(endtime-starttime);
-        
+        progmeter(0);
         for indf = 1:numfr
+            progmeter(mg.video.obj.CurrentTime,endtime);
             fr = rgb2gray(readFrame(mg.video.obj));
             ave = double(ave) + double(fr);
             mg.video.obj.CurrentTime = (1/mg.video.obj.FrameRate)*indf;
@@ -213,4 +236,6 @@ end
 % Write to file
 [~,pr,~] = fileparts(mg.video.obj.Name);
 tmpfile=strcat(pr,'_average.tiff');
+disp('file created under name :');
+disp(tmpfile);
 imwrite(ave2, tmpfile);

@@ -4,9 +4,10 @@ function progmeter(i,n,w)
 if nargin<3,
     w = 1;
 end
-if i==1
+%if i==1
+if(nargin == 1)
   disp(' ');
-    fwrite(1,sprintf('process in progress:  \n'));
+    fwrite(1,sprintf('process in progress :  \n'));
     return;
 elseif ischar(i)
   disp(' ');
