@@ -21,6 +21,7 @@ function ave = mgmotionaverage(varargin)
 % output:
 % ave: average image.
 
+
 l = length(varargin);
 if isempty(varargin)
     return;

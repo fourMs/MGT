@@ -20,7 +20,16 @@ function mgOut = mgmotion_file(f,varargin)
 % mg = mgmotion(mg, ..., 'color', ...);
 % mg = mgmotion(mg, ..., 'invert', ...);
 % mg = mgmotion(mg, ..., 'interval', 10, ...);
-%
+% mg = mgmotion(directory);
+% mg = mgmotion(directory, 'Diff', 'Color', 'Regular', 0.3');
+%please note that when selecting a directory, then the starttime and
+%stoptime cannot be selectd and the values will be extracted from the start
+%and stop time withing the file information
+
+
+
+
+
 % input:
 % filename: the name of the video file
 % mg: instead of filename it is possible to use a MG data structure
@@ -250,8 +259,8 @@ for i = 1:cmd.fileCount
         newfile = strcat(filename,'_motion.avi');
         mg.output.type = 'motion';
         mg.output.motion.filename = newfile;
-
-
+        
+        
 
         v = VideoWriter(newfile);
         v.FrameRate = mg.video.obj.FrameRate;
@@ -358,9 +367,22 @@ for i = 1:cmd.fileCount
                 mg.video.gram.x = imcomplement(mg.video.gram.x);
             end
         end
+        
+           
+        
         close(v)
         disp(' ');
         disp(['The motion video is created with name ',newfile]);
+        
+        if(cmd.fileCount == 1)
+            mgOut = mgvideoreader(newfile);
+        else
+            mgOut{i} = mgvideoreader(newfile);
+
+        end
+
+        
+        
         mg.video.nframe = v.FrameCount;
         %     mg.video.nframe = ind - 1;
 
@@ -394,7 +416,7 @@ for i = 1:cmd.fileCount
         v = VideoWriter(newfile);
         v.FrameRate = mg.video.obj.FrameRate;
         ind = 1;
-        numf = mg.video.obj.FrameRate*(endtime-starttime)-1;
+        %numf = mg.video.obj.FrameRate*(endtime-starttime)-1;
         open(v);
         fh = figure('visible','off');
         fr1 = rgb2gray(readFrame(mg.video.obj));
@@ -443,6 +465,13 @@ for i = 1:cmd.fileCount
             close(v);
         disp(' ');
         disp(['The motion video is created with name ',newfile]);
+        
+        if(cmd.fileCount == 1)
+            mgOut = mgvideoreader(newfile);
+        else
+            mgOut{i} = mgvideoreader(newfile);
+
+        end
         mg.video.nframe = v.FrameCount;
 
         %    figure,subplot(211),plot(mg.video.qom)
@@ -471,10 +500,11 @@ for i = 1:cmd.fileCount
     mgmotionplot(mg);
     
     
+
+    
+    
+    
 end
-
-
-
 
 return;
 

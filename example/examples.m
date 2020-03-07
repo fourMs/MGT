@@ -14,6 +14,7 @@ mgmotion(fn,'OpticalFlow','color','convert','Interval', 5);
 % with the ending _history.avi
 mgmotionhistory(fn);
 
+
 % Generate a motion average image
 % with the ending _average.tiff
 mgmotionaverage(fn);
