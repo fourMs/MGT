@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mgmocapqom</title>
+  <meta name="keywords" content="mgmocapqom">
+  <meta name="description" content="mgmocapqom computes the quantity of motion of mocap data.">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">source-code</a> &gt; mgmocapqom.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for source-code&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>mgmocapqom
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>mgmocapqom computes the quantity of motion of mocap data.</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function s = mgmocapqom(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> mgmocapqom computes the quantity of motion of mocap data. 
+ syntax:
+ s = mgmocapqom(mg);
+
+ input:
+ mg: data structure contains mocap data set
+ s: the quantity of motion of mocap data set is stored in the field of
+ s.mocap.data</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function s = mgmocapqom(varargin)</a>
+0002 <span class="comment">% mgmocapqom computes the quantity of motion of mocap data.</span>
+0003 <span class="comment">% syntax:</span>
+0004 <span class="comment">% s = mgmocapqom(mg);</span>
+0005 <span class="comment">%</span>
+0006 <span class="comment">% input:</span>
+0007 <span class="comment">% mg: data structure contains mocap data set</span>
+0008 <span class="comment">% s: the quantity of motion of mocap data set is stored in the field of</span>
+0009 <span class="comment">% s.mocap.data</span>
+0010 
+0011 s = varargin{1};
+0012 <span class="keyword">if</span> isstruct(varargin{1})
+0013     <span class="keyword">if</span> isfield(varargin{1},<span class="string">'mocap'</span>)
+0014         mocap = varargin{1}.mocap;
+0015         [m,n] = size(mocap.data);
+0016         <span class="keyword">for</span> i =  1:m-1
+0017             mocap.diffdata(i,:) = abs((mocap.data(i+1,:) - mocap.data(i,:)));
+0018         <span class="keyword">end</span>
+0019         mocap_diff = mocap;
+0020         mocap_diff.data = mocap.diffdata;
+0021         mocap_diff.nFrames = mocap_diff.nFrames - 1;
+0022         mocap_diff = mcnorm(mocap_diff);
+0023         s.mocap = mocap_diff;
+0024     <span class="keyword">else</span>
+0025         s = varargin{1};
+0026         [m,n] = size(s.data);
+0027         <span class="keyword">for</span> i =  1:m-1
+0028             s.diffdata(i,:) = abs((s.data(i+1,:) - s.data(i,:)));
+0029         <span class="keyword">end</span>
+0030         mocap_diff = s;
+0031         mocap_diff.data = s.diffdata;
+0032         mocap_diff.nFrames = mocap_diff.nFrames - 1;
+0033         mocap_diff = mcnorm(mocap_diff);
+0034         s = mocap_diff;
+0035     <span class="keyword">end</span>
+0036 <span class="keyword">end</span>
+0037         
+0038 
+0039 
+0040     
+0041     
+0042</pre></div>
+<hr><address>Generated on Wed 28-Jun-2017 21:36:07 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

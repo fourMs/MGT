@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mgwaveplot</title>
+  <meta name="keywords" content="mgwaveplot">
+  <meta name="description" content="function mgwaveplot(varargin)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">source-code</a> &gt; mgwaveplot.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for source-code&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>mgwaveplot
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function mgwaveplot(varargin)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function mgwaveplot(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> function mgwaveplot(varargin)
+ mgwaveplot plots the waveform of the audio,and spectrum, rms,envelop of the audio
+ syntax: mgwaveplot(mg)
+ input: 
+ mg: musical gestures data structure containing the audio information
+ output:
+ a figure showing the waveform,spectrum,rms,envelop of the audio</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="mgdemo1.html" class="code" title="">mgdemo1</a>	function mgdemo1</li><li><a href="mgdemo2.html" class="code" title="">mgdemo2</a>	function mgdemo2</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function mgwaveplot(varargin)</a>
+0002 <span class="comment">% function mgwaveplot(varargin)</span>
+0003 <span class="comment">% mgwaveplot plots the waveform of the audio,and spectrum, rms,envelop of the audio</span>
+0004 <span class="comment">% syntax: mgwaveplot(mg)</span>
+0005 <span class="comment">% input:</span>
+0006 <span class="comment">% mg: musical gestures data structure containing the audio information</span>
+0007 <span class="comment">% output:</span>
+0008 <span class="comment">% a figure showing the waveform,spectrum,rms,envelop of the audio</span>
+0009 close all
+0010 <span class="keyword">if</span> isempty(varargin)
+0011     <span class="keyword">return</span>
+0012 <span class="keyword">end</span>
+0013 audio = varargin{1}.audio.mir
+0014 title(<span class="string">'Waveform'</span>)
+0015 ax1 = gca;
+0016 rms = mirrms(audio,<span class="string">'frame'</span>,2/varargin{1}.video.obj.FrameRate)
+0017 title(<span class="string">'RMS'</span>)
+0018 xlabel(<span class="string">'time(s)'</span>)
+0019 ylabel(<span class="string">'amplitude'</span>)
+0020 ax2 = gca;
+0021 spec = mirspectrum(audio,<span class="string">'Frame'</span>,<span class="string">'dB'</span>)
+0022 title(<span class="string">'Spectrogram'</span>)
+0023 xlabel(<span class="string">'time(s)'</span>)
+0024 ax3 = gca;
+0025 ax31 = gca;
+0026 spec_rms = mirspectrum(rms)
+0027 title(<span class="string">'Spectrum of RMS'</span>)
+0028 ax4 = gca;
+0029 s = varargin{1};
+0030 h = figure;
+0031 ax1_copy = copyobj(ax1,h);
+0032 ax2_copy = copyobj(ax2,h);
+0033 ax3_copy = copyobj(ax3,h);
+0034 ax4_copy = copyobj(ax4,h);
+0035 subplot(2,2,1,ax1_copy);
+0036 subplot(2,2,2,ax2_copy);
+0037 subplot(2,2,3,ax3_copy); 
+0038 subplot(2,2,4,ax4_copy);
+0039 figureobj = findobj(<span class="string">'Type'</span>,<span class="string">'figure'</span>);
+0040 l = length(figureobj);
+0041 close(figure(l-1))
+0042 close(figure(l-2))
+0043 close(figure(l-3))
+0044 close(figure(l-4))
+0045 <span class="keyword">if</span> isfield(s,<span class="string">'video'</span>)
+0046     <span class="keyword">if</span> isfield(s.video,<span class="string">'qom'</span>)
+0047         figure;
+0048         subplot(2,1,1),plot(s.video.qom);
+0049         title(<span class="string">'QoM'</span>)
+0050         tmp = s.video.obj.FrameRate;
+0051         set(gca,<span class="string">'XTick'</span>,[0:2*tmp:length(s.video.qom)]);
+0052         set(gca,<span class="string">'XTickLabel'</span>,s.video.starttime+[0:2*tmp:length(s.video.qom)]/tmp)
+0053         ylabel(<span class="string">'magnitude'</span>)
+0054         rms_data = mirgetdata(rms);
+0055         subplot(2,1,2),plot(rms_data);
+0056         set(gca,<span class="string">'XTick'</span>,[0:2*tmp:length(rms_data)]);
+0057         set(gca,<span class="string">'XTickLabel'</span>,s.video.starttime+[0:2*tmp:length(rms_data)]/tmp)
+0058         title(<span class="string">'RMS'</span>)
+0059         xlabel(<span class="string">'time(s)'</span>)
+0060         ylabel(<span class="string">'magnitude'</span>)
+0061 
+0062     <span class="keyword">end</span>
+0063 <span class="keyword">end</span>
+0064</pre></div>
+<hr><address>Generated on Wed 28-Jun-2017 21:36:07 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

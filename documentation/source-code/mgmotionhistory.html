@@ -1,0 +1,234 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mgmotionhistory</title>
+  <meta name="keywords" content="mgmotionhistory">
+  <meta name="description" content="mgmotionhistory(vidfile,nframe,type,starttime,endtime)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">source-code</a> &gt; mgmotionhistory.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for source-code&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>mgmotionhistory
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>mgmotionhistory(vidfile,nframe,type,starttime,endtime)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function mgmotionhistory(vidfile,nframe,type,varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> mgmotionhistory(vidfile,nframe,type,starttime,endtime)
+ compute the motion history image.
+
+ syntax:
+ mgmotionhistory(vidfile) using defualt nframe = 5 to create grayscale motion
+ history image
+ mgmotionhistory(vidfile,nframe) using nframe to create grayscale motion
+ image
+ mgmotionhistory(vidfile,nframe,type,starttime,endtime)
+
+ input:
+ vidfile: video file name
+ nframe: gives the number of frames to create motion history (default=20)
+ type: 'gray' or 'color' (default='gray')
+ starttime: starting time of the video to create motion history image
+ endtime: end time of the video to create motion history image
+
+ output: a history video written back to disk
+
+ examples:
+ mgmotionhistory(videofile,3,'gray',0,20)
+ mgmotionhistory(videofile)
+ mgmotionhistory(videofile,10,'color')</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="mgvideoreader.html" class="code" title="function mg = mgvideoreader(varargin)">mgvideoreader</a>	function mg = mgvideoreader(varargin)</li><li><a href="progmeter.html" class="code" title="function progmeter(i,n,w)">progmeter</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function mgmotionhistory(vidfile,nframe,type,varargin)</a>
+0002 <span class="comment">% mgmotionhistory(vidfile,nframe,type,starttime,endtime)</span>
+0003 <span class="comment">% compute the motion history image.</span>
+0004 <span class="comment">%</span>
+0005 <span class="comment">% syntax:</span>
+0006 <span class="comment">% mgmotionhistory(vidfile) using defualt nframe = 5 to create grayscale motion</span>
+0007 <span class="comment">% history image</span>
+0008 <span class="comment">% mgmotionhistory(vidfile,nframe) using nframe to create grayscale motion</span>
+0009 <span class="comment">% image</span>
+0010 <span class="comment">% mgmotionhistory(vidfile,nframe,type,starttime,endtime)</span>
+0011 <span class="comment">%</span>
+0012 <span class="comment">% input:</span>
+0013 <span class="comment">% vidfile: video file name</span>
+0014 <span class="comment">% nframe: gives the number of frames to create motion history (default=20)</span>
+0015 <span class="comment">% type: 'gray' or 'color' (default='gray')</span>
+0016 <span class="comment">% starttime: starting time of the video to create motion history image</span>
+0017 <span class="comment">% endtime: end time of the video to create motion history image</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% output: a history video written back to disk</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% examples:</span>
+0022 <span class="comment">% mgmotionhistory(videofile,3,'gray',0,20)</span>
+0023 <span class="comment">% mgmotionhistory(videofile)</span>
+0024 <span class="comment">% mgmotionhistory(videofile,10,'color')</span>
+0025 
+0026 <span class="keyword">if</span> nargin == 1 &amp;&amp; ischar(vidfile)
+0027     file = vidfile;
+0028     [~,pr,ex] = fileparts(file);
+0029     <span class="keyword">if</span> ismember(ex,{<span class="string">'.mp4'</span>;<span class="string">'.avi'</span>;<span class="string">'.mov'</span>;<span class="string">'.mpg'</span>;<span class="string">'.m4v'</span>})
+0030         mg = <a href="mgvideoreader.html" class="code" title="function mg = mgvideoreader(varargin)">mgvideoreader</a>(file);
+0031     <span class="keyword">else</span>
+0032         disp(<span class="string">'please input a video file!'</span>);
+0033         <span class="keyword">return</span>
+0034     <span class="keyword">end</span>
+0035     nf = 20;
+0036     method = <span class="string">'gray'</span>;
+0037     starttime = mg.video.starttime;
+0038     endtime = mg.video.endtime;
+0039 <span class="keyword">elseif</span> nargin == 2 &amp;&amp; ischar(vidfile)
+0040     file = vidfile;
+0041     <span class="keyword">if</span> ischar(nframe)
+0042         nf = 20;
+0043         method = nframe;
+0044     <span class="keyword">else</span>
+0045         method = <span class="string">'gray'</span>;
+0046         nf = nframe;
+0047     <span class="keyword">end</span>
+0048     [~,pr,ex] = fileparts(file);
+0049     <span class="keyword">if</span> ismember(ex,{<span class="string">'.mp4'</span>;<span class="string">'.avi'</span>;<span class="string">'.mov'</span>;<span class="string">'.mpg'</span>;<span class="string">'.m4v'</span>})
+0050         mg = <a href="mgvideoreader.html" class="code" title="function mg = mgvideoreader(varargin)">mgvideoreader</a>(file);
+0051     <span class="keyword">else</span>
+0052         disp(<span class="string">'please input a video file!'</span>);
+0053         <span class="keyword">return</span>
+0054     <span class="keyword">end</span>
+0055     starttime = mg.video.starttime;
+0056     endtime = mg.video.endtime;
+0057 <span class="keyword">elseif</span> nargin == 3 &amp;&amp; ischar(vidfile)
+0058     file = vidfile;
+0059     nf = nframe;
+0060     [~,pr,ex] = fileparts(file);
+0061     <span class="keyword">if</span> ismember(ex,{<span class="string">'.mp4'</span>;<span class="string">'.avi'</span>;<span class="string">'.mov'</span>;<span class="string">'.mpg'</span>;<span class="string">'.m4v'</span>})
+0062         mg = <a href="mgvideoreader.html" class="code" title="function mg = mgvideoreader(varargin)">mgvideoreader</a>(file);
+0063     <span class="keyword">else</span>
+0064         disp(<span class="string">'please input a video file!'</span>);
+0065         <span class="keyword">return</span>
+0066     <span class="keyword">end</span>
+0067     <span class="keyword">if</span> ischar(type)
+0068         method = type;
+0069     <span class="keyword">else</span>
+0070         disp(<span class="string">'please input a proper type: gray or color'</span>);
+0071         <span class="keyword">return</span>
+0072     <span class="keyword">end</span>
+0073     starttime = mg.video.starttime;
+0074     endtime = mg.video.endtime;
+0075 <span class="keyword">elseif</span> nargin == 5 &amp;&amp; ischar(vidfile)
+0076     file = vidfile;
+0077     nf = nframe;
+0078     [~,pr,ex] = fileparts(file);
+0079     <span class="keyword">if</span> ismember(ex,{<span class="string">'.mp4'</span>;<span class="string">'.avi'</span>;<span class="string">'.mov'</span>;<span class="string">'.mpg'</span>;<span class="string">'.m4v'</span>})
+0080         mg = <a href="mgvideoreader.html" class="code" title="function mg = mgvideoreader(varargin)">mgvideoreader</a>(file);
+0081     <span class="keyword">else</span>
+0082         disp(<span class="string">'please input a video file!'</span>);
+0083         <span class="keyword">return</span>
+0084     <span class="keyword">end</span>
+0085     <span class="keyword">if</span> ischar(type)
+0086         method = type;
+0087     <span class="keyword">else</span>
+0088         disp(<span class="string">'please input a proper type: gray or color'</span>);
+0089         <span class="keyword">return</span>
+0090     <span class="keyword">end</span>
+0091     <span class="keyword">if</span> length(varargin) == 1
+0092         starttime = varargin{1};
+0093         endtime = mg.video.endtime;
+0094     <span class="keyword">elseif</span> length(varargin) == 2
+0095         starttime = varargin{1};
+0096         endtime = varargin{2};
+0097     <span class="keyword">end</span>
+0098 <span class="keyword">end</span>
+0099 
+0100 mg.video.obj.CurrentTime = starttime;
+0101 newfile = strcat(pr,<span class="string">'_history.avi'</span>);
+0102 v = VideoWriter(newfile);
+0103 v.FrameRate = mg.video.obj.FrameRate;
+0104 open(v);
+0105 <span class="keyword">if</span> strcmpi(method,<span class="string">'gray'</span>)
+0106     temparray = zeros(mg.video.obj.Height,mg.video.obj.Width,nf-1,<span class="string">'uint8'</span>);
+0107     fr1 = rgb2gray(readFrame(mg.video.obj));
+0108     fr2 = rgb2gray(readFrame(mg.video.obj));
+0109     diff = imsubtract(fr2,fr1);
+0110     temparray(:,:,1) = diff;
+0111     history = diff;
+0112     writeVideo(v,imadd(diff,fr2));
+0113     <span class="keyword">for</span> i = 1:nf-2
+0114         nextf = rgb2gray(readFrame(mg.video.obj));
+0115         temp = imsubtract(nextf,fr2);
+0116         fr2 = nextf;
+0117         temparray(:,:,i+1) = temp;
+0118         history = imadd(temp,history);
+0119         writeVideo(v,imadd(history,nextf));
+0120     <span class="keyword">end</span>
+0121     disp(<span class="string">'*****creating motion history video*****'</span>)
+0122     <span class="keyword">while</span> mg.video.obj.CurrentTime &lt; endtime
+0123 <span class="comment">%        progmeter(indf,numfr)</span>
+0124         temparray = temparray(:,:,[2:end 1]);
+0125         nextf = rgb2gray(readFrame(mg.video.obj));
+0126         temp = imsubtract(nextf,fr2);
+0127         fr2 = nextf;
+0128         temparray(:,:,end) = temp;
+0129         history = uint8(sum(temparray,3));
+0130         writeVideo(v,imadd(history,nextf));
+0131     <span class="keyword">end</span>
+0132 <span class="keyword">elseif</span> strcmpi(method,<span class="string">'color'</span>)
+0133     temparray = zeros(mg.video.obj.Height,mg.video.obj.Width,3,nf-1,<span class="string">'uint8'</span>);
+0134     fr1 = readFrame(mg.video.obj);
+0135     fr2 = readFrame(mg.video.obj);
+0136     diff = imsubtract(fr2,fr1);
+0137     temparray(:,:,:,1) = diff;
+0138     history = diff;
+0139     writeVideo(v,imadd(diff,fr2));
+0140     <span class="keyword">for</span> i = 1:nf-2
+0141         nextf = readFrame(mg.video.obj);
+0142         temp = imsubtract(nextf,fr2);
+0143         fr2 = nextf;
+0144         temparray(:,:,:,i+1) = temp;
+0145         history = imadd(temp,history);
+0146         writeVideo(v,imadd(history,nextf));
+0147     <span class="keyword">end</span>
+0148     disp(<span class="string">'*****creating motion history video*****'</span>)
+0149     indf = 1;
+0150     numfr = mg.video.obj.FrameRate*(endtime-starttime)-nf;
+0151     <span class="keyword">while</span> mg.video.obj.CurrentTime &lt; endtime
+0152         <a href="progmeter.html" class="code" title="function progmeter(i,n,w)">progmeter</a>(indf,numfr)
+0153         temparray = temparray(:,:,:,[2:end 1]);
+0154         nextf = readFrame(mg.video.obj);
+0155         temp = imsubtract(nextf,fr2);
+0156         fr2 = nextf;
+0157         temparray(:,:,:,end) = temp;
+0158         history = uint8(sum(temparray,4));
+0159         writeVideo(v,imadd(history,nextf));
+0160         indf = indf + 1;
+0161     <span class="keyword">end</span>
+0162 <span class="keyword">end</span>
+0163 disp(<span class="string">' '</span>)
+0164 disp([<span class="string">'The motion history video is created with name '</span>,newfile]);
+0165 close(v)</pre></div>
+<hr><address>Generated on Wed 28-Jun-2017 21:36:07 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

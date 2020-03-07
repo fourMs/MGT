@@ -1,0 +1,305 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mgdemo2</title>
+  <meta name="keywords" content="mgdemo2">
+  <meta name="description" content="function mgdemo2">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">source-code</a> &gt; mgdemo2.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for source-code&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>mgdemo2
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function mgdemo2</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> function mgdemo2
+ this example shows you how to analysis multiple objects, as the original
+ video recordings are too large.We need to resample the video recordings
+ first.</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="mgautocor.html" class="code" title="function [per,ac,eac,lag] = mgautocor(mg,type,maxp,method)">mgautocor</a>	function out = mgautocor(fn,max,method)</li><li><a href="mgmap.html" class="code" title="function mg = mgmap(varargin)">mgmap</a>	function mg = mgcrop(varargin)</li><li><a href="mgmotion.html" class="code" title="function mg = mgmotion(f,varargin)">mgmotion</a>	MGMOTION - Calculate various motion features from a video file</li><li><a href="mgread.html" class="code" title="function mg = mgread(varargin)">mgread</a>	function mg = mgread(varargin)</li><li><a href="mgsimilarity.html" class="code" title="function sim = mgsimilarity(x,distance)">mgsimilarity</a>	function sim = mgsimilarity(x,distance)</li><li><a href="mgstatistics.html" class="code" title="function features = mgstatistics(varargin)">mgstatistics</a>	function features = mgstatistics(varargin)</li><li><a href="mgvideoreader.html" class="code" title="function mg = mgvideoreader(varargin)">mgvideoreader</a>	function mg = mgvideoreader(varargin)</li><li><a href="mgvideosample.html" class="code" title="function mg = mgvideosample(varargin)">mgvideosample</a>	function mg = mgvideosample(varargin)</li><li><a href="mgwaveplot.html" class="code" title="function mgwaveplot(varargin)">mgwaveplot</a>	function mgwaveplot(varargin)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% function mgdemo2</span>
+0002 <span class="comment">% this example shows you how to analysis multiple objects, as the original</span>
+0003 <span class="comment">% video recordings are too large.We need to resample the video recordings</span>
+0004 <span class="comment">% first.</span>
+0005 mg = <a href="mgread.html" class="code" title="function mg = mgread(varargin)">mgread</a>(<span class="string">'dance.mp4'</span>);
+0006 <span class="comment">% extract a temporal segment from the video</span>
+0007 ts = 5;
+0008 te = 25;
+0009 mgseg= <a href="mgvideoreader.html" class="code" title="function mg = mgvideoreader(varargin)">mgvideoreader</a>(mg,<span class="string">'Extract'</span>,ts,te);
+0010 
+0011 <span class="comment">% map this segment into audio, and mocap data</span>
+0012 mgseg = <a href="mgmap.html" class="code" title="function mg = mgmap(varargin)">mgmap</a>(mgseg,<span class="string">'Both'</span>,<span class="string">'dance.wav'</span>,<span class="string">'dance.c3d'</span>);
+0013 <span class="comment">%% resample the video frames,reduce the size of each frame.</span>
+0014 tic;
+0015 mgsam = <a href="mgvideosample.html" class="code" title="function mg = mgvideosample(varargin)">mgvideosample</a>(mgseg,[4,4],<span class="string">'dancesamplevideo.avi'</span>);
+0016 toc;
+0017 <span class="comment">% 25m</span>
+0018 <span class="comment">%% crop the interest of region of the video frame</span>
+0019 <span class="comment">% mgcrop = mgvideocrop(mgsam);</span>
+0020 
+0021 <span class="comment">%%</span>
+0022 tic;
+0023 mgsammo = <a href="mgmotion.html" class="code" title="function mg = mgmotion(f,varargin)">mgmotion</a>(mgsam,<span class="string">'Diff'</span>);
+0024 toc;
+0025 <span class="comment">% or</span>
+0026 <span class="comment">% mgsamop = mgmotion(mgsam,'OpticalFlow');</span>
+0027 <span class="comment">%%</span>
+0028 subplot(211)
+0029 plot(mgsammo.video.qom,<span class="string">'-b'</span>)
+0030 set(gca,<span class="string">'XTick'</span>,[0:4*mgsammo.video.obj.FrameRate:mgsammo.video.nframe])
+0031 set(gca,<span class="string">'XTickLabel'</span>,[mgsammo.video.starttime:4:mgsammo.video.endtime])
+0032 xlabel(<span class="string">'Time(s)'</span>)
+0033 ylabel(<span class="string">'magnitude'</span>)
+0034 title(<span class="string">'quantity of motion'</span>)
+0035 subplot(212)
+0036 plot(mgsammo.video.com(:,1),mgsammo.video.com(:,2),<span class="string">'.'</span>)
+0037 xlabel(<span class="string">'x coordinate'</span>)
+0038 ylabel(<span class="string">'y coordinate'</span>)
+0039 title(<span class="string">'centroid of motion'</span>)
+0040 <span class="comment">%%</span>
+0041 [per,ac,eac,lag] = <a href="mgautocor.html" class="code" title="function [per,ac,eac,lag] = mgautocor(mg,type,maxp,method)">mgautocor</a>(mgsammo,<span class="string">'Video'</span>,1);
+0042 figure,subplot(211),plot(lag,ac)
+0043 title(<span class="string">'period'</span>)
+0044 xlabel(<span class="string">'seconds'</span>)
+0045 ylabel(<span class="string">'magnitude'</span>)
+0046 subplot(212),plot(lag,eac)
+0047 title(<span class="string">'enhanced period'</span>)
+0048 xlabel(<span class="string">'seconds'</span>)
+0049 ylabel(<span class="string">'magnitude'</span>)
+0050 
+0051 <span class="comment">%%</span>
+0052 gramx = medfilt2(mgsammo.video.gram.gramx,[3,3]);
+0053 gramx = mgsammo.video.gram.gramx&gt;0.3;
+0054 gramx = mgsammo.video.gram.gramx.*gramx;
+0055 figure;
+0056 subplot(211)
+0057 imagesc(gramx)
+0058 fr = mgsammo.video.obj.FrameRate;
+0059 [~,n] = size(mgsammo.video.gram.gramx);
+0060 set(gca,<span class="string">'XTick'</span>,[0:2*fr:mgsammo.video.nframe]);
+0061 set(gca,<span class="string">'XTickLabel'</span>,[fr*<span class="keyword">...</span>
+0062     mgsammo.video.starttime:<span class="keyword">...</span>
+0063     2*fr:<span class="keyword">...</span>
+0064     mgsammo.video.endtime*fr]<span class="keyword">...</span>
+0065     /fr);
+0066 title(<span class="string">'horizontal gram'</span>);
+0067 gramy = medfilt2(mgsammo.video.gram.gramy,[3,3]);
+0068 gramy = mgsammo.video.gram.gramy&gt;0.4;
+0069 gramy = mgsammo.video.gram.gramy.*gramy;
+0070 subplot(212)
+0071 imagesc(gramy);
+0072 set(gca,<span class="string">'YTick'</span>,[0:2*fr:mgsammo.video.nframe]);
+0073 set(gca,<span class="string">'YTickLabel'</span>,[fr*<span class="keyword">...</span>
+0074     mgsammo.video.starttime:<span class="keyword">...</span>
+0075     2*fr:<span class="keyword">...</span>
+0076     mgsammo.video.endtime*fr]<span class="keyword">...</span>
+0077     /fr);
+0078 ylabel(<span class="string">'seconds'</span>);
+0079 title(<span class="string">'vertical gram'</span>);
+0080 
+0081 <span class="comment">%%</span>
+0082 <span class="comment">% plot the waveform,rms,spectrum</span>
+0083 <a href="mgwaveplot.html" class="code" title="function mgwaveplot(varargin)">mgwaveplot</a>(mgsammo);
+0084 <span class="comment">%%</span>
+0085 
+0086 <span class="comment">% compute the spectrum of quantity of motion, spectrum of rms</span>
+0087 <span class="comment">%</span>
+0088 mir = mirframe(mgsammo.audio.mir,<span class="string">'Length'</span>,1/15)
+0089 rms = mirrms(mir);
+0090 envelop = mirenvelope(rms);
+0091 <span class="comment">%</span>
+0092 envelop_data = mirgetdata(envelop);
+0093 envelop_data = envelop_data/max(envelop_data);
+0094 <span class="comment">%%</span>
+0095 figure;
+0096 subplot(211)
+0097 fft_envelop_data = fft(envelop_data);
+0098 L = length(fft_envelop_data);
+0099 y = abs(fft_envelop_data/L);
+0100 y1 = y(1:L/2+1);
+0101 y1(2:end-1) = 2*y1(2:end-1);
+0102 fs = 30;
+0103 f = fs*(0:L/2)/L;
+0104 plot(f,y1)
+0105 set(gca,<span class="string">'XTick'</span>,[0:15])
+0106 xlabel(<span class="string">'f(Hz)'</span>)
+0107 ylabel(<span class="string">'magnitude'</span>)
+0108 title(<span class="string">'spectrum of rms'</span>);
+0109 <span class="comment">%%</span>
+0110 subplot(212)
+0111 fft_qom = fft(mgsammo.video.qom);
+0112 L = length(fft_qom);
+0113 x = abs(fft_qom/L);
+0114 x1 = x(1:L/2+1);
+0115 x1(2:end-1) = 2*x1(2:end-1);
+0116 fs = 30;
+0117 f = fs*(0:L/2)/L;
+0118 plot(f,x1);
+0119 xlabel(<span class="string">'f(Hz)'</span>)
+0120 set(gca,<span class="string">'XTick'</span>,[0:15])
+0121 ylabel(<span class="string">'magnitude'</span>)
+0122 title(<span class="string">'spectrum of qom'</span>)
+0123 
+0124 
+0125 <span class="comment">%% statistics</span>
+0126 features1 = <a href="mgstatistics.html" class="code" title="function features = mgstatistics(varargin)">mgstatistics</a>(mgsammo,<span class="string">'Video'</span>,<span class="string">'FirstOrder'</span>);
+0127 features1_norm = features1./repmat(max(features1),size(mgsammo.video.gram.gramy,1),1);
+0128 plot(features1_norm(:,2),features1_norm(:,3),<span class="string">'.'</span>)
+0129 <span class="comment">%%</span>
+0130 features2 = <a href="mgstatistics.html" class="code" title="function features = mgstatistics(varargin)">mgstatistics</a>(mgsampleseg_motion,<span class="string">'Video'</span>,<span class="string">'SecondOrder'</span>);
+0131 features2_norm = features2./repmat(max(features2),size(mgsammo.video.gram.gramy,1),1);
+0132 plot(features2_norm(:,7),features2_norm(:,8),<span class="string">'.'</span>)
+0133 
+0134 <span class="comment">%%</span>
+0135 <span class="comment">%%%%%%%%%%% analysis the mocap data</span>
+0136 mcplottimeseries(mgsammo.mocap,[1:9],<span class="string">'dim'</span>,3)
+0137 mcplottimeseries(mgsammo.mocap,[1:9],<span class="string">'dim'</span>,2)
+0138 mcplottimeseries(mgsammo.mocap,[1:9],<span class="string">'dim'</span>,1)
+0139 <span class="comment">%%</span>
+0140 mocap = mgseg.mocap;
+0141 [m,n] = size(mocap.data);
+0142 <span class="keyword">for</span> i =  1:m-1
+0143     mocap.diffdata(i,:) = abs((mocap.data(i+1,:) - mocap.data(i,:)));
+0144 <span class="keyword">end</span>
+0145 mocap_diff = mocap;
+0146 mocap_diff.data = mocap.diffdata;
+0147 mocap_diff.nFrames = mocap_diff.nFrames - 1;
+0148 mocap_diff = mcnorm(mocap_diff);
+0149 <span class="comment">%% norm difference movement of each person</span>
+0150 figure,
+0151 <span class="keyword">for</span> i = 1:9
+0152     subplot(3,3,i)
+0153     plot(mocap_diff.data(:,i))
+0154     set(gca,<span class="string">'XTick'</span>,[0:1600:m-1])
+0155     set(gca,<span class="string">'XTickLabel'</span>,[ts:8:te])
+0156     ylim([0 10])
+0157     title([<span class="string">'difference movement of person'</span>,num2str(i)])
+0158     xlabel(<span class="string">'Time(s)'</span>)
+0159 <span class="keyword">end</span>
+0160 <span class="comment">%% periodicity of difference movement</span>
+0161 [per2,ac2,eac2,lag2] = mcperiod(mocap_diff,3);
+0162 figure,
+0163 <span class="keyword">for</span> i = 1:9
+0164     subplot(3,3,i)
+0165     plot(lag2,ac2(:,i))
+0166     title([<span class="string">'periodicity of person'</span>,num2str(i)])
+0167     xlabel(<span class="string">'lag(s)'</span>)
+0168 <span class="keyword">end</span>
+0169 <span class="comment">%% average movement of 9 persons</span>
+0170 figure,
+0171 av = sum(mocap_diff.data,2)/9;
+0172 plot(av)
+0173 set(gca,<span class="string">'XTick'</span>,[0:1600:m-1])
+0174 set(gca,<span class="string">'XTickLabel'</span>,[ts:8:te])
+0175 xlabel(<span class="string">'Time(s)'</span>)
+0176 title(<span class="string">'average movement of 9 persons'</span>)
+0177 <span class="comment">%% summation movement of 9 persons</span>
+0178 figure,
+0179 total = sum(mocap_diff.data,2);
+0180 plot(total);
+0181 set(gca,<span class="string">'XTick'</span>,[0:1600:m-1])
+0182 set(gca,<span class="string">'XTickLabel'</span>,[ts:8:te])
+0183 xlabel(<span class="string">'Time(s)'</span>)
+0184 title(<span class="string">'total movement of 9 persons'</span>)
+0185 <span class="comment">%% similarity of persons</span>
+0186 sm = <a href="mgsimilarity.html" class="code" title="function sim = mgsimilarity(x,distance)">mgsimilarity</a>(mocap_diff.data');
+0187 figure,imagesc(sm)
+0188 xlabel(<span class="string">'no.person'</span>)
+0189 ylabel(<span class="string">'no.person'</span>)
+0190 title(<span class="string">'similarity matrix'</span>)
+0191 <span class="comment">%% spectrum of difference position</span>
+0192 figure,
+0193 [s2,f2] = mcspectrum(mocap_diff);
+0194 <span class="keyword">for</span> i = 1:9
+0195     subplot(3,3,i)
+0196     plot(f2(1:6000),s2.data(1:6000,i))
+0197     xlim([0 20])
+0198     title([<span class="string">'spectrum of person'</span>,num2str(i)])
+0199     xlabel(<span class="string">'Hz'</span>)
+0200 <span class="keyword">end</span>
+0201 <span class="comment">%% similarity of spectrum of persons</span>
+0202 sm_spec = <a href="mgsimilarity.html" class="code" title="function sim = mgsimilarity(x,distance)">mgsimilarity</a>(s2.data');
+0203 figure,imagesc(sm_spec)
+0204 xlabel(<span class="string">'no.person'</span>)
+0205 ylabel(<span class="string">'no.person'</span>)
+0206 title(<span class="string">'spectrum similarity matrix'</span>)
+0207 <span class="comment">%% marker positions of 9 nine persons</span>
+0208 figure;
+0209 mocap = mcnorm(mocap);
+0210 <span class="keyword">for</span> i = 1:9
+0211     subplot(3,3,i)
+0212     plot(mocap.data(:,i))
+0213     set(gca,<span class="string">'XTick'</span>,[0:1600:m])
+0214     set(gca,<span class="string">'XTickLabel'</span>,[5:8:125])
+0215     title([<span class="string">'marker position of person'</span>,num2str(i)])
+0216     xlabel(<span class="string">'Time(s)'</span>)
+0217 <span class="keyword">end</span>
+0218 figure,
+0219 av = sum(mocap.data,2)/n;
+0220 plot(av)
+0221 set(gca,<span class="string">'XTick'</span>,[0:1600:m])
+0222 set(gca,<span class="string">'XTickLabel'</span>,[ts:8:te])
+0223 xlabel(<span class="string">'Time(s)'</span>)
+0224 title(<span class="string">'average position of 9 persons'</span>)
+0225 <span class="comment">%%</span>
+0226 [per3,ac3,eac3,lag3] = mcperiod(mocap,3);
+0227 figure,
+0228 <span class="keyword">for</span> i = 1:9
+0229     subplot(3,3,i)
+0230     plot(lag3,ac3(:,i))
+0231     title([<span class="string">'periodicity of person'</span>,num2str(i)])
+0232     xlabel(<span class="string">'lag(s)'</span>)
+0233 <span class="keyword">end</span>
+0234 
+0235 <span class="comment">%% spectrum of marker position</span>
+0236 [s1,f1] = mcspectrum(mocap);
+0237 figure
+0238 <span class="keyword">for</span> i = 1:9
+0239     subplot(3,3,i)
+0240     plot(f1(1:6000),s1.data(1:6000,i))
+0241     xlim([0 2])
+0242     title([<span class="string">'spectrum of person'</span>,num2str(i)])
+0243     xlabel(<span class="string">'Hz'</span>)
+0244 <span class="keyword">end</span>
+0245 
+0246 
+0247 
+0248 
+0249 
+0250 
+0251 
+0252 
+0253 
+0254     
+0255</pre></div>
+<hr><address>Generated on Wed 28-Jun-2017 21:36:07 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

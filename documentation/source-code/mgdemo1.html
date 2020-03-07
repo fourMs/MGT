@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mgdemo1</title>
+  <meta name="keywords" content="mgdemo1">
+  <meta name="description" content="function mgdemo1">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">source-code</a> &gt; mgdemo1.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for source-code&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>mgdemo1
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function mgdemo1</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>This is a script file. </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> function mgdemo1
+ This example shows how you can read Video,Mocap,Audio files into Matlab
+ and visulize the data</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="mgautocor.html" class="code" title="function [per,ac,eac,lag] = mgautocor(mg,type,maxp,method)">mgautocor</a>	function out = mgautocor(fn,max,method)</li><li><a href="mgmap.html" class="code" title="function mg = mgmap(varargin)">mgmap</a>	function mg = mgcrop(varargin)</li><li><a href="mgmotion.html" class="code" title="function mg = mgmotion(f,varargin)">mgmotion</a>	MGMOTION - Calculate various motion features from a video file</li><li><a href="mgread.html" class="code" title="function mg = mgread(varargin)">mgread</a>	function mg = mgread(varargin)</li><li><a href="mgstatistics.html" class="code" title="function features = mgstatistics(varargin)">mgstatistics</a>	function features = mgstatistics(varargin)</li><li><a href="mgvideoplot.html" class="code" title="function mgvideoplot(varargin)">mgvideoplot</a>	function mgvideoplot(varargin)</li><li><a href="mgvideoreader.html" class="code" title="function mg = mgvideoreader(varargin)">mgvideoreader</a>	function mg = mgvideoreader(varargin)</li><li><a href="mgwaveplot.html" class="code" title="function mgwaveplot(varargin)">mgwaveplot</a>	function mgwaveplot(varargin)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">% function mgdemo1</span>
+0002 <span class="comment">% This example shows how you can read Video,Mocap,Audio files into Matlab</span>
+0003 <span class="comment">% and visulize the data</span>
+0004 
+0005 <span class="comment">% read video file into matlab</span>
+0006 <span class="comment">% load mg_structure.mat;</span>
+0007 mg = <a href="mgread.html" class="code" title="function mg = mgread(varargin)">mgread</a>(<span class="string">'pianist.mp4'</span>,<span class="string">'pianist.wav'</span>,<span class="string">'pianist.tsv'</span>);
+0008 <span class="comment">% extract a segment from 10 seconds to 30 seconds from the mg</span>
+0009 mgseg = <a href="mgvideoreader.html" class="code" title="function mg = mgvideoreader(varargin)">mgvideoreader</a>(mg,<span class="string">'Extract'</span>,10,30);
+0010 <span class="comment">% map the same segment to audio,mocap dataset</span>
+0011 mgseg = <a href="mgmap.html" class="code" title="function mg = mgmap(varargin)">mgmap</a>(mgseg,<span class="string">'Both'</span>);
+0012 
+0013 <span class="comment">% alternatively, extract a segment by mgreadsegment without using mgmap.</span>
+0014 <span class="comment">% mgseg = mgreadsegment(mg,10,30);</span>
+0015 <span class="comment">%% if needed</span>
+0016 <span class="comment">% down sampling the video to half size in space. The sampled video was</span>
+0017 <span class="comment">% written back to disk.</span>
+0018 <span class="comment">% mgsam = mgvideosample(mgseg,[2,2],'samplevideo.avi');</span>
+0019 
+0020 <span class="comment">%% if needed</span>
+0021 <span class="comment">% crop the region of interest in a video</span>
+0022 <span class="comment">% mgcrop = mgvideocrop(mg);</span>
+0023 <span class="comment">% mgcrop = mgvideocrop(mgsam);</span>
+0024 
+0025 <span class="comment">%%</span>
+0026 <span class="comment">% compute the motion image, motiongrams, quantity of motion,centroid of</span>
+0027 <span class="comment">% motion</span>
+0028 mgsegmo = <a href="mgmotion.html" class="code" title="function mg = mgmotion(f,varargin)">mgmotion</a>(mgseg,<span class="string">'Diff'</span>);
+0029 <span class="comment">% mgseg_flow = mgmotion(mgseg,'OpticalFlow');</span>
+0030 <span class="comment">%%</span>
+0031 <span class="comment">% compute the periodicity of movement</span>
+0032 [per,ac,eac,lag] = <a href="mgautocor.html" class="code" title="function [per,ac,eac,lag] = mgautocor(mg,type,maxp,method)">mgautocor</a>(mgsegmo,<span class="string">'video'</span>,3);
+0033 figure,subplot(211),plot(lag,ac)
+0034 title(<span class="string">'period'</span>)
+0035 xlabel(<span class="string">'seconds'</span>)
+0036 ylabel(<span class="string">'magnitude'</span>)
+0037 subplot(212),plot(lag,eac)
+0038 title(<span class="string">'enhanced period'</span>)
+0039 xlabel(<span class="string">'seconds'</span>)
+0040 ylabel(<span class="string">'magnitude'</span>)
+0041 <span class="comment">%%</span>
+0042 <span class="comment">% plot the motion image motion grams over time. If 'Converted' is set to</span>
+0043 <span class="comment">% 'On' , then mgvideoplot will plot white-black motiongrams.</span>
+0044 <a href="mgvideoplot.html" class="code" title="function mgvideoplot(varargin)">mgvideoplot</a>(mgsegmo,<span class="string">'Converted'</span>,<span class="string">'Off'</span>);
+0045 <span class="comment">%</span>
+0046 <span class="comment">% mgvideoplot(mgsegmo,'Converted','On')</span>
+0047 <span class="comment">%%</span>
+0048 <span class="comment">% plot the whole motion grams</span>
+0049 figure;
+0050 subplot(211)
+0051 gramx = medfilt2(mgsegmo.video.gram.gramx,[3,3]);
+0052 gramx = mgsegmo.video.gram.gramx&gt;0.3;
+0053 gramx = mgsegmo.video.gram.gramx.*gramx;
+0054 
+0055 imagesc(gramx)
+0056 [~,n] = size(mgsegmo.video.gram.gramx);
+0057 set(gca,<span class="string">'XTick'</span>,[0:2*mgsegmo.video.obj.FrameRate:n]);
+0058 set(gca,<span class="string">'XTickLabel'</span>,[0:2*mgsegmo.video.obj.FrameRate:n]/mgsegmo.video.obj.FrameRate+mgsegmo.video.starttime);
+0059 title(<span class="string">'horizontal gram'</span>);
+0060 subplot(212)
+0061 gramy = medfilt2(mgsegmo.video.gram.gramy,[3,3]);
+0062 gramy = mgsegmo.video.gram.gramy&gt;0.4;
+0063 gramy = mgsegmo.video.gram.gramy.*gramy;
+0064 imagesc(gramy);
+0065 set(gca,<span class="string">'YTick'</span>,[0:2*mgsegmo.video.obj.FrameRate:n]);
+0066 set(gca,<span class="string">'YTickLabel'</span>,[0:2*mgsegmo.video.obj.FrameRate:n]/mgsegmo.video.obj.FrameRate+mgsegmo.video.starttime);
+0067 ylabel(<span class="string">'seconds'</span>);
+0068 title(<span class="string">'vertical gram'</span>);
+0069 
+0070 <span class="comment">%%</span>
+0071 <span class="comment">% plot the waveform,rms,spectrum</span>
+0072 <a href="mgwaveplot.html" class="code" title="function mgwaveplot(varargin)">mgwaveplot</a>(mgsegmo);
+0073 
+0074 <span class="comment">% compute the spectrum of quantity of motion, spectrum of rms</span>
+0075 <span class="comment">%</span>
+0076 mir = mirframe(mgsegmo.audio.mir,<span class="string">'Length'</span>,1/15)
+0077 rms = mirrms(mir);
+0078 envelop = mirenvelope(rms);
+0079 <span class="comment">%</span>
+0080 envelop_data = mirgetdata(envelop);
+0081 envelop_data = envelop_data/max(envelop_data);
+0082 <span class="comment">%%</span>
+0083 figure;
+0084 subplot(211)
+0085 fft_envelop_data = fft(envelop_data);
+0086 L = length(fft_envelop_data);
+0087 y = abs(fft_envelop_data/L);
+0088 y1 = y(1:L/2+1);
+0089 y1(2:end-1) = 2*y1(2:end-1);
+0090 fs = 30;
+0091 f = fs*(0:L/2)/L;
+0092 plot(f,y1)
+0093 set(gca,<span class="string">'XTick'</span>,[0:15])
+0094 xlabel(<span class="string">'f(Hz)'</span>)
+0095 ylabel(<span class="string">'magnitude'</span>)
+0096 title(<span class="string">'spectrum of rms'</span>);
+0097 <span class="comment">%</span>
+0098 subplot(212)
+0099 fft_qom = fft(mgsegmo.video.qom);
+0100 L = length(fft_qom);
+0101 x = abs(fft_qom/L);
+0102 x1 = x(1:L/2+1);
+0103 x1(2:end-1) = 2*x1(2:end-1);
+0104 fs = 30;
+0105 f = fs*(0:L/2)/L;
+0106 plot(f,x1);
+0107 xlabel(<span class="string">'f(Hz)'</span>)
+0108 ylabel(<span class="string">'magnitude'</span>)
+0109 title(<span class="string">'spectrum of qom'</span>)
+0110 <span class="comment">%% statistics  first order descriptors</span>
+0111 features1 = <a href="mgstatistics.html" class="code" title="function features = mgstatistics(varargin)">mgstatistics</a>(mgsegmo,<span class="string">'Video'</span>,<span class="string">'FirstOrder'</span>);
+0112 features1_norm = features1./repmat(max(features1),size(mgsegmo.video.gram.gramy,1),1);
+0113 plot(features1_norm(:,2),features1_norm(:,3),<span class="string">'.'</span>)
+0114 
+0115 <span class="comment">%% second order descriptors</span>
+0116 features2 = <a href="mgstatistics.html" class="code" title="function features = mgstatistics(varargin)">mgstatistics</a>(mgseg_motion,<span class="string">'Video'</span>,<span class="string">'SecondOrder'</span>);
+0117 features2_norm = features2./repmat(max(features2),size(mgsegmo.video.gram.gramy,1),1);
+0118 plot(features2_norm(:,7),features2_norm(:,8),<span class="string">'.'</span>)
+0119 
+0120 
+0121 
+0122 
+0123 
+0124 
+0125 
+0126</pre></div>
+<hr><address>Generated on Wed 28-Jun-2017 21:36:07 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

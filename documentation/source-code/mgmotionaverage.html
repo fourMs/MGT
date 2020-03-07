@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of mgmotionaverage</title>
+  <meta name="keywords" content="mgmotionaverage">
+  <meta name="description" content="function mgmotionaverage(varargin)">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../index.html">Home</a> &gt;  <a href="index.html">source-code</a> &gt; mgmotionaverage.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../index.html"><img alt="<" border="0" src="../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for source-code&nbsp;<img alt=">" border="0" src="../right.png"></a></td></tr></table>-->
+
+<h1>mgmotionaverage
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function mgmotionaverage(varargin)</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="box"><strong>function ave = mgmotionaverage(varargin) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> function mgmotionaverage(varargin)
+ create an image by taking average of the video frames
+ if you want to compute average image on the color scale, make sure the
+ input is a mg structure which contains the video information, for
+ example, created by function mgread. Then set the mode like
+ mg.video.mode.color = 'on';
+
+ syntax:
+ mgmotionaverage(videofile,starttime,endtime);
+ mgmotionaverage(mg,starttime,endtime);
+ mgmotionaverage(mg);
+ mgmotionaverage(videofile);
+
+ input:
+ videofile or mg: input video file or data structure which contains video
+ information
+ starttime: specified startting time for averaging video
+ endtime: specified end time for avereaging video
+
+ output:
+ ave: average image.
+
+ todo:
+ fix color output</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../matlabicon.gif)">
+<li><a href="mgvideoreader.html" class="code" title="function mg = mgvideoreader(varargin)">mgvideoreader</a>	function mg = mgvideoreader(varargin)</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function ave = mgmotionaverage(varargin)</a>
+0002 <span class="comment">% function mgmotionaverage(varargin)</span>
+0003 <span class="comment">% create an image by taking average of the video frames</span>
+0004 <span class="comment">% if you want to compute average image on the color scale, make sure the</span>
+0005 <span class="comment">% input is a mg structure which contains the video information, for</span>
+0006 <span class="comment">% example, created by function mgread. Then set the mode like</span>
+0007 <span class="comment">% mg.video.mode.color = 'on';</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% syntax:</span>
+0010 <span class="comment">% mgmotionaverage(videofile,starttime,endtime);</span>
+0011 <span class="comment">% mgmotionaverage(mg,starttime,endtime);</span>
+0012 <span class="comment">% mgmotionaverage(mg);</span>
+0013 <span class="comment">% mgmotionaverage(videofile);</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% input:</span>
+0016 <span class="comment">% videofile or mg: input video file or data structure which contains video</span>
+0017 <span class="comment">% information</span>
+0018 <span class="comment">% starttime: specified startting time for averaging video</span>
+0019 <span class="comment">% endtime: specified end time for avereaging video</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% output:</span>
+0022 <span class="comment">% ave: average image.</span>
+0023 <span class="comment">%</span>
+0024 <span class="comment">% todo:</span>
+0025 <span class="comment">% fix color output</span>
+0026 
+0027 l = length(varargin);
+0028 <span class="keyword">if</span> isempty(varargin)
+0029     <span class="keyword">return</span>;
+0030 <span class="keyword">end</span>
+0031 f = varargin{1};
+0032 <span class="keyword">if</span> ischar(f)
+0033     <span class="keyword">try</span>
+0034         mg = <a href="mgvideoreader.html" class="code" title="function mg = mgvideoreader(varargin)">mgvideoreader</a>(f);
+0035     <span class="keyword">catch</span>
+0036         error(<span class="string">'wrong input file,please check the format...'</span>);
+0037     <span class="keyword">end</span>
+0038     <span class="keyword">if</span> l == 1
+0039         starttime = mg.video.starttime;
+0040         endtime = mg.video.endtime;
+0041     <span class="keyword">elseif</span> l == 2
+0042         starttime = varargin{2};
+0043         endtime = mg.video.endtime;
+0044     <span class="keyword">elseif</span> l == 3
+0045         starttime = varargin{2};
+0046         endtime = varargin{3};
+0047     <span class="keyword">end</span>
+0048     ave = zeros(mg.video.obj.Height,mg.video.obj.Width);
+0049     i = 0;
+0050     mg.video.obj.CurrentTime = starttime;
+0051     <span class="keyword">while</span> mg.video.obj.CurrentTime &lt; endtime
+0052         fr = rgb2gray(readFrame(mg.video.obj));
+0053         ave = double(ave) + double(fr);
+0054         i = i + 1;
+0055     <span class="keyword">end</span>
+0056 <span class="keyword">elseif</span> isstruct(f) &amp;&amp; isfield(f,<span class="string">'video'</span>)
+0057     <span class="keyword">if</span> l == 1
+0058         starttime = f.video.starttime;
+0059         endtime = f.video.endtime;
+0060     <span class="keyword">elseif</span> l == 2
+0061         starttime = varargin{2};
+0062         endtime = f.video.endtime;
+0063     <span class="keyword">elseif</span> l == 3
+0064         starttime = varargin{2};
+0065         endtime = varargin{3};
+0066     <span class="keyword">end</span>
+0067     f.video.obj.CurrentTime = starttime;
+0068     i = 0;
+0069     <span class="keyword">if</span> isfield(f.video,<span class="string">'mode'</span>) &amp;&amp; strcmpi(f.video.mode.color,<span class="string">'on'</span>)
+0070         ave = zeros(f.video.obj.Height,f.video.obj.Width,3);
+0071         <span class="keyword">while</span> f.video.obj.CurrentTime &lt; endtime
+0072             fr = readFrame(f.video.obj);
+0073             ave = double(ave) + double(fr);
+0074             i = i + 1;
+0075         <span class="keyword">end</span>
+0076     <span class="keyword">else</span>
+0077         ave = zeros(f.video.obj.Height,f.video.obj.Width);
+0078         <span class="keyword">while</span> f.video.obj.CurrentTime &lt; endtime
+0079             fr = rgb2gray(readFrame(f.video.obj));
+0080             ave = double(ave) + double(fr);
+0081             i = i + 1;
+0082         <span class="keyword">end</span>
+0083     <span class="keyword">end</span>
+0084 <span class="keyword">end</span>
+0085 ave2 = uint8(ave/i);
+0086 <span class="comment">%figure, imshow(ave2);</span>
+0087 <span class="comment">% Write to file</span>
+0088 [~,pr,~] = fileparts(mg.video.obj.Name);
+0089 tmpfile=strcat(pr,<span class="string">'_ave.tiff'</span>);
+0090 imwrite(ave2, tmpfile);</pre></div>
+<hr><address>Generated on Wed 28-Jun-2017 21:36:07 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
