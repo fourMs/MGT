@@ -117,10 +117,9 @@ l = length(varargin);
 
 
 for argi = 1:l
-    if( ischar(varargin{argi}))   
-
-
-        if(strcmpi(cmd.inputType, 'folder') == 0)    
+    
+    if(strcmpi(cmd.inputType, 'folder') == 0)    
+        if(argi == 1)
             if(argi <= l && isnumeric(varargin{argi }))
                 disp('starttime specified in argument');
                 cmd.starttime = varargin{argi+1};
@@ -130,8 +129,10 @@ for argi = 1:l
                 end
             end
         end
-            
-            
+    end
+    
+    
+    if( ischar(varargin{argi}))     
         if (strcmpi(varargin{argi},'normalize'))
             disp('normalization option is specified in argument');
             
