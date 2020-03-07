@@ -229,17 +229,17 @@ for i = 1:cmd.fileCount
     disp(['The motion history video is created with name ',newfile]);
     
     
-    
-    
-    %disp(newfile);
-    %if(cmd.fileCount == 1)
-    %    mgOut = mgvideoreader(newfile);
-    %else
-    %    mgOut{i} = mgvideoreader(newfile);
-    %end
-    
-    
     close(v)
+    
+    disp(newfile);
+    if(cmd.fileCount == 1)
+        mgOut = mgvideoreader(newfile);
+    else
+        mgOut{i} = mgvideoreader(newfile);
+    end
+    
+    
+    
     
 end
 
