@@ -1,4 +1,4 @@
-function ave = mgmotionaverage(varargin)
+function ave = mgmotionaverage(f, varargin)
 % function mgmotionaverage(varargin)
 % Create an average image by calculating the average of the video frames.
 %
@@ -22,54 +22,120 @@ function ave = mgmotionaverage(varargin)
 % ave: average image.
 
 
-l = length(varargin);
-if isempty(varargin)
-    return;
-end
-f = varargin{1};
+
+
+
 
 cmd = [];
 
+%default parameters
+cmd.mg = [];
+cmd.method = 'Diff';
+cmd.fileList = [];
+cmd.filterflag = 0;
+cmd.filtertype = [];
+cmd.thresh = 0.1;
+cmd.color = 'off';
+cmd.invert = 'off';
+cmd.frameInterval = 1;
+cmd.fileCount = 0;
+cmd.normalize = 'on'
+
+
+
+
 if(ischar(f))
-    disp('input is a file');
-    mg = mgvideoreader(f);
-    cmd.inputType = 'file';
+    disp('input is file or folder');
+    if exist(f, 'dir')
+        disp('folder exists');
+        cmd.inputType = 'folder';
+        
+        files = dir(f);
+        fileCount = size(files);
+        
+        fileCount = size(files);   
+        fileCount = fileCount(1);
+        %disp(fileCount);
+        validFileCount = 0;
+        for i= 1:fileCount
+            if(files(i).isdir == 0)
+                %disp(files(i).name);
+
+                [~, ~, extension_i] = fileparts(files(i).name);
+                extension_i = lower(extension_i);
+                if((extension_i == ".avi")||(extension_i == ".mp4")||(extension_i == ".m4v") ||(extension_i == ".mpg") ||(extension_i == ".mov")    )
+                    validFileCount = validFileCount + 1;
+                    cmd.fileList{validFileCount} = files(i);
+                    cmd.mg{validFileCount} = mgvideoreader([files(i).folder,'\',files(i).name]);
+                    %disp[files(i).folder,files(i).name];
+                    cmd.fileCount = cmd.fileCount + 1;
+                end
+            end
+        end
+        
+        disp({'file count is ', cmd.fileCount});
+        
+        
+
+    else
+        disp('folder does not exist. probably the input is file');
+        [~, ~, extension_i] = fileparts(f);
+        extension_i = lower(extension_i);
+        
+        if exist(f, 'file')
+            disp('file exists. checking file format')
+            if((extension_i == ".avi")||(extension_i == ".mp4")||(extension_i == ".m4v") ||(extension_i == ".mpg") ||(extension_i == ".mov")    )
+                disp('valid file format');
+                cmd.fileCount = 1;
+                cmd.inputType = 'file';
+                cmd.mg = mgvideoreader(f);
+                cmd.starttime = cmd.mg.video.starttime;
+                cmd.endtime = cmd.mg.video.endtime;
+
+            else
+                disp('invalid file format');
+        end
+        else
+            disp('file not found');
+        end
+    end
 elseif isstruct(f) && isfield(f,'video')
     disp('input is mg struct');
-    mg = f;
+    cmd.fileCount = 1;
     cmd.inputType = 'struct';
+    cmd.mg = f;
+    cmd.starttime = cmd.mg.video.starttime;
+    cmd.endtime = cmd.mg.video.endtime;
+    
 else
-    error('wrong input file, please check the format...');
+    error('invalid input ');
 end
 
 
-%cmd.method = 'Diff';
-cmd.starttime = mg.video.starttime;
-cmd.endtime = mg.video.endtime;
-%cmd.filterflag = 0;
-%cmd.filtertype = [];
-%cmd.thresh = 0.1;
-cmd.color = 'off';
-%cmd.convert = 'off';
-cmd.frameInterval = 1;
-cmd.normalize = 'on'
+
+l = length(varargin);
 
 
 for argi = 1:l
     if( ischar(varargin{argi}))   
-        if(argi == 1 ) %the file name is always the first element in the varargin 
-            if(argi + 1 <= l && isnumeric(varargin{argi + 1}))
+
+
+        if(strcmpi(cmd.inputType, 'folder') == 0)    
+            if(argi <= l && isnumeric(varargin{argi }))
                 disp('starttime specified in argument');
                 cmd.starttime = varargin{argi+1};
-                if(argi + 2 <= l &&isnumeric(varargin{argi + 2})) 
+                if(argi + 1 <= l &&isnumeric(varargin{argi + 1})) 
                     disp('stoptime specified in argument');
                     cmd.endtime = varargin{argi+2};
                 end
             end
-        elseif (strcmpi(varargin{argi},'normalize'))
+        end
+            
+            
+        if (strcmpi(varargin{argi},'normalize'))
             disp('normalization option is specified in argument');
             
-            if(argi < l) 
+            if(argi + 1 <= l) 
                 if (strcmpi(varargin{argi+1},'off'))
                     cmd.normalize = 'off'
                 elseif (strcmpi(varargin{argi+1},'on'))
@@ -84,7 +150,7 @@ for argi = 1:l
             cmd.color = 'on'
             
             
-             if(argi < l) 
+             if(argi + 1 <= l) 
                 if (strcmpi(varargin{argi+1},'off'))
                     cmd.color = 'off'
                 elseif (strcmpi(varargin{argi+1},'on'))
@@ -99,49 +165,36 @@ for argi = 1:l
             if(argi + 1 <= l &&  isnumeric(varargin{argi + 1}))
                 cmd.frameInterval = varargin{argi+1};
             end
-        end
+    end
+        
     end
 end
 
-frameInterval = cmd.frameInterval;
 
-if ischar(f)
-    try
-        mg = mgvideoreader(f);
-    catch
-        error('wrong input file, please check the format...');
+
+
+for i = 1:cmd.fileCount
+    frameInterval = cmd.frameInterval;
+    if(cmd.fileCount == 1)
+        mg = cmd.mg;
+    else
+        mg = cmd.mg{i};
+        cmd.starttime = cmd.mg{i}.video.starttime;
+        cmd.endtime = cmd.mg{i}.video.endtime;
     end
     
-    starttime = cmd.starttime;
-    endtime = cmd.endtime;
-    
-%     if l == 1
-%         starttime = mg.video.starttime;
-%         endtime = mg.video.endtime;
-%     elseif l == 2
-%         starttime = varargin{2};
-%         endtime = mg.video.endtime;
-%     elseif l == 3
-%         starttime = varargin{2};
-%         endtime = varargin{3};
-%     end
     ave = zeros(mg.video.obj.Height,mg.video.obj.Width);
     i = 1;
-    mg.video.obj.CurrentTime = starttime;
+    mg.video.obj.CurrentTime = cmd.starttime;
     
-    
-%     while mg.video.obj.CurrentTime < endtime
-%         fr = rgb2gray(readFrame(mg.video.obj));
-%         ave = double(ave) + double(fr);
-%         i = i + 1;
-%     end
     
     if (strcmpi(cmd.color, 'on')) || (isfield(mg.video,'mode') && strcmpi(mg.video.mode.color,'on'))
         ave = zeros(mg.video.obj.Height,mg.video.obj.Width,3);
-        numfr = mg.video.obj.FrameRate*(endtime-starttime);
+        numfr = mg.video.obj.FrameRate*(cmd.endtime-cmd.starttime);
         progmeter(0);
         for indf = 1:frameInterval:numfr
-            progmeter(mg.video.obj.CurrentTime,endtime);
+            %progmeter(indf,numfr);
+            progmeter(mg.video.obj.CurrentTime,cmd.endtime);
             fr = readFrame(mg.video.obj);
             ave = double(ave) + double(fr);
             mg.video.obj.CurrentTime = (1/mg.video.obj.FrameRate)*indf;
@@ -155,10 +208,11 @@ if ischar(f)
 %         end
     else
         ave = zeros(mg.video.obj.Height,mg.video.obj.Width);
-        numfr = mg.video.obj.FrameRate*(endtime-starttime);
+        numfr = mg.video.obj.FrameRate*(cmd.endtime-cmd.starttime);
         progmeter(0);
         for indf = 1:frameInterval:numfr
-            progmeter(mg.video.obj.CurrentTime,endtime);
+            %progmeter(indf,numfr);
+            progmeter(mg.video.obj.CurrentTime,cmd.endtime);
             fr = rgb2gray(readFrame(mg.video.obj));
             ave = double(ave) + double(fr);
             mg.video.obj.CurrentTime = (1/mg.video.obj.FrameRate)*indf;
@@ -170,73 +224,26 @@ if ischar(f)
 %         end
     end
     
-    
-elseif isstruct(f) && isfield(f,'video')
-    mg = f;
-    
-    starttime = cmd.starttime;
-    endtime = cmd.endtime;
-    
-    
-%     if l == 1
-%         starttime = mg.video.starttime;
-%         endtime = mg.video.endtime;
-%     elseif l == 2
-%         starttime = varargin{2};
-%         endtime = mg.video.endtime;
-%     elseif l == 3
-%         starttime = varargin{2};
-%         endtime = varargin{3};
-%     end
 
-    mg.video.obj.CurrentTime = starttime;
-    i = 1;
+    % Normalizing values to [0,1]
 
-    if (strcmpi(cmd.color, 'on')) || (isfield(mg.video,'mode') && strcmpi(mg.video.mode.color,'on'))
-        ave = zeros(mg.video.obj.Height,mg.video.obj.Width,3);
-        numfr = mg.video.obj.FrameRate*(endtime-starttime);
-        progmeter(0);
-        for indf = 1:numfr
-            progmeter(mg.video.obj.CurrentTime,endtime);
-            fr = readFrame(mg.video.obj);
-            ave = double(ave) + double(fr);
-            mg.video.obj.CurrentTime = (1/mg.video.obj.FrameRate)*indf;
-        end
-        
-%         while mg.video.obj.CurrentTime < endtime
-%             fr = readFrame(mg.video.obj);
-%             ave = double(ave) + double(fr);
-%             %i = i + 1;
-%         end
-    else
-        ave = zeros(mg.video.obj.Height,mg.video.obj.Width);
-        numfr = mg.video.obj.FrameRate*(endtime-starttime);
-        progmeter(0);
-        for indf = 1:numfr
-            progmeter(mg.video.obj.CurrentTime,endtime);
-            fr = rgb2gray(readFrame(mg.video.obj));
-            ave = double(ave) + double(fr);
-            mg.video.obj.CurrentTime = (1/mg.video.obj.FrameRate)*indf;
-        end
-%         while mg.video.obj.CurrentTime < endtime
-%             fr = rgb2gray(readFrame(mg.video.obj));
-%             ave = double(ave) + double(fr);
-%             %i = i + 1;
-%         end
+    if (strcmpi(cmd.normalize,'on'))
+        %ave2 = uint8(ave/i); % old approach didnt work well
+        ave2=(ave-min(ave(:))) ./ max(ave(:)-min(ave(:)));
     end
+    %figure, imshow(ave2);
+
+    % Write to file
+    [~,pr,~] = fileparts(mg.video.obj.Name);
+    tmpfile=strcat(pr,'_average.tiff');
+    disp(' ');
+    disp('file created under name :');
+    disp(tmpfile);
+    imwrite(ave2, tmpfile);
+
+
 end
 
-% Normalizing values to [0,1]
+return;
 
-if (strcmpi(cmd.normalize,'on'))
-    %ave2 = uint8(ave/i); % old approach didnt work well
-    ave2=(ave-min(ave(:))) ./ max(ave(:)-min(ave(:)));
-end
-%figure, imshow(ave2);
 
-% Write to file
-[~,pr,~] = fileparts(mg.video.obj.Name);
-tmpfile=strcat(pr,'_average.tiff');
-disp('file created under name :');
-disp(tmpfile);
-imwrite(ave2, tmpfile);
