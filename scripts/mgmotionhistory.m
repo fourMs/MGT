@@ -48,16 +48,16 @@ if(ischar(f))
         fileCount = fileCount(1);
         %disp(fileCount);
         validFileCount = 0;
-        for i= 1:fileCount
-            if(files(i).isdir == 0)
+        for fileIndex= 1:fileCount
+            if(files(fileIndex).isdir == 0)
                 %disp(files(i).name);
 
-                [~, ~, extension_i] = fileparts(files(i).name);
+                [~, ~, extension_i] = fileparts(files(fileIndex).name);
                 extension_i = lower(extension_i);
                 if((extension_i == ".avi")||(extension_i == ".mp4")||(extension_i == ".m4v") ||(extension_i == ".mpg") ||(extension_i == ".mov")    )
                     validFileCount = validFileCount + 1;
-                    cmd.fileList{validFileCount} = files(i);
-                    cmd.mg{validFileCount} = mgvideoreader([files(i).folder,'\',files(i).name]);
+                    cmd.fileList{validFileCount} = files(fileIndex);
+                    cmd.mg{validFileCount} = mgvideoreader([files(fileIndex).folder,'\',files(fileIndex).name]);
                     %disp[files(i).folder,files(i).name];
                     cmd.fileCount = cmd.fileCount + 1;
                 end
@@ -142,14 +142,14 @@ end
 
 
 
-for i = 1:cmd.fileCount
+for fileIndex = 1:cmd.fileCount
     
     if(cmd.fileCount == 1)
         mg = cmd.mg;
     else
-        mg = cmd.mg{i};
-        cmd.starttime = cmd.mg{i}.video.starttime;
-        cmd.endtime = cmd.mg{i}.video.endtime;
+        mg = cmd.mg{fileIndex};
+        cmd.starttime = cmd.mg{fileIndex}.video.starttime;
+        cmd.endtime = cmd.mg{fileIndex}.video.endtime;
     end
     
 
@@ -235,7 +235,7 @@ for i = 1:cmd.fileCount
     if(cmd.fileCount == 1)
         mgOut = mgvideoreader(newfile);
     else
-        mgOut{i} = mgvideoreader(newfile);
+        mgOut{fileIndex} = mgvideoreader(newfile);
     end
     
     
