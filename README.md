@@ -1,6 +1,6 @@
 # Musical Gestures Toolbox for Matlab
 
-![MGT](documentation/mgt-matlab-screenshot.png)
+![MGT](documentation/promo/mgt-matlab-promo.png)
 
 The Musical Gestures Toolbox (MGT) is a Matlab toolbox for analysing music-related body motion, using sets of audio, video and motion capture data as source material.
 
