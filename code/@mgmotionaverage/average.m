@@ -26,20 +26,20 @@ function [outputArg1,outputArg2] = average(obj,varargin)
 f = obj.file;
 
 
-cmd = [];
+arg = [];
 
 %default parameters
-cmd.mg = [];
-cmd.method = 'Diff';
-cmd.fileList = [];
-cmd.filterflag = 0;
-cmd.filtertype = [];
-cmd.thresh = 0.1;
-cmd.color = 'off';
-cmd.invert = 'off';
-cmd.frameInterval = 1;
-cmd.fileCount = 0;
-cmd.normalize = 'on'
+arg.mg = [];
+arg.method = 'Diff';
+arg.fileList = [];
+arg.filterflag = 0;
+arg.filtertype = [];
+arg.thresh = 0.1;
+arg.color = 'off';
+arg.invert = 'off';
+arg.frameInterval = 1;
+arg.fileCount = 0;
+arg.normalize = 'on'
 
 
 
@@ -48,7 +48,7 @@ if(ischar(f))
     disp('input is file or folder');
     if exist(f, 'dir')
         disp('folder exists');
-        cmd.inputType = 'folder';
+        arg.inputType = 'folder';
         
         files = dir(f);
         fileCount = size(files);
@@ -65,15 +65,15 @@ if(ischar(f))
                 extension_i = lower(extension_i);
                 if((extension_i == ".avi")||(extension_i == ".mp4")||(extension_i == ".m4v") ||(extension_i == ".mpg") ||(extension_i == ".mov")    )
                     validFileCount = validFileCount + 1;
-                    cmd.fileList{validFileCount} = files(fileIndex);
-                    cmd.mg{validFileCount} = mgvideoreader([files(fileIndex).folder,'\',files(fileIndex).name]);
+                    arg.fileList{validFileCount} = files(fileIndex);
+                    arg.mg{validFileCount} = mgvideoreader([files(fileIndex).folder,'\',files(fileIndex).name]);
                     %disp[files(i).folder,files(i).name];
-                    cmd.fileCount = cmd.fileCount + 1;
+                    arg.fileCount = arg.fileCount + 1;
                 end
             end
         end
         
-        disp({'file count is ', cmd.fileCount});
+        disp({'file count is ', arg.fileCount});
         
         
 
@@ -86,11 +86,11 @@ if(ischar(f))
             disp('file exists. checking file format')
             if((extension_i == ".avi")||(extension_i == ".mp4")||(extension_i == ".m4v") ||(extension_i == ".mpg") ||(extension_i == ".mov")    )
                 disp('valid file format');
-                cmd.fileCount = 1;
-                cmd.inputType = 'file';
-                cmd.mg = mgvideoreader(f);
-                cmd.starttime = cmd.mg.video.starttime;
-                cmd.endtime = cmd.mg.video.endtime;
+                arg.fileCount = 1;
+                arg.inputType = 'file';
+                arg.mg = mgvideoreader(f);
+                arg.starttime = arg.mg.video.starttime;
+                arg.endtime = arg.mg.video.endtime;
 
             else
                 disp('invalid file format');
@@ -101,11 +101,11 @@ if(ischar(f))
     end
 elseif isstruct(f) && isfield(f,'video')
     disp('input is mg struct');
-    cmd.fileCount = 1;
-    cmd.inputType = 'struct';
-    cmd.mg = f;
-    cmd.starttime = cmd.mg.video.starttime;
-    cmd.endtime = cmd.mg.video.endtime;
+    arg.fileCount = 1;
+    arg.inputType = 'struct';
+    arg.mg = f;
+    arg.starttime = arg.mg.video.starttime;
+    arg.endtime = arg.mg.video.endtime;
     
 else
     error('invalid input ');
@@ -118,14 +118,14 @@ l = length(varargin);
 
 for argi = 1:l
     
-    if(strcmpi(cmd.inputType, 'folder') == 0)    
+    if(strcmpi(arg.inputType, 'folder') == 0)    
         if(argi == 1)
             if(argi <= l && isnumeric(varargin{argi }))
                 disp('starttime specified in argument');
-                cmd.starttime = varargin{argi+1};
+                arg.starttime = varargin{argi+1};
                 if(argi + 1 <= l &&isnumeric(varargin{argi + 1})) 
                     disp('stoptime specified in argument');
-                    cmd.endtime = varargin{argi+2};
+                    arg.endtime = varargin{argi+2};
                 end
             end
         end
@@ -138,33 +138,33 @@ for argi = 1:l
             
             if(argi + 1 <= l) 
                 if (strcmpi(varargin{argi+1},'off'))
-                    cmd.normalize = 'off'
+                    arg.normalize = 'off'
                 elseif (strcmpi(varargin{argi+1},'on'))
-                    cmd.normalize = 'on'
+                    arg.normalize = 'on'
                 end
             else
-                cmd.normalize = 'on'
+                arg.normalize = 'on'
             end
             
         elseif (strcmpi(varargin{argi},'Color'))
             disp('color mode on is specified in argument');
-            cmd.color = 'on'
+            arg.color = 'on'
             
             
              if(argi + 1 <= l) 
                 if (strcmpi(varargin{argi+1},'off'))
-                    cmd.color = 'off'
+                    arg.color = 'off'
                 elseif (strcmpi(varargin{argi+1},'on'))
-                    cmd.color = 'on'
+                    arg.color = 'on'
                 end
             else
-                cmd.color = 'on'
+                arg.color = 'on'
              end
             
             
         elseif (strcmpi(varargin{argi},'Interval'))
             if(argi + 1 <= l &&  isnumeric(varargin{argi + 1}))
-                cmd.frameInterval = varargin{argi+1};
+                arg.frameInterval = varargin{argi+1};
             end
     end
         
@@ -174,28 +174,28 @@ end
 
 
 
-for fileIndex = 1:cmd.fileCount
-    frameInterval = cmd.frameInterval;
-    if(cmd.fileCount == 1)
-        mg = cmd.mg;
+for fileIndex = 1:arg.fileCount
+    frameInterval = arg.frameInterval;
+    if(arg.fileCount == 1)
+        mg = arg.mg;
     else
-        mg = cmd.mg{fileIndex};
-        cmd.starttime = cmd.mg{fileIndex}.video.starttime;
-        cmd.endtime = cmd.mg{fileIndex}.video.endtime;
+        mg = arg.mg{fileIndex};
+        arg.starttime = arg.mg{fileIndex}.video.starttime;
+        arg.endtime = arg.mg{fileIndex}.video.endtime;
     end
     
     ave = zeros(mg.video.obj.Height,mg.video.obj.Width);
     %i = 1;
-    mg.video.obj.CurrentTime = cmd.starttime;
+    mg.video.obj.CurrentTime = arg.starttime;
     
     
-    if (strcmpi(cmd.color, 'on')) || (isfield(mg.video,'mode') && strcmpi(mg.video.mode.color,'on'))
+    if (strcmpi(arg.color, 'on')) || (isfield(mg.video,'mode') && strcmpi(mg.video.mode.color,'on'))
         ave = zeros(mg.video.obj.Height,mg.video.obj.Width,3);
-        numfr = mg.video.obj.FrameRate*(cmd.endtime-cmd.starttime);
+        numfr = mg.video.obj.FrameRate*(arg.endtime-arg.starttime);
         progmeter(0);
         for indf = 1:frameInterval:numfr
             %progmeter(indf,numfr);
-            progmeter(mg.video.obj.CurrentTime,cmd.endtime);
+            progmeter(mg.video.obj.CurrentTime,arg.endtime);
             fr = readFrame(mg.video.obj);
             ave = double(ave) + double(fr);
             mg.video.obj.CurrentTime = (1/mg.video.obj.FrameRate)*indf;
@@ -209,11 +209,11 @@ for fileIndex = 1:cmd.fileCount
 %         end
     else
         ave = zeros(mg.video.obj.Height,mg.video.obj.Width);
-        numfr = mg.video.obj.FrameRate*(cmd.endtime-cmd.starttime);
+        numfr = mg.video.obj.FrameRate*(arg.endtime-arg.starttime);
         progmeter(0);
         for indf = 1:frameInterval:numfr
             %progmeter(indf,numfr);
-            progmeter(mg.video.obj.CurrentTime,cmd.endtime);
+            progmeter(mg.video.obj.CurrentTime,arg.endtime);
             fr = rgb2gray(readFrame(mg.video.obj));
             ave = double(ave) + double(fr);
             mg.video.obj.CurrentTime = (1/mg.video.obj.FrameRate)*indf;
@@ -228,7 +228,7 @@ for fileIndex = 1:cmd.fileCount
 
     % Normalizing values to [0,1]
 
-    if (strcmpi(cmd.normalize,'on'))
+    if (strcmpi(arg.normalize,'on'))
         %ave2 = uint8(ave/i); % old approach didnt work well
         ave2=(ave-min(ave(:))) ./ max(ave(:)-min(ave(:)));
     end

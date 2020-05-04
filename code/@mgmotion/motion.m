@@ -46,19 +46,19 @@ function [outputArg1,outputArg2] = motion(obj,varargin)
 
 % mg = mginitstruct;
 
-cmd = [];
+arg = [];
 
 %default parameters
-cmd.mg = [];
-cmd.method = 'Diff';
-cmd.fileList = [];
-cmd.filterflag = 0;
-cmd.filtertype = [];
-cmd.thresh = 0.1;
-cmd.color = 'off';
-cmd.invert = 'off';
-cmd.frameInterval = 1;
-cmd.fileCount = 0;
+arg.mg = [];
+arg.method = 'Diff';
+arg.fileList = [];
+arg.filterflag = 0;
+arg.filtertype = [];
+arg.thresh = 0.1;
+arg.color = 'off';
+arg.invert = 'off';
+arg.frameInterval = 1;
+arg.fileCount = 0;
 
 
 
@@ -68,7 +68,7 @@ if(ischar(f))
     disp('input is file or folder');
     if exist(f, 'dir')
         disp('folder exists');
-        cmd.inputType = 'folder';
+        arg.inputType = 'folder';
         
         files = dir(f);
         fileCount = size(files);
@@ -85,15 +85,15 @@ if(ischar(f))
                 extension_i = lower(extension_i);
                 if((extension_i == ".avi")||(extension_i == ".mp4")||(extension_i == ".m4v") ||(extension_i == ".mpg") ||(extension_i == ".mov")    )
                     validFileCount = validFileCount + 1;
-                    cmd.fileList{validFileCount} = files(fileIndex);
-                    cmd.mg{validFileCount} = mgvideoreader([files(fileIndex).folder,'\',files(fileIndex).name]);
+                    arg.fileList{validFileCount} = files(fileIndex);
+                    arg.mg{validFileCount} = mgvideoreader([files(fileIndex).folder,'\',files(fileIndex).name]);
                     %disp[files(i).folder,files(i).name];
-                    cmd.fileCount = cmd.fileCount + 1;
+                    arg.fileCount = arg.fileCount + 1;
                 end
             end
         end
         
-        disp({'file count is ', cmd.fileCount});
+        disp({'file count is ', arg.fileCount});
         
         
         
@@ -106,11 +106,11 @@ if(ischar(f))
             disp('file exists. checking file format')
             if((extension_i == ".avi")||(extension_i == ".mp4")||(extension_i == ".m4v") ||(extension_i == ".mpg") ||(extension_i == ".mov")    )
                 disp('valid file format');
-                cmd.fileCount = 1;
-                cmd.inputType = 'file';
-                cmd.mg = mgvideoreader(f);
-                cmd.starttime = cmd.mg.video.starttime;
-                cmd.endtime = cmd.mg.video.endtime;
+                arg.fileCount = 1;
+                arg.inputType = 'file';
+                arg.mg = mgvideoreader(f);
+                arg.starttime = arg.mg.video.starttime;
+                arg.endtime = arg.mg.video.endtime;
                 
             else
                 disp('invalid file format');
@@ -121,11 +121,11 @@ if(ischar(f))
     end
 elseif isstruct(f) && isfield(f,'video')
     disp('input is mg struct');
-    cmd.fileCount = 1;
-    cmd.inputType = 'struct';
-    cmd.mg = f;
-    cmd.starttime = cmd.mg.video.starttime;
-    cmd.endtime = cmd.mg.video.endtime;
+    arg.fileCount = 1;
+    arg.inputType = 'struct';
+    arg.mg = f;
+    arg.starttime = arg.mg.video.starttime;
+    arg.endtime = arg.mg.video.endtime;
     
 else
     error('invalid input ');
@@ -141,17 +141,17 @@ for argi = 1:l
         if(strcmpi(varargin{argi},'Diff') || strcmpi(varargin{argi},'OpticalFlow') )
             disp('method specified in argument');
             
-            cmd.method = varargin{argi};
+            arg.method = varargin{argi};
             
             
-            if(strcmpi(cmd.inputType, 'folder') == 0)
+            if(strcmpi(arg.inputType, 'folder') == 0)
                 disp('input type accepts starttime and stoptime only if input is file or struct and not folder');
                 if(argi + 1 <= l && isnumeric(varargin{argi + 1}))
                     disp('starttime specified in argument');
-                    cmd.starttime = varargin{argi+1};
+                    arg.starttime = varargin{argi+1};
                     if(argi + 2 <= l &&isnumeric(varargin{argi + 2}))
                         disp('stoptime specified in argument');
-                        cmd.endtime = varargin{argi+2};
+                        arg.endtime = varargin{argi+2};
                     end
                 end
             end
@@ -159,21 +159,21 @@ for argi = 1:l
             
         elseif (strcmpi(varargin{argi},'Regular') || strcmpi(varargin{argi},'Binary') )
             disp('filtertype specified in argument');
-            cmd.filtertype = varargin{argi};
-            cmd.filterflag = 1;
+            arg.filtertype = varargin{argi};
+            arg.filterflag = 1;
             if(argi + 1 <= l &&  isnumeric(varargin{argi + 1}))
                 disp('thresh specified in argument');
-                cmd.thresh = varargin{argi+1};
+                arg.thresh = varargin{argi+1};
             end
         elseif (strcmpi(varargin{argi},'Color'))
             disp('color mode on is specified in argument');
-            cmd.color = 'on'
+            arg.color = 'on'
         elseif (strcmpi(varargin{argi},'invert'))
             disp('invert mode on is specified in argument');
-            cmd.invert = 'on'
+            arg.invert = 'on'
         elseif (strcmpi(varargin{argi},'Interval'))
             if(argi + 1 <= l &&  isnumeric(varargin{argi + 1}))
-                cmd.frameInterval = varargin{argi+1};
+                arg.frameInterval = varargin{argi+1};
             end
         end
     end
@@ -181,24 +181,24 @@ end
 
 
 
-for fileIndex = 1:cmd.fileCount
+for fileIndex = 1:arg.fileCount
     
-    if(cmd.fileCount == 1)
-        mg = cmd.mg;
+    if(arg.fileCount == 1)
+        mg = arg.mg;
     else
-        mg = cmd.mg{fileIndex};
-        cmd.starttime = cmd.mg{fileIndex}.video.starttime;
-        cmd.endtime = cmd.mg{fileIndex}.video.endtime;
+        mg = arg.mg{fileIndex};
+        arg.starttime = arg.mg{fileIndex}.video.starttime;
+        arg.endtime = arg.mg{fileIndex}.video.endtime;
     end
     
-    method = cmd.method;
-    starttime = cmd.starttime;
-    endtime = cmd.endtime;
-    filterflag = cmd.filterflag;
-    filtertype = cmd.filtertype;
-    thresh = cmd.thresh;
+    method = arg.method;
+    starttime = arg.starttime;
+    endtime = arg.endtime;
+    filterflag = arg.filterflag;
+    filtertype = arg.filtertype;
+    thresh = arg.thresh;
     %disp(thresh);
-    frameInterval = cmd.frameInterval;
+    frameInterval = arg.frameInterval;
     
     mg.video.method = method;
     mg.video.gram.y = [];
@@ -213,7 +213,7 @@ for fileIndex = 1:cmd.fileCount
     % hblob = vision.BlobAnalysis;
     % hblob.AreaOutputPort = true;
     
-    if(strcmpi(cmd.color, 'on'))
+    if(strcmpi(arg.color, 'on'))
         colorflag = true;
     else
         if (isfield(mg.video,'mode') && isfield(mg.video.mode,'color') )
@@ -228,7 +228,7 @@ for fileIndex = 1:cmd.fileCount
     end
     
     
-    if(strcmpi(cmd.invert, 'on'))
+    if(strcmpi(arg.invert, 'on'))
         invertflag = true'
     else
         if (isfield (mg.video,'mode') && isfield(mg.video.mode,'invert'))
@@ -375,7 +375,7 @@ for fileIndex = 1:cmd.fileCount
         disp(' ');
         disp(['The motion video is created with name ',newfile]);
         
-        if(cmd.fileCount == 1)
+        if(arg.fileCount == 1)
             mgOut = mgvideoreader(newfile);
         else
             mgOut{fileIndex} = mgvideoreader(newfile);
@@ -467,7 +467,7 @@ for fileIndex = 1:cmd.fileCount
         disp(' ');
         disp(['The motion video is created with name ',newfile]);
         
-        if(cmd.fileCount == 1)
+        if(arg.fileCount == 1)
             mgOut = mgvideoreader(newfile);
         else
             mgOut{fileIndex} = mgvideoreader(newfile);
