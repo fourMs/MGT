@@ -120,7 +120,7 @@ if(arg.fileCount <= 1)
         end
         
     else
-        ave = zeros(obj.video.Height,obj.video.Width);
+        ave = zeros(obj.video.Height,obj.video.Width,3);
         numfr = obj.video.FrameRate*(arg.stopTime-arg.startTime);
         progmeter(0);
         
@@ -133,22 +133,7 @@ if(arg.fileCount <= 1)
         
     end
     
-    if (strcmpi(arg.normalize,'on'))
-        %ave2 = uint8(ave/i); % old approach didnt work well
-        aveNormalized=(ave-min(ave(:))) ./ max(ave(:)-min(ave(:)));
-        aveOut = aveNormalized;
-    else
-        aveOut = ave;
-    end
     
-    % Write to file
-    [~,pr,~] = fileparts(obj.video.Name);
-    tmpfile=strcat(pr,'_average.tiff');
-    disp(' ');
-    disp('file created under name :');
-    disp(tmpfile);
-    imwrite(aveOut, tmpfile);
-
     
     
 else
@@ -158,46 +143,29 @@ else
         
         if (strcmpi(arg.color, 'on'))
             ave = zeros(obj.video{fileIndex}.Height,obj.video{fileIndex}.Width,3);
-            numfr = obj.video{fileIndex}.FrameRate*(obj.stopTime{fileIndex}-obj.startTime{fileIndex});
+            numfr = obj.video{fileIndex}.FrameRate*(arg.stopTime-arg.startTime);
             progmeter(0);
             
             for indf = 1:arg.frameInterval:numfr
-                progmeter(obj.video{fileIndex}.CurrentTime,obj.stopTime{fileIndex});
+                progmeter(obj.video{fileIndex}.CurrentTime,arg.stopTime);
                 fr = readFrame(obj.video{fileIndex});
                 ave = double(ave) + double(fr);
-                mg.video.obj.CurrentTime = obj.startTime{fileIndex} + (1/obj.video{fileIndex}.FrameRate)*indf;
+                mg.video.obj.CurrentTime = arg.startTime+ (1/obj.video{fileIndex}.FrameRate)*indf;
             end
             
         else
-            ave = zeros(obj.video{fileIndex}.Height,obj.video{fileIndex}.Width);
-            numfr = obj.video{fileIndex}.FrameRate*(obj.stopTime{fileIndex}-obj.startTime{fileIndex});
+            ave = zeros(obj.video{fileIndex}.Height,obj.video{fileIndex}.Width,3);
+            numfr = obj.video{fileIndex}.FrameRate*(arg.stopTime-arg.startTime);
             progmeter(0);
             
             for indf = 1:arg.frameInterval:numfr
-                progmeter(obj.video{fileIndex}.CurrentTime,obj.stopTime{fileIndex});
+                progmeter(obj.video{fileIndex}.CurrentTime,arg.stopTime);
                 fr = rgb2gray(readFrame(obj.video{fileIndex}));
                 ave = double(ave) + double(fr);
-                mg.video.obj.CurrentTime = obj.startTime{fileIndex} + (1/obj.video{fileIndex}.FrameRate)*indf;
+                mg.video.obj.CurrentTime = arg.startTime + (1/obj.video{fileIndex}.FrameRate)*indf;
             end
             
         end
-        
-        
-        if (strcmpi(arg.normalize,'on'))
-            %ave2 = uint8(ave/i); % old approach didnt work well
-            aveNormalized=(ave-min(ave(:))) ./ max(ave(:)-min(ave(:)));
-            aveOut = aveNormalized;
-        else
-            aveOut = ave;
-        end
-        
-        % Write to file
-        [~,pr,~] = fileparts(obj.video{fileIndex}.Name);
-        tmpfile=strcat(pr,'_average.tiff');
-        disp(' ');
-        disp('file created under name :');
-        disp(tmpfile);
-        imwrite(aveOut, tmpfile);
         
         
         
@@ -205,6 +173,21 @@ else
     
 end
 
+if (strcmpi(arg.normalize,'on'))
+    %ave2 = uint8(ave/i); % old approach didnt work well
+    aveNormalized=(ave-min(ave(:))) ./ max(ave(:)-min(ave(:)));
+    aveOut = aveNormalized;
+else
+    aveOut = ave;
+end
+
+% Write to file
+[~,pr,~] = fileparts(obj.video.Name);
+tmpfile=strcat(pr,'_average.tiff');
+disp(' ');
+disp('file created under name :');
+disp(tmpfile);
+imwrite(aveOut, tmpfile);
 
 
 
