@@ -3,16 +3,16 @@ classdef mgmotion
     %   Detailed explanation goes here
     
     properties (Access = private)
-        file
+        
     end
     
     methods
-        function obj = mgmotion(f,varargin)
+        function obj = mgmotion(varargin)
             %MGMOTION Construct an instance of this class
             %   Detailed explanation goes here
             %obj.Property1 = inputArg1 + inputArg2;
-            disp(["mgmotion class created with values" f]);
-            obj.file = f;
+            %disp(["mgmotion class created with values" f]);
+            %obj.file = f;
         end
         
         function outputArg = method_mgmotion(obj,inputArg)

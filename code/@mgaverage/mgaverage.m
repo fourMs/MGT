@@ -1,18 +1,18 @@
-classdef mgmotionaverage
+classdef mgaverage
     %MGMOTIONAVERAGE Summary of this class goes here
     %   Detailed explanation goes here
     
     properties (Access = private)
-        file
+        
         
     end
     
     methods
-        function obj = mgmotionaverage(f,varargin)
+        function obj = mgaverage(varargin)
             %MGMOTIONAVERAGE Construct an instance of this class
             %   Detailed explanation goes here
             %obj.Property1 = inputArg1 + inputArg2;
-            obj.file = f;
+            %obj.file = f;
         end
         
         function outputArg = method1(obj,inputArg)

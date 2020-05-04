@@ -1,4 +1,4 @@
-classdef musicalgesture < mgobject
+classdef musicalgesture < mgobject & mgmotion & mghistory & mgaverage
     %UNTITLED2 Summary of this class goes here
     %   Detailed explanation goes here
     
