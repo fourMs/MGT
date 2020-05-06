@@ -7,10 +7,10 @@ classdef mgflow
     end
     
     methods
-        function obj = mgflow(inputArg1,inputArg2)
+        function obj = mgflow(varargin)
             %FLOW Construct an instance of this class
             %   Detailed explanation goes here
-            obj.Property1 = inputArg1 + inputArg2;
+            %obj.Property1 = inputArg1 + inputArg2;
         end
         
         function outputArg = method1(obj,inputArg)
@@ -18,6 +18,9 @@ classdef mgflow
             %   Detailed explanation goes here
             outputArg = obj.Property1 + inputArg;
         end
+        
+        [retval,videoOut] = flow(obj, varargin)
+        
     end
 end
 

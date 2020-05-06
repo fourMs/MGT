@@ -14,7 +14,6 @@ classdef musicalgesture < mgobject
             %UNTITLED2 Construct an instance of this class
             %   Detailed explanation goes here
             %obj.Property1 = inputArg1 + inputArg2;
-            
             obj=obj@mgobject(f);
             %obj=obj@mgmotion(f,varargin);
             %obj=obj@mghistory(f,varargin);
@@ -26,26 +25,23 @@ classdef musicalgesture < mgobject
                 
                 if (strcmpi(varargin{argi},'startTime'))
                     if(fileCount <= 1)
-                        if(argi + 1 <= nargin-1 &&  isnumeric(varargin{argi + 1}))
+                        
+                        if(argi + 1 <= nargin-1)
                             disp('start time specified');
                             obj.startTime = varargin{argi+1};
                         end
                     else
-                        cprintf('*Magenta', 'startTime cannot be defined when loading multiple files\n');
+                        cprintf('*red', 'starttime cannot be defined when loading multiple files\n');
                     end
                     
                 elseif (strcmpi(varargin{argi},'stopTime'))
                     if(fileCount <= 1)
-                        if(argi + 1 <= nargin-1 &&  isnumeric(varargin{argi + 1}))
+                        if(argi + 1 <= nargin-1)
                             disp('stop time specified');
                             obj.stopTime = varargin{argi+1};
                         end
                     else
-                        cprintf('*Magenta', 'stopTime cannot be defined when loading multiple files\n');
-                    end
-                elseif (strcmpi(varargin{argi},'Interval'))
-                    if(argi + 1 <= nargin-1 &&  isnumeric(varargin{argi + 1}))
-                        obj.frameInterval = varargin{argi+1};
+                        cprintf('*orange', 'starttime cannot be defined when loading multiple files\n');
                     end
                 end
                 

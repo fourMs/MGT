@@ -89,34 +89,28 @@ classdef mgobject < mgmotion  & mgflow & mghistory & mgaverage
             end
             
             
-            
             disp(length(obj.video));
-            
-            for argi = 1:nargin-1
-                
-                if (strcmpi(varargin{argi},'startTime'))
-                    if(arg.fileCount <= 1)
-                        
-                        if(argi + 1 <= nargin-1)
-                            disp('start time specified');
-                            arg.startTime = varargin{argi+1};
-                        end
-                    else
-                        cprintf('*orange', 'starttime cannot be defined when loading multiple files\n');
+            if (strcmpi(varargin{argi},'startTime'))
+                if(arg.fileCount <= 1)
+                    
+                    if(argi + 1 <= nargin-1)
+                        disp('start time specified');
+                        arg.startTime = varargin{argi+1};
                     end
                     
-                elseif (strcmpi(varargin{argi},'stopTime'))
-                    if(arg.fileCount <= 1)
-                        if(argi + 1 <= nargin-1)
-                            disp('stop time specified');
-                            arg.stopTime = varargin{argi+1};
-                        end
-                    else
-                        cprintf('*orange', 'starttime cannot be defined when loading multiple files\n');
+                end
+            else
+            elseif (strcmpi(varargin{argi},'stopTime'))
+                if(arg.fileCount <= 1)
+                    if(argi + 1 <= nargin-1)
+                        disp('stop time specified');
+                        arg.stopTime = varargin{argi+1};
                     end
                 end
-                
             end
+            
+            
+            
             
             %obj.file = f;
             %obj.video = VideoReader(obj.file);

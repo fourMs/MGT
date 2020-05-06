@@ -1,4 +1,4 @@
-classdef filter
+classdef mgfilter
     %FILTER Summary of this class goes here
     %   Detailed explanation goes here
     
@@ -7,7 +7,7 @@ classdef filter
     end
     
     methods
-        function obj = filter(inputArg1,inputArg2)
+        function obj = mgfilter(inputArg1,inputArg2)
             %FILTER Construct an instance of this class
             %   Detailed explanation goes here
             obj.Property1 = inputArg1 + inputArg2;

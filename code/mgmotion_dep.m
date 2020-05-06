@@ -1,4 +1,4 @@
-function mgOut = mgmotion_file(f,varargin)
+function mgOut = mgmotion_dep(f,varargin)
 %MGMOTION - Calculate various motion features from a video file
 % mgmotion computes a motion video, motiongram, quantity of motion, centroid of
 % motion, width of motion, and height of motion from the video file or musical
