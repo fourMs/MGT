@@ -52,6 +52,7 @@ end
 
 filterflag = [];
 colorflag = [];
+invertflag = [];
 
 if(strcmpi(arg.color, 'on'))
     colorflag = true;
@@ -195,10 +196,6 @@ else
         
     end
 end
-
-
-
-
 
 
 

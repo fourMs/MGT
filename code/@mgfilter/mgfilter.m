@@ -7,10 +7,10 @@ classdef mgfilter
     end
     
     methods
-        function obj = mgfilter(inputArg1,inputArg2)
+        function obj = mgfilter(f,varargin)
             %FILTER Construct an instance of this class
             %   Detailed explanation goes here
-            obj.Property1 = inputArg1 + inputArg2;
+         
         end
         
         function outputArg = method1(obj,inputArg)
@@ -18,6 +18,11 @@ classdef mgfilter
             %   Detailed explanation goes here
             outputArg = obj.Property1 + inputArg;
         end
+        
+        
+        [retval,videoOut] = filter(obj, varargin)
+        
+        
     end
 end
 

@@ -1,4 +1,4 @@
-classdef mgobject < mgmotion  & mgflow & mghistory & mgaverage
+classdef mgobject < mgmotion  & mgfilter & mgflow & mghistory & mgaverage
     %MGOBJECT Summary of this class goes here
     %   Detailed explanation goes here
     

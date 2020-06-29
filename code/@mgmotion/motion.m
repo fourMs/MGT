@@ -248,9 +248,9 @@ for fileIndex = 1:arg.fileCount
     if strcmpi(method,'Diff')
         mg.video.obj.CurrentTime = starttime;
         if colorflag == true
-            fr = readFrame(mg.video.obj);
+            fr1 = readFrame(mg.video.obj);
         else
-            fr = rgb2gray(readFrame(mg.video.obj));
+            fr1 = rgb2gray(readFrame(mg.video.obj));
         end
         [filepath,filename,ext] = fileparts(mg.video.obj.Name);
         newfile = strcat(filename,'_motion.avi');
@@ -276,10 +276,10 @@ for fileIndex = 1:arg.fileCount
                 mg.video.obj.CurrentTime = mg.video.obj.CurrentTime + (1/mg.video.obj.FrameRate)*frameInterval;
                 
                 
-                pfr = readFrame(mg.video.obj);
+                fr2 = readFrame(mg.video.obj);
                 
                 
-                diff = abs(pfr-fr);
+                diff = abs(fr2-fr1);
                 if filterflag
                     for i = 1:size(diff,3)
                         diff(:,:,i) = mgmotionfilter(diff(:,:,i),filtertype,thresh);
@@ -305,7 +305,7 @@ for fileIndex = 1:arg.fileCount
                     diff = imcomplement(diff);
                 end
                 writeVideo(v,diff);
-                fr = pfr;
+                fr1 = fr2;
                 
                 ind = ind + 1;
                 progmeter(mg.video.obj.CurrentTime,endtime);
@@ -328,13 +328,19 @@ for fileIndex = 1:arg.fileCount
                 mg.video.obj.CurrentTime = mg.video.obj.CurrentTime - (1/mg.video.obj.FrameRate); %subtracting the incremented currenttime due to readFrame()
                 mg.video.obj.CurrentTime = mg.video.obj.CurrentTime + (1/mg.video.obj.FrameRate)*frameInterval;
                 
-                pfr = rgb2gray(readFrame(mg.video.obj));
+                fr2 = rgb2gray(readFrame(mg.video.obj));
                 
                 
-                diff = abs(pfr-fr);
+                
+                
+                
+                
+                diff = abs(fr2-fr1);
                 if filterflag
                     diff = mgmotionfilter(diff,filtertype,thresh);
                 end
+                
+                
                 [com,qom] = mgcentroid(diff);
                 %             hautoh = vision.Autothresholder;
                 %             level = multithresh(diff);
@@ -356,7 +362,7 @@ for fileIndex = 1:arg.fileCount
                     diff = imcomplement(diff);
                 end
                 writeVideo(v,diff);
-                fr = pfr;
+                fr1 = fr2;
                 ind = ind + 1;
                 progmeter(mg.video.obj.CurrentTime,endtime);
                 if(mg.video.obj.CurrentTime > endtime)
