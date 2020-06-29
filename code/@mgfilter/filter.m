@@ -164,6 +164,7 @@ if(arg.fileCount <= 1)
         
     end
     
+
     
     if invertflag == true
         obj.mg.video.gram.x = imcomplement(obj.mg.video.gram.x);
@@ -171,6 +172,10 @@ if(arg.fileCount <= 1)
     end
   
     
+    close(v);
+    disp(['The motion video is created with name ',newfile]);
+
+
     % Write motiongrams to files
     tmpfile=strcat(filename,'_mgx.tiff');
     imwrite(obj.mg.video.gram.x, tmpfile);
@@ -181,7 +186,102 @@ if(arg.fileCount <= 1)
     
 else
     for fileIndex = 1:arg.fileCount
+        obj.mg{fileIndex}.video.gram.y = [];
+        obj.mg{fileIndex}.video.gram.x = [];
+        obj.mg{fileIndex}.video.qom = [];
+        obj.mg{fileIndex}.video.com = [];
+        obj.mg{fileIndex}.video.aom = [];
+        obj.mg{fileIndex}.video.wom = [];
+        obj.mg{fileIndex}.video.hom = [];
+
+
+        [filepath,filename,ext] = fileparts(obj.video{fileIndex}.Name);
+        newfile = strcat(filename,'_motion.avi');
+        v = VideoWriter(newfile);
+        v.FrameRate = obj.video{fileIndex}.FrameRate;
+        open(v);
+
+        fh = figure('visible','off');
+
         
+
+
+        if colorflag == true
+            fr1 = readFrame(obj.video{fileIndex});
+        else
+            fr1 = rgb2gray(readFrame(obj.video{fileIndex}));
+        end
+
+
+        obj.video{fileIndex}.CurrentTime = obj.startTime{fileIndex};
+        numfr = obj.video{fileIndex}.FrameRate*(obj.stopTime{fileIndex}-obj.startTime{fileIndex});
+
+
+        for i = 1:arg.frameInterval:numfr-1
+
+            if colorflag == true
+                fr2 = readFrame(obj.video{fileIndex});
+            else
+                fr2 = rgb2gray(readFrame(obj.video{fileIndex}));
+            end
+
+            diff = abs(fr2-fr1);
+
+
+            if colorflag == true
+
+            else
+                 diff = abs(fr2-fr1);
+                if filterflag
+                    diff = mgmotionfilter(diff,filtertype,thresh);
+                end
+            end
+
+
+
+            if colorflag == true
+                [com,qom] = mgcentroid(rgb2gray(diff));
+            else
+                [com,qom] = mgcentroid(diff);
+            end
+
+
+
+            obj.mg{fileIndex}.video.qom = [obj.mg{fileIndex}.video.qom;qom];
+            obj.mg{fileIndex}.video.com = [obj.mg{fileIndex}.video.com;com];
+            gramx = mean(diff);
+            gramy = mean(diff,2);
+            obj.mg{fileIndex}.video.gram.y = [obj.mg{fileIndex}.video.gram.y;gramx];
+            obj.mg{fileIndex}.video.gram.x = [obj.mg{fileIndex}.video.gram.x,gramy];
+            if invertflag == true
+                diff = imcomplement(diff);
+            end
+            writeVideo(v,diff);
+            fr1 = fr2;
+
+            progmeter(obj.video{fileIndex}.CurrentTime,obj.stopTime{fileIndex});
+            obj.video{fileIndex}.CurrentTime = obj.startTime{fileIndex} + (1/obj.video{fileIndex}.FrameRate)*i;
+
+        end
+
+
+        if invertflag == true
+            obj.mg{fileIndex}.video.gram.x = imcomplement(obj.mg{fileIndex}.video.gram.x);
+            obj.mg{fileIndex}.video.gram.y = imcomplement(obj.mg{fileIndex}.video.gram.y);
+        end
+
+        
+        close(v);
+        disp(['The motion video is created with name ',newfile]);
+        
+
+        % Write motiongrams to files
+        tmpfile=strcat(filename,'_mgx.tiff');
+        imwrite(obj.mg{fileIndex}.video.gram.x, tmpfile);
+        tmpfile=strcat(filename,'_mgy.tiff');
+        imwrite(obj.mg{fileIndex}.video.gram.y, tmpfile);
+
+
         
     end
     

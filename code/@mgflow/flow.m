@@ -193,7 +193,7 @@ else
         end
         close(v);
         disp(['The motion video is created with name ',newfile]);
-        
+
     end
 end
 
