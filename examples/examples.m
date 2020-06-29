@@ -6,23 +6,23 @@
 
 fn='dance.avi';
 
+mg = musicalgesture(fn);
+
+
+% Generate mg motion video
+mg.motion();
+
 % Generate an optical flow video
 % with the file ending _flow.avi
-mgmotion(fn,'OpticalFlow','color','convert','Interval', 5);
+mg.flow('color','invert','Interval',5);
+
 
 % Generate a motion history video
 % with the ending _history.avi
-mgmotionhistory(fn);
+mg.history();
 
 
 % Generate a motion average image
 % with the ending _average.tiff
-mgmotionaverage(fn);
-
-
-%to load all video files from an entire directory
-%mgmotion_loadMultiple(".\toolbox\MGT-matlab\example\dance",'Diff','color','convert','Interval', 5);
-mgmotionhistory_loadMultiple(".\toolbox\MGT-matlab\example\dance",'nFrame', 20, 'color','Interval', 2);
-%mgmotionaverage_loadMultiple(".\toolbox\MGT-matlab\example\example_data",'color','Interval', 5);
-
+mg.average();
 
