@@ -29,12 +29,15 @@ end
 
 for argi = 1:nargin-1
 
-
+    if (strcmpi(varargin{argi},'Regular') || strcmpi(varargin{argi},'Binary') )
+    disp('filtertype specified in argument');
+    arg.filtertype = varargin{argi};
+    arg.filterflag = 1;
+    if(argi + 1 <= nargin-1 &&  isnumeric(varargin{argi + 1}))
+        disp('thresh specified in argument');
+        arg.thresh = varargin{argi+1};
+    end
     
-    if (strcmpi(varargin{argi},'Thresh'))
-        if(argi + 1 <= nargin-1 &&  isnumeric(varargin{argi + 1}))
-            arg.thresh = varargin{argi+1};
-        end
     elseif (strcmpi(varargin{argi},'Color'))
         disp('color mode on is specified in argument');
         arg.color = 'on'
@@ -161,7 +164,18 @@ if(arg.fileCount <= 1)
         
     end
     
+    
+    if invertflag == true
+        obj.mg.video.gram.x = imcomplement(obj.mg.video.gram.x);
+        obj.mg.video.gram.y = imcomplement(obj.mg.video.gram.y);
+    end
   
+    
+    % Write motiongrams to files
+    tmpfile=strcat(filename,'_mgx.tiff');
+    imwrite(obj.mg.video.gram.x, tmpfile);
+    tmpfile=strcat(filename,'_mgy.tiff');
+    imwrite(obj.mg.video.gram.y, tmpfile);
     
 
     

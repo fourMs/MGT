@@ -1,4 +1,4 @@
-function [retval,videoOut] = filter(f,varargin)
+function [retval,videoOut] = filter(obj,varargin)
 %FILTER Summary of this function goes here
 
 
@@ -29,12 +29,15 @@ end
 
 for argi = 1:nargin-1
 
-
+    if (strcmpi(varargin{argi},'Regular') || strcmpi(varargin{argi},'Binary') )
+    disp('filtertype specified in argument');
+    arg.filtertype = varargin{argi};
+    arg.filterflag = 1;
+    if(argi + 1 <= nargin-1 &&  isnumeric(varargin{argi + 1}))
+        disp('thresh specified in argument');
+        arg.thresh = varargin{argi+1};
+    end
     
-    if (strcmpi(varargin{argi},'Thresh'))
-        if(argi + 1 <= nargin-1 &&  isnumeric(varargin{argi + 1}))
-            arg.thresh = varargin{argi+1};
-        end
     elseif (strcmpi(varargin{argi},'Color'))
         disp('color mode on is specified in argument');
         arg.color = 'on'
@@ -61,8 +64,9 @@ for argi = 1:nargin-1
 end
 
 
-
-filterflag = [];
+filtertype = arg.filtertype;
+thresh = arg.thresh;
+filterflag = 1;
 colorflag = [];
 invertflag = [];
 
@@ -99,6 +103,10 @@ if(arg.fileCount <= 1)
     
     fh = figure('visible','off');
 
+    obj.video.CurrentTime = arg.startTime;
+    numfr = obj.video.FrameRate*(arg.stopTime-arg.startTime);
+    
+    
     if colorflag == true
         fr1 = readFrame(obj.video);
     else
@@ -107,32 +115,61 @@ if(arg.fileCount <= 1)
     
     
     
-    obj.video.CurrentTime = arg.startTime;
-    numfr = obj.video.FrameRate*(arg.stopTime-arg.startTime);
+ 
     
-    if colorflag == true
-            for i = 1:arg.frameInterval:numfr-1
-                fr2 = readFrame(obj.video);
-                diff = abs(fr2-fr1);
-                if filterflag
-                    for i = 1:size(diff,3)
-                        diff(:,:,i) = mgmotionfilter(diff(:,:,i),filtertype,thresh);
-                    end
-                end
-            end
+    for i = 1:arg.frameInterval:numfr-1
         
-    else
-            for i = 1:arg.frameInterval:numfr-1
-                fr2 = rgb2gray(obj.video);
-                diff = abs(fr2-fr1);
-                if filterflag
-                    for i = 1:size(diff,3)
-                        diff(:,:,i) = mgmotionfilter(diff(:,:,i),filtertype,thresh);
-                    end
-                end
+        if colorflag == true
+            fr2 = readFrame(obj.video);
+        else
+            fr2 = rgb2gray(readFrame(obj.video));
+        end
+        
+        diff = abs(fr2-fr1);
+        
+
+        if colorflag == true
+            
+        else
+             diff = abs(fr2-fr1);
+            if filterflag
+                diff = mgmotionfilter(diff,filtertype,thresh);
             end
+        end
+        
+
+        
+        if colorflag == true
+            [com,qom] = mgcentroid(rgb2gray(diff));
+        else
+            [com,qom] = mgcentroid(diff);
+        end
+        
+        
+        
+        obj.mg.video.qom = [obj.mg.video.qom;qom];
+        obj.mg.video.com = [obj.mg.video.com;com];
+        gramx = mean(diff);
+        gramy = mean(diff,2);
+        obj.mg.video.gram.y = [obj.mg.video.gram.y;gramx];
+        obj.mg.video.gram.x = [obj.mg.video.gram.x,gramy];
+        if invertflag == true
+            diff = imcomplement(diff);
+        end
+        writeVideo(v,diff);
+        fr1 = fr2;
+        
+        progmeter(obj.video.CurrentTime,obj.stopTime);
+        obj.video.CurrentTime = arg.startTime + (1/obj.video.FrameRate)*i;
         
     end
+    
+    
+    if invertflag == true
+        mg.video.gram.x = imcomplement(mg.video.gram.x);
+        mg.video.gram.y = imcomplement(mg.video.gram.y);
+    end
+  
     
 
     
