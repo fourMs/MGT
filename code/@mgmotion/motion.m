@@ -1,11 +1,11 @@
-function mgOut = mgmotion_file(f,varargin)
+function [outputArg1,outputArg2] = motion(obj,varargin)
 %MGMOTION - Calculate various motion features from a video file
 % mgmotion computes a motion video, motiongram, quantity of motion, centroid of
 % motion, width of motion, and height of motion from the video file or musical
 % gestures data structure. The default method is to use plain frame differencing
 % ('Diff'). A more expensive optical flow field can be calculated with the
 % 'OpticalFlow' method. The mgmotion founction also provides a color mode, and the
-% possibility to invert images with white on black instead of black on white. 
+% possibility to invert images with white on black instead of black on white.
 %
 % syntax:
 % mg = mgmotion(mg,method,starttime,endtime,filtertype,thresh)
@@ -31,7 +31,7 @@ function mgOut = mgmotion_file(f,varargin)
 % filename: the name of the video file
 % mg: instead of filename it is possible to use a MG data structure
 % Diff: method calculates the absolute frame difference between
-% two successive frames. 
+% two successive frames.
 % OpticalFlow: calculates the optical flow field
 % filtertype: Binary, Regular, Blob. When choosing Blob, the element
 % structure needs to be constructed using function strel
@@ -46,57 +46,57 @@ function mgOut = mgmotion_file(f,varargin)
 
 % mg = mginitstruct;
 
-cmd = [];
+arg = [];
 
 %default parameters
-cmd.mg = [];
-cmd.method = 'Diff';
-cmd.fileList = [];
-cmd.filterflag = 0;
-cmd.filtertype = [];
-cmd.thresh = 0.1;
-cmd.color = 'off';
-cmd.invert = 'off';
-cmd.frameInterval = 1;
-cmd.fileCount = 0;
+arg.mg = [];
+arg.method = 'Diff';
+arg.fileList = [];
+arg.filterflag = 0;
+arg.filtertype = [];
+arg.thresh = 0.1;
+arg.color = 'off';
+arg.invert = 'off';
+arg.frameInterval = 1;
+arg.fileCount = 0;
 
 
 
-
+f = obj.file
 
 if(ischar(f))
     disp('input is file or folder');
     if exist(f, 'dir')
         disp('folder exists');
-        cmd.inputType = 'folder';
+        arg.inputType = 'folder';
         
         files = dir(f);
         fileCount = size(files);
         
-        fileCount = size(files);   
+        fileCount = size(files);
         fileCount = fileCount(1);
         %disp(fileCount);
         validFileCount = 0;
         for fileIndex= 1:fileCount
             if(files(fileIndex).isdir == 0)
                 %disp(files(i).name);
-
+                
                 [~, ~, extension_i] = fileparts(files(fileIndex).name);
                 extension_i = lower(extension_i);
                 if((extension_i == ".avi")||(extension_i == ".mp4")||(extension_i == ".m4v") ||(extension_i == ".mpg") ||(extension_i == ".mov")    )
                     validFileCount = validFileCount + 1;
-                    cmd.fileList{validFileCount} = files(fileIndex);
-                    cmd.mg{validFileCount} = mgvideoreader([files(fileIndex).folder,'\',files(fileIndex).name]);
+                    arg.fileList{validFileCount} = files(fileIndex);
+                    arg.mg{validFileCount} = mgvideoreader([files(fileIndex).folder,'\',files(fileIndex).name]);
                     %disp[files(i).folder,files(i).name];
-                    cmd.fileCount = cmd.fileCount + 1;
+                    arg.fileCount = arg.fileCount + 1;
                 end
             end
         end
         
-        disp({'file count is ', cmd.fileCount});
+        disp({'file count is ', arg.fileCount});
         
         
-
+        
     else
         disp('folder does not exist. probably the input is file');
         [~, ~, extension_i] = fileparts(f);
@@ -106,26 +106,26 @@ if(ischar(f))
             disp('file exists. checking file format')
             if((extension_i == ".avi")||(extension_i == ".mp4")||(extension_i == ".m4v") ||(extension_i == ".mpg") ||(extension_i == ".mov")    )
                 disp('valid file format');
-                cmd.fileCount = 1;
-                cmd.inputType = 'file';
-                cmd.mg = mgvideoreader(f);
-                cmd.starttime = cmd.mg.video.starttime;
-                cmd.endtime = cmd.mg.video.endtime;
-
+                arg.fileCount = 1;
+                arg.inputType = 'file';
+                arg.mg = mgvideoreader(f);
+                arg.starttime = arg.mg.video.starttime;
+                arg.endtime = arg.mg.video.endtime;
+                
             else
                 disp('invalid file format');
-        end
+            end
         else
             disp('file not found');
         end
     end
 elseif isstruct(f) && isfield(f,'video')
     disp('input is mg struct');
-    cmd.fileCount = 1;
-    cmd.inputType = 'struct';
-    cmd.mg = f;
-    cmd.starttime = cmd.mg.video.starttime;
-    cmd.endtime = cmd.mg.video.endtime;
+    arg.fileCount = 1;
+    arg.inputType = 'struct';
+    arg.mg = f;
+    arg.starttime = arg.mg.video.starttime;
+    arg.endtime = arg.mg.video.endtime;
     
 else
     error('invalid input ');
@@ -137,43 +137,43 @@ end
 l = length(varargin);
 
 for argi = 1:l
-    if( ischar(varargin{argi}))   
+    if( ischar(varargin{argi}))
         if(strcmpi(varargin{argi},'Diff') || strcmpi(varargin{argi},'OpticalFlow') )
             disp('method specified in argument');
             
-            cmd.method = varargin{argi};
+            arg.method = varargin{argi};
             
             
-            if(strcmpi(cmd.inputType, 'folder') == 0)
+            if(strcmpi(arg.inputType, 'folder') == 0)
                 disp('input type accepts starttime and stoptime only if input is file or struct and not folder');
                 if(argi + 1 <= l && isnumeric(varargin{argi + 1}))
                     disp('starttime specified in argument');
-                    cmd.starttime = varargin{argi+1};
-                    if(argi + 2 <= l &&isnumeric(varargin{argi + 2})) 
+                    arg.starttime = varargin{argi+1};
+                    if(argi + 2 <= l &&isnumeric(varargin{argi + 2}))
                         disp('stoptime specified in argument');
-                        cmd.endtime = varargin{argi+2};
+                        arg.endtime = varargin{argi+2};
                     end
                 end
             end
             
             
-        elseif (strcmpi(varargin{argi},'Regular') || strcmpi(varargin{argi},'Binary') ) 
+        elseif (strcmpi(varargin{argi},'Regular') || strcmpi(varargin{argi},'Binary') )
             disp('filtertype specified in argument');
-            cmd.filtertype = varargin{argi};
-            cmd.filterflag = 1;
+            arg.filtertype = varargin{argi};
+            arg.filterflag = 1;
             if(argi + 1 <= l &&  isnumeric(varargin{argi + 1}))
                 disp('thresh specified in argument');
-                cmd.thresh = varargin{argi+1};
+                arg.thresh = varargin{argi+1};
             end
         elseif (strcmpi(varargin{argi},'Color'))
             disp('color mode on is specified in argument');
-            cmd.color = 'on'
+            arg.color = 'on'
         elseif (strcmpi(varargin{argi},'invert'))
             disp('invert mode on is specified in argument');
-            cmd.invert = 'on'
+            arg.invert = 'on'
         elseif (strcmpi(varargin{argi},'Interval'))
             if(argi + 1 <= l &&  isnumeric(varargin{argi + 1}))
-                cmd.frameInterval = varargin{argi+1};
+                arg.frameInterval = varargin{argi+1};
             end
         end
     end
@@ -181,25 +181,25 @@ end
 
 
 
-for fileIndex = 1:cmd.fileCount
+for fileIndex = 1:arg.fileCount
     
-    if(cmd.fileCount == 1)
-        mg = cmd.mg;
+    if(arg.fileCount == 1)
+        mg = arg.mg;
     else
-        mg = cmd.mg{fileIndex};
-        cmd.starttime = cmd.mg{fileIndex}.video.starttime;
-        cmd.endtime = cmd.mg{fileIndex}.video.endtime;
+        mg = arg.mg{fileIndex};
+        arg.starttime = arg.mg{fileIndex}.video.starttime;
+        arg.endtime = arg.mg{fileIndex}.video.endtime;
     end
     
-    method = cmd.method;
-    starttime = cmd.starttime;
-    endtime = cmd.endtime;
-    filterflag = cmd.filterflag;
-    filtertype = cmd.filtertype;
-    thresh = cmd.thresh;
+    method = arg.method;
+    starttime = arg.starttime;
+    endtime = arg.endtime;
+    filterflag = arg.filterflag;
+    filtertype = arg.filtertype;
+    thresh = arg.thresh;
     %disp(thresh);
-    frameInterval = cmd.frameInterval;
-
+    frameInterval = arg.frameInterval;
+    
     mg.video.method = method;
     mg.video.gram.y = [];
     mg.video.gram.x = [];
@@ -212,12 +212,12 @@ for fileIndex = 1:cmd.fileCount
     mg.video.endtime = endtime;
     % hblob = vision.BlobAnalysis;
     % hblob.AreaOutputPort = true;
-
-    if(strcmpi(cmd.color, 'on'))
+    
+    if(strcmpi(arg.color, 'on'))
         colorflag = true;
     else
-        if (isfield(mg.video,'mode') && isfield(mg.video.mode,'color') ) 
-            if strcmpi(mg.video.mode.color,'on') 
+        if (isfield(mg.video,'mode') && isfield(mg.video.mode,'color') )
+            if strcmpi(mg.video.mode.color,'on')
                 colorflag = true;
             else
                 colorflag = false;
@@ -226,9 +226,9 @@ for fileIndex = 1:cmd.fileCount
             colorflag = false;
         end
     end
-
-
-    if(strcmpi(cmd.invert, 'on'))
+    
+    
+    if(strcmpi(arg.invert, 'on'))
         invertflag = true'
     else
         if (isfield (mg.video,'mode') && isfield(mg.video.mode,'invert'))
@@ -241,16 +241,16 @@ for fileIndex = 1:cmd.fileCount
             invertflag = false;
         end
     end
-
-
-
-
+    
+    
+    
+    
     if strcmpi(method,'Diff')
         mg.video.obj.CurrentTime = starttime;
         if colorflag == true
-            fr = readFrame(mg.video.obj);
+            fr1 = readFrame(mg.video.obj);
         else
-            fr = rgb2gray(readFrame(mg.video.obj));
+            fr1 = rgb2gray(readFrame(mg.video.obj));
         end
         [filepath,filename,ext] = fileparts(mg.video.obj.Name);
         newfile = strcat(filename,'_motion.avi');
@@ -258,17 +258,17 @@ for fileIndex = 1:cmd.fileCount
         mg.output.motion.filename = newfile;
         
         
-
+        
         v = VideoWriter(newfile);
         v.FrameRate = mg.video.obj.FrameRate;
         ind = 1;
-
+        
         %numf = mg.video.obj.FrameRate*(endtime-starttime)-1;
-        %numf = mg.video.obj.FrameRate*(endtime-starttime); %eg. for 1 second at 25fps,  25*(0-1) = 25 
+        %numf = mg.video.obj.FrameRate*(endtime-starttime); %eg. for 1 second at 25fps,  25*(0-1) = 25
         disp(' ');
         open(v);
         progmeter(0);
-
+        
         if colorflag == true
             while hasFrame(mg.video.obj)
                 %progmeter(mg.video.obj.CurrentTime,endtime);
@@ -276,10 +276,10 @@ for fileIndex = 1:cmd.fileCount
                 mg.video.obj.CurrentTime = mg.video.obj.CurrentTime + (1/mg.video.obj.FrameRate)*frameInterval;
                 
                 
-                pfr = readFrame(mg.video.obj);
-
-
-                diff = abs(pfr-fr);
+                fr2 = readFrame(mg.video.obj);
+                
+                
+                diff = abs(fr2-fr1);
                 if filterflag
                     for i = 1:size(diff,3)
                         diff(:,:,i) = mgmotionfilter(diff(:,:,i),filtertype,thresh);
@@ -305,36 +305,42 @@ for fileIndex = 1:cmd.fileCount
                     diff = imcomplement(diff);
                 end
                 writeVideo(v,diff);
-                fr = pfr;
-
+                fr1 = fr2;
+                
                 ind = ind + 1;
                 progmeter(mg.video.obj.CurrentTime,endtime);
-
+                
                 if(mg.video.obj.CurrentTime > endtime)
                     break;
                 end
                 
             end
-
+            
             if invertflag == true
                 mg.video.gram.x = imcomplement(mg.video.gram.x);
                 mg.video.gram.y = imcomplement(mg.video.gram.y);
             end
         else
-
+            
             while hasFrame(mg.video.obj)
                 %progmeter(mg.video.obj.CurrentTime,endtime);
                 
                 mg.video.obj.CurrentTime = mg.video.obj.CurrentTime - (1/mg.video.obj.FrameRate); %subtracting the incremented currenttime due to readFrame()
                 mg.video.obj.CurrentTime = mg.video.obj.CurrentTime + (1/mg.video.obj.FrameRate)*frameInterval;
                 
-                pfr = rgb2gray(readFrame(mg.video.obj));
-
-
-                diff = abs(pfr-fr);
+                fr2 = rgb2gray(readFrame(mg.video.obj));
+                
+                
+                
+                
+                
+                
+                diff = abs(fr2-fr1);
                 if filterflag
                     diff = mgmotionfilter(diff,filtertype,thresh);
                 end
+                
+                
                 [com,qom] = mgcentroid(diff);
                 %             hautoh = vision.Autothresholder;
                 %             level = multithresh(diff);
@@ -356,7 +362,7 @@ for fileIndex = 1:cmd.fileCount
                     diff = imcomplement(diff);
                 end
                 writeVideo(v,diff);
-                fr = pfr;
+                fr1 = fr2;
                 ind = ind + 1;
                 progmeter(mg.video.obj.CurrentTime,endtime);
                 if(mg.video.obj.CurrentTime > endtime)
@@ -369,30 +375,30 @@ for fileIndex = 1:cmd.fileCount
             end
         end
         
-           
+        
         
         close(v)
         disp(' ');
         disp(['The motion video is created with name ',newfile]);
         
-        if(cmd.fileCount == 1)
+        if(arg.fileCount == 1)
             mgOut = mgvideoreader(newfile);
         else
             mgOut{fileIndex} = mgvideoreader(newfile);
-
+            
         end
-
+        
         
         
         mg.video.nframe = v.FrameCount;
         %     mg.video.nframe = ind - 1;
-
+        
         % Write motiongrams to files
         tmpfile=strcat(filename,'_mgx.tiff');
         imwrite(mg.video.gram.x, tmpfile);
         tmpfile=strcat(filename,'_mgy.tiff');
         imwrite(mg.video.gram.y, tmpfile);
-
+        
         % Plot graphs
         %    figure,subplot(211),plot(mg.video.qom)
         %    title('Quantity of Motion');
@@ -430,7 +436,7 @@ for fileIndex = 1:cmd.fileCount
             mg.video.obj.CurrentTime = mg.video.obj.CurrentTime + (1/mg.video.obj.FrameRate)*frameInterval;
             fr2 = rgb2gray(readFrame(mg.video.obj));
             ii = ii + 1;
-
+            
             flow = mgopticalflow(fr2,fr1);
             magnitude = flow.Magnitude;
             if filterflag
@@ -458,23 +464,23 @@ for fileIndex = 1:cmd.fileCount
             fr1 = fr2;
             ind = ind + 1;
             progmeter(mg.video.obj.CurrentTime,endtime);
-
-
+            
+            
         end
-            %textprogressbar('done');
-            %close(h);
-            close(v);
+        %textprogressbar('done');
+        %close(h);
+        close(v);
         disp(' ');
         disp(['The motion video is created with name ',newfile]);
         
-        if(cmd.fileCount == 1)
+        if(arg.fileCount == 1)
             mgOut = mgvideoreader(newfile);
         else
             mgOut{fileIndex} = mgvideoreader(newfile);
-
+            
         end
         mg.video.nframe = v.FrameCount;
-
+        
         %    figure,subplot(211),plot(mg.video.qom)
         %    title('Quantity of motion by opticalflow');
         %    set(gca,'XTick',[0:2*mg.video.obj.FrameRate:ind])
@@ -490,21 +496,19 @@ for fileIndex = 1:cmd.fileCount
     mg.video.obj.CurrentTime = 0;
     mg.type = 'mg data';
     mg.createtime = datestr(datetime('today'));
-
+    
     % Write data to text file
     csvdata = [mg.video.qom mg.video.com];
     newfile = strcat(filename,'_data.csv');
-
+    
     csvwrite(newfile, csvdata); % Need to write header info as well
     % xlswrite(newfile, csvdata);
-
+    
     mgmotionplot(mg);
     
 end
 
 return;
 
-
-
-
+end
 

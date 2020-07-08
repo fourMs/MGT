@@ -227,10 +227,13 @@ for fileIndex = 1:cmd.fileCount
     
 
     % Normalizing values to [0,1]
-
+    aveOut = ave
     if (strcmpi(cmd.normalize,'on'))
         %ave2 = uint8(ave/i); % old approach didnt work well
-        ave2=(ave-min(ave(:))) ./ max(ave(:)-min(ave(:)));
+        aveNormalized=(ave-min(ave(:))) ./ max(ave(:)-min(ave(:)));
+        aveOut = aveNormalized;
+    else
+        aveOut = ave;
     end
     %figure, imshow(ave2);
 
@@ -240,7 +243,7 @@ for fileIndex = 1:cmd.fileCount
     disp(' ');
     disp('file created under name :');
     disp(tmpfile);
-    imwrite(ave2, tmpfile);
+    imwrite(aveOut, tmpfile);
 
 
 end
