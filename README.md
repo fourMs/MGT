@@ -49,6 +49,11 @@ If you use this toolbox for research purposes, please reference this publication
 
 - Jensenius, Alexander Refsum (2018). [The Musical Gestures Toolbox for Matlab](http://hdl.handle.net/10852/65559). Proceedings of the 19th International Society for Music Information Retrieval Conference, Late Breaking Demos Session. Paris, France.
 
+Many examples of the use of the toolbox can be found in this master's thesis: 
+
+- Zhou, B. (2016). [Video Analysis of Music Related Body Motion in Matlab](http://urn.nb.no/URN:NBN:no-54640). Master’s Thesis. University of Oslo.
+
+
 ## Credits
 
 Main developers: [Alexander Refsum Jensenius](http://people.uio.no/alexanje) and [Bo Shou](https://github.com/benlyyan).
