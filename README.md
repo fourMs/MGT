@@ -56,7 +56,7 @@ Many examples of the use of the toolbox can be found in this master's thesis:
 
 ## Credits
 
-Main developers: [Alexander Refsum Jensenius](http://people.uio.no/alexanje) and [Bo Shou](https://github.com/benlyyan).
+Main developers: [Alexander Refsum Jensenius](http://people.uio.no/alexanje), [Bo Shou](https://github.com/benlyyan), and [Habibur Rahman](https://github.com/emoninet2).
 
 ## License
 
